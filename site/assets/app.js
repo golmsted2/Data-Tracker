@@ -32,9 +32,25 @@ function initials(name) {
   const words = String(name || "?").replace(/[^A-Za-z0-9 ]/g, "").split(/\s+/).filter(Boolean);
   return (words.length > 1 ? words.slice(0, 2).map(word => word[0]) : [words[0]?.slice(0, 3) || "?"]).join("").toUpperCase();
 }
-function teamLogo(team) {
+const THEME_KEY = "power-hoops-theme";
+const FAVORITES_KEY = "power-hoops-favorites";
+let favoriteIds = new Set();
+function favoriteButton(team) {
   const itemId = String(team.item_id || "");
-  return `<span class="team-cell"><span class="logo-frame"><img class="team-logo" src="https://a.espncdn.com/i/teamlogos/ncaa/500/${encodeURIComponent(itemId)}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="logo-fallback">${initials(team.item)}</span></span><span>${safe(team.item)}</span></span>`;
+  if (!itemId) return "";
+  const active = favoriteIds.has(itemId);
+  return `<button class="favorite-button${active ? " is-favorite" : ""}" type="button" data-favorite-id="${safe(itemId)}" data-favorite-name="${safe(team.item)}" aria-label="${active ? "Remove" : "Add"} ${safe(team.item)} ${active ? "from" : "to"} favorites" aria-pressed="${active}" title="${active ? "Remove from favorites" : "Add to favorites"}">${active ? "★" : "☆"}</button>`;
+}
+function teamLogo(team, options = {}) {
+  const itemId = String(team.item_id || "");
+  const favorite = options.showFavorite === false ? "" : favoriteButton(team);
+  return `<span class="team-cell"><span class="logo-frame"><img class="team-logo" src="https://a.espncdn.com/i/teamlogos/ncaa/500/${encodeURIComponent(itemId)}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="logo-fallback">${initials(team.item)}</span></span><span class="team-name">${safe(team.item)}</span>${favorite}</span>`;
+}
+function rankMovement(itemId, currentRanks, previousRanks) {
+  const current = currentRanks[itemId], previous = previousRanks[itemId];
+  if (!current || !previous || current === previous) return `<span class="rank-move neutral" data-tooltip="No rank change since the previous snapshot" title="No rank change">—</span>`;
+  const movement = previous - current, direction = movement > 0 ? "up" : "down", amount = Math.abs(movement), word = movement > 0 ? "up" : "down";
+  return `<span class="rank-move ${direction}" data-tooltip="Moved ${word} ${amount} ${amount === 1 ? "spot" : "spots"} since the previous snapshot" title="Moved ${word} ${amount} ${amount === 1 ? "spot" : "spots"}">${movement > 0 ? "▲" : "▼"}${amount}</span>`;
 }
 function latestDates(rows) { return [...new Set(rows.map(row => row.date))].sort(); }
 function latestRows(rows) { const dates = latestDates(rows); return dates.length ? rows.filter(row => row.date === dates.at(-1)) : []; }
@@ -63,6 +79,47 @@ function conferenceRecord(itemId, conference, games) {
   return {wins, losses, total: wins + losses};
 }
 function average(value, games) { return games ? (number(value) / games).toFixed(1) : "0.0"; }
+
+function initPreferences() {
+  try {
+    favoriteIds = new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]").map(String));
+  } catch { favoriteIds = new Set(); }
+  let storedTheme = "light";
+  try { storedTheme = localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"; } catch {}
+  document.documentElement.dataset.theme = storedTheme;
+  const themeToggle = document.querySelector("#theme-toggle");
+  function paintThemeToggle() {
+    if (!themeToggle) return;
+    const dark = document.documentElement.dataset.theme === "dark";
+    themeToggle.textContent = dark ? "Light mode" : "Dark mode";
+    themeToggle.setAttribute("aria-pressed", String(dark));
+    themeToggle.title = dark ? "Switch to light mode" : "Switch to dark mode";
+  }
+  themeToggle?.addEventListener("click", () => {
+    const dark = document.documentElement.dataset.theme !== "dark";
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    try { localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); } catch {}
+    paintThemeToggle();
+  });
+  paintThemeToggle();
+  document.addEventListener("click", event => {
+    const button = event.target instanceof Element ? event.target.closest("[data-favorite-id]") : null;
+    if (!button) return;
+    event.preventDefault(); event.stopPropagation();
+    const itemId = button.dataset.favoriteId;
+    if (favoriteIds.has(itemId)) favoriteIds.delete(itemId); else favoriteIds.add(itemId);
+    try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteIds])); } catch {}
+    document.querySelectorAll("[data-favorite-id]").forEach(item => {
+      const active = favoriteIds.has(item.dataset.favoriteId);
+      item.classList.toggle("is-favorite", active);
+      item.textContent = active ? "★" : "☆";
+      item.setAttribute("aria-pressed", String(active));
+      item.setAttribute("aria-label", `${active ? "Remove" : "Add"} ${item.dataset.favoriteName} ${active ? "from" : "to"} favorites`);
+      item.title = active ? "Remove from favorites" : "Add to favorites";
+    });
+    document.dispatchEvent(new CustomEvent("favoriteschange", {detail: {itemId}}));
+  });
+}
 
 function compareLeaderboard(a, b, field) {
   if (field === "item" || field === "conference") return String(a[field]).localeCompare(String(b[field]));
@@ -101,6 +158,7 @@ function renderQuality(status) {
 
 function renderToday(rows, games, status) {
   const dates = latestDates(rows), latest = rankRows(latestRows(rows)), previous = dates.length > 1 ? teamMap(rows.filter(row => row.date === dates.at(-2))) : {};
+  const currentRanks = Object.fromEntries(latest.map(row => [row.item_id, row.rank])), previousRanks = Object.fromEntries(rankRows(Object.values(previous)).map(row => [row.item_id, row.rank]));
   const averageWin = latest.length ? latest.reduce((sum, row) => sum + number(row.win_pct), 0) / latest.length : 0;
   const movers = latest.map(row => ({...row, delta: number(row.win_pct) - number(previous[row.item_id]?.win_pct), pointDelta: number(row.point_diff) - number(previous[row.item_id]?.point_diff)})).filter(row => row.delta || row.pointDelta).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || Math.abs(b.pointDelta) - Math.abs(a.pointDelta)).slice(0, 8);
   document.querySelector("#run-status").textContent = status.run_time ? `Last pipeline run ${new Date(status.run_time).toLocaleString()}` : "No pipeline status available";
@@ -111,7 +169,7 @@ function renderToday(rows, games, status) {
   const leaderHeaders = [...document.querySelectorAll("#leaders th[data-sort]")];
   function paintLeaderboard() {
     const sorted = sortedLeaderboard(leaderSnapshot, leaderSortField, leaderSortDirection);
-    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 12).map(row => `<tr><td class="rank-cell">${row.rank}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 12).map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
     leaderHeaders.forEach(header => {
       const active = header.dataset.sort === leaderSortField;
       header.classList.toggle("sort-active", active);
@@ -135,6 +193,15 @@ function renderToday(rows, games, status) {
   document.querySelector("#conferences").innerHTML = Object.entries(conferenceMap).sort((a, b) => b[1].reduce((x, y) => x + y, 0) / b[1].length - a[1].reduce((x, y) => x + y, 0) / a[1].length).map(([conference, values]) => { const value = values.reduce((x, y) => x + y, 0) / values.length; return `<div class="bar-row"><span>${safe(conference)}</span><strong>${pct(value)}</strong></div>`; }).join("");
 
   const todayGames = games.filter(game => game.date === dates.at(-1));
+  const scoreboard = document.querySelector("#scoreboard");
+  const scoreboardCount = document.querySelector("#scoreboard-count");
+  if (scoreboard && scoreboardCount) {
+    scoreboardCount.textContent = `${todayGames.length} ${todayGames.length === 1 ? "game" : "games"}`;
+    scoreboard.innerHTML = todayGames.length ? todayGames.slice(0, 12).map(game => {
+      const homeWon = game.winner_id === game.home_id, awayWon = game.winner_id === game.away_id;
+      return `<article class="score-card"><div class="score-card-top"><span class="badge">FINAL</span><span>${String(game.neutral_site).toLowerCase() === "true" ? "Neutral" : ""}</span></div><div class="score-line ${homeWon ? "score-winner" : ""}">${teamLogo({item_id: game.home_id, item: game.home_team}, {showFavorite: false})}<strong>${number(game.home_score)}</strong></div><div class="score-line ${awayWon ? "score-winner" : ""}">${teamLogo({item_id: game.away_id, item: game.away_team}, {showFavorite: false})}<strong>${number(game.away_score)}</strong></div></article>`;
+    }).join("") : `<p class="muted">No completed games logged for the latest date.</p>`;
+  }
   const recap = [
     ["Biggest win", [...todayGames].sort((a, b) => number(b.margin) - number(a.margin))[0], game => game ? `${safe(game.winner_id === game.home_id ? game.home_team : game.away_team)} won by ${game.margin}` : "No games logged"],
     ["Closest game", [...todayGames].sort((a, b) => number(a.margin) - number(b.margin))[0], game => game ? `${safe(game.home_team)} ${game.home_score}, ${safe(game.away_team)} ${game.away_score}` : "No games logged"],
@@ -146,15 +213,16 @@ function renderToday(rows, games, status) {
 }
 
 function renderBrowse(rows) {
-  const latest = rankRows(latestRows(rows)), conference = document.querySelector("#conference-filter"), search = document.querySelector("#team-search"), sort = document.querySelector("#sort-field"), count = document.querySelector("#browse-count");
+  const dates = latestDates(rows), latest = rankRows(latestRows(rows)), previous = dates.length > 1 ? rankRows(rows.filter(row => row.date === dates.at(-2))) : [], currentRanks = Object.fromEntries(latest.map(row => [row.item_id, row.rank])), previousRanks = Object.fromEntries(previous.map(row => [row.item_id, row.rank])), conference = document.querySelector("#conference-filter"), search = document.querySelector("#team-search"), sort = document.querySelector("#sort-field"), favoritesOnly = document.querySelector("#favorites-only"), count = document.querySelector("#browse-count");
   [...new Set(latest.map(row => row.conference))].sort().forEach(value => conference.insertAdjacentHTML("beforeend", `<option value="${safe(value)}">${safe(value)}</option>`));
   function paint() {
     const query = search.value.toLowerCase(), selected = conference.value, field = sort.value;
-    const filtered = latest.filter(row => row.item.toLowerCase().includes(query) && (!selected || row.conference === selected)).sort((a, b) => field === "item" ? a.item.localeCompare(b.item) : number(b[field]) - number(a[field]));
+    const filtered = latest.filter(row => row.item.toLowerCase().includes(query) && (!selected || row.conference === selected) && (!favoritesOnly?.checked || favoriteIds.has(String(row.item_id)))).sort((a, b) => field === "item" ? a.item.localeCompare(b.item) : number(b[field]) - number(a[field]));
     count.textContent = `${filtered.length} teams shown`;
-    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td class="rank-cell">${row.rank}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
   }
-  [search, conference, sort].forEach(element => element.addEventListener("input", paint)); paint();
+  [search, conference, sort, favoritesOnly].filter(Boolean).forEach(element => element.addEventListener("input", paint));
+  document.addEventListener("favoriteschange", paint); paint();
 }
 
 function renderConferences(rows, games) {
@@ -263,7 +331,7 @@ function drawChart(canvas, points, color, formatter) {
   canvas.width = width * ratio; canvas.height = height * ratio; context.setTransform(ratio, 0, 0, ratio, 0, 0); context.clearRect(0, 0, width, height);
   if (!points.length) return;
   const min = Math.min(...points), max = Math.max(...points), spread = max - min || 1;
-  context.strokeStyle = "#d9e2ec"; context.lineWidth = 1; context.beginPath(); context.moveTo(0, height - 24); context.lineTo(width, height - 24); context.stroke();
+  context.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--line").trim() || "#d9e2ec"; context.lineWidth = 1; context.beginPath(); context.moveTo(0, height - 24); context.lineTo(width, height - 24); context.stroke();
   context.strokeStyle = color; context.lineWidth = 3; context.beginPath(); points.forEach((point, index) => { const x = points.length === 1 ? width / 2 : index / (points.length - 1) * width; const y = 16 + (max - point) / spread * (height - 48); index ? context.lineTo(x, y) : context.moveTo(x, y); }); context.stroke();
   context.fillStyle = color; context.font = "12px system-ui"; context.fillText(formatter(points.at(-1)), 8, 18);
 }
@@ -281,6 +349,7 @@ function renderTrends(rows, games) {
   select.addEventListener("change", paint); paint();
 }
 
+initPreferences();
 loadData().then(({history, games, status}) => {
   renderQuality(status);
   const page = document.body.dataset.page;
