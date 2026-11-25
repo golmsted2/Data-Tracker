@@ -82,19 +82,39 @@ const CONFERENCE_LOGOS = {
 const CONFERENCE_SHORT = {
   "America East Conference": "AE", "American Athletic Conference": "AAC", "Atlantic 10 Conference": "A-10", "Atlantic Coast Conference": "ACC", "Atlantic Sun Conference": "ASUN", "Big 12 Conference": "XII", "Big East Conference": "BE", "Big Sky Conference": "BSKY", "Big South Conference": "BS", "Big Ten Conference": "B1G", "Big West Conference": "BW", "Coastal Athletic Association": "CAA", "Conference USA": "C-USA", "Horizon League": "HL", "Ivy League": "IVY", "Metro Conference": "METRO", "Mid-American Conference": "MAC", "Mid-Eastern Athletic Conference": "MEAC", "Missouri Valley Conference": "MVC", "Mountain West Conference": "MW", "Northeast Conference": "NEC", "Ohio Valley Conference": "OVC", "Pac-12 Conference": "PAC-12", "Patriot League": "PAT", "Southeastern Conference": "SEC", "Southern Conference": "SOCON", "Southland Conference": "SLC", "Southwestern Athletic Conference": "SWAC", "Summit League": "SUMMIT", "Sun Belt Conference": "SBC", "United Athletic Conference": "UAC", "West Coast Conference": "WCC",
 };
+const TEAM_DIRECTORY_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams?limit=500";
+const CONFERENCE_COLORS = {
+  "America East Conference": "#0f766e", "American Athletic Conference": "#0c2340", "Atlantic 10 Conference": "#0066b3", "Atlantic Coast Conference": "#013ca6", "Atlantic Sun Conference": "#2e7d32", "Big 12 Conference": "#0057b8", "Big East Conference": "#1b365d", "Big Sky Conference": "#005b96", "Big South Conference": "#7f1d1d", "Big Ten Conference": "#008c95", "Big West Conference": "#006a8e", "Coastal Athletic Association": "#2b5797", "Conference USA": "#006747", "Horizon League": "#486a8d", "Ivy League": "#00539b", "Metro Conference": "#6b21a8", "Mid-American Conference": "#154734", "Mid-Eastern Athletic Conference": "#7b1e3a", "Missouri Valley Conference": "#087f5b", "Mountain West Conference": "#00629b", "Northeast Conference": "#374151", "Ohio Valley Conference": "#1d4e89", "Pac-12 Conference": "#003b5c", "Patriot League": "#163b65", "Southeastern Conference": "#d6001c", "Southern Conference": "#006633", "Southland Conference": "#006666", "Southwestern Athletic Conference": "#1f4e79", "Summit League": "#4b2e83", "Sun Belt Conference": "#0b6e4f", "United Athletic Conference": "#475569", "West Coast Conference": "#0d3b66",
+};
+const ACCENT_PALETTE = ["#1769aa", "#7c3aed", "#0f766e", "#c2410c", "#be123c", "#475569", "#15803d", "#a16207"];
+let teamColors = {};
+function colorHash(value) { return [...String(value || "")].reduce((hash, character) => ((hash * 31) + character.charCodeAt(0)) >>> 0, 7); }
+function validColor(value, fallback) { const candidate = String(value || "").replace(/^#/, ""); return /^[0-9a-f]{6}$/i.test(candidate) && !/^f{6}$/i.test(candidate) ? `#${candidate}` : fallback; }
+function fallbackAccent(value) { return ACCENT_PALETTE[colorHash(value) % ACCENT_PALETTE.length]; }
+function teamAccent(team) { const entry = teamColors[String(team?.item_id)] || {}; return validColor(entry.primary, fallbackAccent(team?.item)); }
+function teamAccentAlt(team) { const entry = teamColors[String(team?.item_id)] || {}; return validColor(entry.alternate, teamAccent(team)); }
+function accentSoft(color) { const value = String(color || "").replace(/^#/, ""); if (!/^[0-9a-f]{6}$/i.test(value)) return "rgba(47,128,237,.10)"; return `rgba(${parseInt(value.slice(0, 2), 16)},${parseInt(value.slice(2, 4), 16)},${parseInt(value.slice(4, 6), 16)},.11)`; }
+function conferenceAccent(conference) { return validColor(CONFERENCE_COLORS[conference], fallbackAccent(conference)); }
+function normalizeTeamColors(payload) {
+  const entries = payload?.sports?.flatMap(sport => (sport.leagues || []).flatMap(league => league.teams || [])) || [];
+  return Object.fromEntries(entries.map(entry => { const team = entry.team || entry; return [String(team.id || ""), {primary: team.color, alternate: team.alternateColor}]; }).filter(([id]) => id));
+}
 function conferenceMark(conference, options = {}) {
   const slug = CONFERENCE_LOGOS[conference], fallback = CONFERENCE_SHORT[conference] || initials(conference);
   return `<span class="conference-mark${options.large ? " large" : ""}"><img class="conference-logo" src="https://a.espncdn.com/i/teamlogos/ncaa_conf/500/${slug || "missing"}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="conference-logo-fallback">${safe(fallback)}</span></span>`;
 }
 function conferenceLabel(conference, options = {}) {
-  return `<span class="conference-cell${options.large ? " conference-heading" : ""}">${conferenceMark(conference, options)}<span class="conference-name">${safe(conference)}</span></span>`;
+  const accent = options.accent ? conferenceAccent(conference) : "";
+  const style = options.accent ? ` style="--conference-accent:${accent};--conference-accent-soft:${accentSoft(accent)}"` : "";
+  return `<span class="conference-cell${options.large ? " conference-heading" : ""}${options.accent ? " conference-color-accent" : ""}"${style}>${conferenceMark(conference, options)}<span class="conference-name">${safe(conference)}</span></span>`;
 }
 function teamLogo(team, options = {}) {
   const itemId = String(team.item_id || "");
   const favorite = options.showFavorite === false ? "" : favoriteButton(team);
+  const accentStyle = options.accent ? ` style="--team-accent:${teamAccent(team)};--team-accent-alt:${teamAccentAlt(team)};--team-accent-soft:${accentSoft(teamAccent(team))}"` : "";
   const identity = `<span class="logo-frame"><img class="team-logo" src="https://a.espncdn.com/i/teamlogos/ncaa/500/${encodeURIComponent(itemId)}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="logo-fallback">${initials(team.item)}</span></span><span class="team-name">${safe(team.item)}</span>`;
   const linkedIdentity = options.link === false || !itemId || (rosterIds.size && !rosterIds.has(itemId)) ? identity : `<a class="team-link" href="team.html?id=${encodeURIComponent(itemId)}">${identity}</a>`;
-  return `<span class="team-cell">${linkedIdentity}${favorite}</span>`;
+  return `<span class="team-cell${options.accent ? " team-color-accent" : ""}"${accentStyle}>${linkedIdentity}${favorite}</span>`;
 }
 function rankMovement(itemId, currentRanks, previousRanks) {
   const current = currentRanks[itemId], previous = previousRanks[itemId];
@@ -196,14 +216,16 @@ function sortedLeaderboard(rows, field, direction) {
 }
 
 async function loadData() {
-  const [historyResponse, gamesResponse, statusResponse, rankingsResponse] = await Promise.all([
-    fetch(DATA.history), fetch(DATA.games), fetch(DATA.status), fetch(DATA.rankings),
+  const [historyResponse, gamesResponse, statusResponse, rankingsResponse, teamDirectoryResponse] = await Promise.all([
+    fetch(DATA.history), fetch(DATA.games), fetch(DATA.status), fetch(DATA.rankings), fetch(TEAM_DIRECTORY_URL).catch(() => null),
   ]);
   const history = historyResponse.ok ? parseCSV(await historyResponse.text()) : [];
   const games = gamesResponse.ok ? parseCSV(await gamesResponse.text()) : [];
   const status = statusResponse.ok ? await statusResponse.json() : {};
   const rankings = rankingsResponse.ok ? await rankingsResponse.json() : {};
-  return {history, games, status, rankings};
+  let colors = {};
+  if (teamDirectoryResponse?.ok) { try { colors = normalizeTeamColors(await teamDirectoryResponse.json()); } catch {} }
+  return {history, games, status, rankings, colors};
 }
 
 function renderQuality(status) {
@@ -297,9 +319,9 @@ function renderConferences(rows, games) {
   [...new Set(latest.map(row => row.conference))].sort().forEach(value => conferences.insertAdjacentHTML("beforeend", `<option value="${safe(value)}">${safe(value)}</option>`));
   function paint() {
     const selected = conferences.value, teams = latest.filter(row => !selected || row.conference === selected).map(row => ({...row, conferenceRecord: conferenceRecord(row.item_id, row.conference, games)})).sort((a, b) => b.conferenceRecord.wins / Math.max(b.conferenceRecord.total, 1) - a.conferenceRecord.wins / Math.max(a.conferenceRecord.total, 1) || number(b.win_pct) - number(a.win_pct) || number(b.point_diff) - number(a.point_diff));
-    title.innerHTML = selected ? conferenceLabel(selected, {large: true}) : "All conferences";
+    title.innerHTML = selected ? conferenceLabel(selected, {large: true, accent: true}) : "All conferences";
     document.querySelector("#conference-summary").innerHTML = selected ? `<div class="metric"><strong>${teams.length}</strong><span>Teams</span></div><div class="metric"><strong>${teams.filter(row => row.conferenceRecord.wins > row.conferenceRecord.losses).length}</strong><span>Teams above .500 in conference</span></div><div class="metric"><strong>${teams.length ? pct(teams.reduce((sum, row) => sum + number(row.win_pct), 0) / teams.length) : "0.0%"}</strong><span>Average overall win %</span></div>` : `<p class="muted">Choose a conference to see its table and conference records.</p>`;
-    document.querySelector("#conference-table tbody").innerHTML = teams.map((row, index) => `<tr><td>${index + 1}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${row.conferenceRecord.wins}-${row.conferenceRecord.losses}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td></tr>`).join("");
+    document.querySelector("#conference-table tbody").innerHTML = teams.map((row, index) => `<tr class="conference-team-row" style="--team-accent:${teamAccent(row)}"><td>${index + 1}</td><td>${teamLogo(row, {accent: true})}</td><td>${conferenceLabel(row.conference, {accent: true})}</td><td>${row.conferenceRecord.wins}-${row.conferenceRecord.losses}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td></tr>`).join("");
   }
   conferences.addEventListener("input", paint); paint();
 }
@@ -411,9 +433,13 @@ function renderTeam(rows, games, rankings) {
   const conferenceGames = teamGames.filter(game => game.home_conference === team.conference && game.away_conference === team.conference);
   const conferenceWins = conferenceGames.filter(game => game.winner_id === itemId).length;
   const pointDiffPerGame = number(team.games_played) ? number(team.point_diff) / number(team.games_played) : 0;
+  const hero = document.querySelector(".team-profile-hero");
+  hero.style.setProperty("--team-accent", teamAccent(team));
+  hero.style.setProperty("--team-accent-alt", teamAccentAlt(team));
+  hero.style.setProperty("--team-accent-soft", accentSoft(teamAccent(team)));
   title.textContent = team.item;
-  subtitle.innerHTML = `${conferenceLabel(team.conference)} <span class="muted">· ${record(team)} · ${dateLabel(team.date)}</span>`;
-  document.querySelector("#team-hero-logo").innerHTML = teamLogo(team, {link: false});
+  subtitle.innerHTML = `${conferenceLabel(team.conference, {accent: true})} <span class="muted">· ${record(team)} · ${dateLabel(team.date)}</span>`;
+  document.querySelector("#team-hero-logo").innerHTML = teamLogo(team, {link: false, accent: true});
   document.querySelector("#team-summary").innerHTML = [[record(team), "Overall record"], [pct(team.win_pct), "Win percentage"], [`${pointDiffPerGame >= 0 ? "+" : ""}${pointDiffPerGame.toFixed(1)}`, "Point diff. / game"], [`AP ${ap ? `#${ap.rank}` : "NR"}`, `Coaches ${coaches ? `#${coaches.rank}` : "NR"}`]].map(([value, label]) => `<div class="metric"><strong>${safe(value)}</strong><span>${safe(label)}</span></div>`).join("");
   document.querySelector("#team-polls").innerHTML = [["AP Top 25", ap], ["Coaches Poll", coaches]].map(([label, entry]) => `<div class="team-poll-row"><span>${label}</span><strong>${entry ? `#${entry.rank}` : "NR"}</strong><small>${entry ? `${safe(entry.record)} · ${pollTrend(entry.trend)}` : "Not ranked"}</small></div>`).join("");
   const recent = teamGames.slice(-10).reverse(), recentWins = recent.filter(game => game.winner_id === itemId).length;
@@ -424,7 +450,7 @@ function renderTeam(rows, games, rankings) {
   const timeline = rows.filter(row => row.item_id === itemId).sort((a, b) => a.date.localeCompare(b.date));
   drawChart(document.querySelector("#team-win-chart"), timeline.map(row => number(row.win_pct)), "#2f80ed", pct);
   drawChart(document.querySelector("#team-diff-chart"), timeline.map(row => number(row.games_played) ? number(row.point_diff) / number(row.games_played) : 0), "#ef8354", value => `${value >= 0 ? "+" : ""}${value.toFixed(1)}`);
-  document.querySelector("#team-schedule tbody").innerHTML = teamGames.slice().reverse().map(game => { const opponentId = gameOpponent(game, itemId), opponent = gameTeamName(game, opponentId), result = resultFor(game, itemId), type = game.home_conference === team.conference && game.away_conference === team.conference ? "Conference" : "Non-conference"; return `<tr><td>${dateLabel(game.date)}</td><td><span class="badge ${resultClass(result)}">${result}</span></td><td>${teamLogo({item_id: opponentId, item: opponent})}</td><td>${gameScore(game, itemId)}-${opponentScore(game, itemId)}</td><td>${number(game.margin)}</td><td>${type}</td></tr>`; }).join("") || `<tr><td colspan="6" class="muted">No completed games logged.</td></tr>`;
+  document.querySelector("#team-schedule tbody").innerHTML = teamGames.slice().reverse().map(game => { const opponentId = gameOpponent(game, itemId), opponent = gameTeamName(game, opponentId), result = resultFor(game, itemId), type = game.home_conference === team.conference && game.away_conference === team.conference ? "Conference" : "Non-conference"; return `<tr><td>${dateLabel(game.date)}</td><td><span class="badge ${resultClass(result)}">${result}</span></td><td>${teamLogo({item_id: opponentId, item: opponent}, {accent: true})}</td><td>${gameScore(game, itemId)}-${opponentScore(game, itemId)}</td><td>${number(game.margin)}</td><td>${type}</td></tr>`; }).join("") || `<tr><td colspan="6" class="muted">No completed games logged.</td></tr>`;
 }
 
 function renderBracket(rows, games) {
@@ -516,7 +542,8 @@ function renderTrends(rows, games) {
 }
 
 initPreferences();
-loadData().then(({history, games, status, rankings}) => {
+loadData().then(({history, games, status, rankings, colors}) => {
+  teamColors = colors;
   rosterIds = new Set(history.map(row => row.item_id));
   renderQuality(status);
   const page = document.body.dataset.page;
