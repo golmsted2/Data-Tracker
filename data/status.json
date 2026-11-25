@@ -1,5 +1,5 @@
 {
-  "run_time": "2026-11-25T00:39:31.561504Z",
+  "run_time": "2026-11-25T00:56:18.686613Z",
   "first_run_date": "2026-11-01",
   "days_with_success": 24,
   "dates_requested": [
@@ -29,7 +29,7 @@
     "2026-11-24"
   ],
   "failed_dates": [],
-  "items": 77,
+  "items": 365,
   "new_today": [],
   "gone_today": [],
   "sources": [
