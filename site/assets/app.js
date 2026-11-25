@@ -444,8 +444,8 @@ function renderBracket(rows, games) {
   function buildRegion(region, regionIndex) {
     const firstRound = [];
     for (let index = 0; index < 8; index += 1) {
-      const seedA = regionIndex * 8 + index + 1, seedB = 65 - seedA;
-      firstRound.push(createGame(`${regionIndex}`, 1, index, {...profiles[seedA - 1], seed: seedA}, {...profiles[seedB - 1], seed: seedB}));
+      const overallSeedA = regionIndex * 8 + index + 1, overallSeedB = 65 - overallSeedA;
+      firstRound.push(createGame(`${regionIndex}`, 1, index, {...profiles[overallSeedA - 1], seed: index + 1, overallSeed: overallSeedA}, {...profiles[overallSeedB - 1], seed: 16 - index, overallSeed: overallSeedB}));
     }
     const rounds = [firstRound];
     for (let round = 2; round <= 4; round += 1) {
