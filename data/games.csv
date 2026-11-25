@@ -1358,3 +1358,23 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-24,401911253,true,2253,Grand Canyon,Mountain West Conference,91,139,Saint Louis,Atlantic 10 Conference,88,2253,139,3,179
 2026-11-24,401921712,true,36,Colorado State,Pac-12 Conference,81,2670,VCU,Atlantic 10 Conference,84,2670,36,3,165
 2026-11-24,401909763,true,24,Stanford,Atlantic Coast Conference,65,38,Colorado,Big 12 Conference,70,38,24,5,135
+2026-11-25,401929406,false,233,South Dakota,Summit League,86,2029,Arkansas-Pine Bluff,Southwestern Athletic Conference,50,233,2029,36,136
+2026-11-25,401926207,false,2717,Western Carolina,Southern Conference,100,2410,Montreat Cavaliers,Outside roster,42,2717,2410,58,142
+2026-11-25,401920428,true,269,Marquette,Big East Conference,54,258,Virginia,Atlantic Coast Conference,60,258,269,6,114
+2026-11-25,401927399,true,2057,Belmont,Missouri Valley Conference,68,179,St. Bonaventure,Atlantic 10 Conference,71,179,2057,3,139
+2026-11-25,401928845,true,195,Ohio,Mid-American Conference,74,242,Rice,American Athletic Conference,82,242,195,8,156
+2026-11-25,401921702,true,2429,Charlotte,American Athletic Conference,85,2460,Northern Iowa,Missouri Valley Conference,72,2429,2460,13,157
+2026-11-25,401911201,false,2230,Fordham,Atlantic 10 Conference,104,2384,Mercy Mavericks,Outside roster,56,2230,2384,48,160
+2026-11-25,401920196,false,2603,Saint Joseph's,Atlantic 10 Conference,104,3183,Penn State Abington Nittany Lions,Outside roster,48,2603,3183,56,152
+2026-11-25,401919762,false,161,Fairleigh Dickinson,Northeast Conference,123,130189,Vermont State Randolph Knights,Outside roster,48,161,130189,75,171
+2026-11-25,401920547,true,2174,Detroit Mercy,Horizon League,83,2458,Northern Colorado,Big Sky Conference,93,2458,2174,10,176
+2026-11-25,401928831,true,2750,Wright State,Horizon League,70,43,Yale,Ivy League,72,43,2750,2,142
+2026-11-25,401926835,false,2619,Stony Brook,Coastal Athletic Association,69,2815,Lindenwood,Ohio Valley Conference,63,2619,2815,6,132
+2026-11-25,401924268,true,299,Long Beach State,Big West Conference,65,253,Southern Utah,Big Sky Conference,64,299,253,1,129
+2026-11-25,401920067,false,227,Rhode Island,Atlantic 10 Conference,98,2022,American International Yellow Jackets,Outside roster,89,227,2022,9,187
+2026-11-25,401911029,false,193,Miami (OH),Mid-American Conference,85,2198,Eastern Kentucky,United Athletic Conference,72,193,2198,13,157
+2026-11-25,401919007,true,2166,Davidson,Atlantic 10 Conference,74,2655,Tulane,American Athletic Conference,47,2166,2655,27,121
+2026-11-25,401928850,false,2711,Western Michigan,Mid-American Conference,104,126822,Grace Christian Tigers,Outside roster,52,2711,126822,52,156
+2026-11-25,401924705,false,171,Columbia,Ivy League,65,2612,Saint Peter's,Metro Conference,44,171,2612,21,109
+2026-11-25,401922223,false,2454,North Florida,Atlantic Sun Conference,100,2683,Warner Royals,Outside roster,68,2454,2683,32,168
+2026-11-25,401911311,false,225,Brown,Ivy League,98,353,Johnson & Wales Griffins,Outside roster,52,225,353,46,150
