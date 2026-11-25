@@ -1,0 +1,15 @@
+{
+  "run_time": "2026-11-25T00:31:14.680250Z",
+  "first_run_date": "2026-11-24",
+  "days_with_success": 1,
+  "items": 77,
+  "new_today": [],
+  "gone_today": [],
+  "sources": [
+    {
+      "name": "ESPN Men's College Basketball Scoreboard",
+      "ok": true,
+      "count": 87
+    }
+  ]
+}

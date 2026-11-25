@@ -1,0 +1,78 @@
+date,item_id,item,source,conference,games_played,wins,losses,win_pct,points_for,points_against,point_diff,avg_points_for,avg_points_against,streak
+2026-11-24,2,Auburn,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,8,Arkansas,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,9,Arizona State,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,12,Arizona,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,21,San Diego State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,24,Stanford,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,25,California,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,26,UCLA,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,30,USC,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,36,Colorado State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,38,Colorado,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,52,Florida State,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,57,Florida,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,59,Georgia Tech,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,61,Georgia,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,66,Iowa State,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,68,Boise State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,77,Northwestern,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,84,Indiana,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,87,Notre Dame,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,96,Kentucky,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,97,Louisville,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,99,LSU,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,103,Boston College,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,120,Maryland,ESPN Men's College Basketball Scoreboard,Big Ten,1,0,1,0.0,64,72,-8,64.0,72.0,L1
+2026-11-24,127,Michigan State,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,130,Michigan,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,135,Minnesota,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,142,Missouri,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,145,Ole Miss,ESPN Men's College Basketball Scoreboard,SEC,1,1,0,1.0,73,63,10,73.0,63.0,W1
+2026-11-24,150,Duke,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,152,NC State,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,153,North Carolina,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,154,Wake Forest,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,158,Nebraska,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,164,Rutgers,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,183,Syracuse,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,194,Ohio State,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,197,Oklahoma State,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,201,Oklahoma,ESPN Men's College Basketball Scoreboard,SEC,1,0,1,0.0,68,79,-11,68.0,79.0,L1
+2026-11-24,204,Oregon State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,213,Penn State,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,221,Pittsburgh,ESPN Men's College Basketball Scoreboard,ACC,1,1,0,1.0,79,68,11,79.0,68.0,W1
+2026-11-24,228,Clemson,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,238,Vanderbilt,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,239,Baylor,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,245,Texas A&M,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,248,Houston,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,251,Texas,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,252,BYU,ESPN Men's College Basketball Scoreboard,Big 12,1,0,1,0.0,63,73,-10,63.0,73.0,L1
+2026-11-24,254,Utah,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,256,SMU,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,258,Virginia,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,259,Virginia Tech,ESPN Men's College Basketball Scoreboard,ACC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,264,Washington,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,265,Washington State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,275,Wisconsin,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,277,West Virginia,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,278,Fresno State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,326,Texas State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,328,Utah State,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,333,Alabama,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,344,Mississippi State,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,356,Illinois,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2116,UCF,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2132,Cincinnati,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2250,Gonzaga,ESPN Men's College Basketball Scoreboard,Pac-12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2294,Iowa,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2305,Kansas,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2306,Kansas State,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2390,Miami,ESPN Men's College Basketball Scoreboard,ACC,1,0,1,0.0,71,84,-13,71.0,84.0,L1
+2026-11-24,2483,Oregon,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2509,Purdue,ESPN Men's College Basketball Scoreboard,Big Ten,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2579,South Carolina,ESPN Men's College Basketball Scoreboard,SEC,0,0,0,0,0,0,0,0,0,-
+2026-11-24,2628,TCU,ESPN Men's College Basketball Scoreboard,Big 12,1,1,0,1.0,84,71,13,84.0,71.0,W1
+2026-11-24,2633,Tennessee,ESPN Men's College Basketball Scoreboard,SEC,1,1,0,1.0,72,64,8,72.0,64.0,W1
+2026-11-24,2641,Texas Tech,ESPN Men's College Basketball Scoreboard,Big 12,0,0,0,0,0,0,0,0,0,-
