@@ -50,6 +50,7 @@ HISTORY_FIELDS = [
 GAME_FIELDS = [
     "date",
     "event_id",
+    "neutral_site",
     "home_id",
     "home_team",
     "home_conference",
@@ -141,6 +142,7 @@ def completed_games(payload: dict, teams: dict[str, dict[str, str]]) -> list[dic
                 continue
         competition = (event.get("competitions") or [{}])[0]
         competitors = competition.get("competitors") or []
+        neutral_site = competition.get("neutralSite") is True or str(competition.get("neutralSite", "")).lower() == "true"
         if len(competitors) < 2:
             continue
         parsed = []
@@ -172,6 +174,7 @@ def completed_games(payload: dict, teams: dict[str, dict[str, str]]) -> list[dic
             continue
         games.append({
             "event_id": str(event.get("id", "")),
+            "neutral_site": neutral_site,
             "teams": tracked,
             "competitors": parsed,
         })
@@ -280,6 +283,7 @@ def build_games(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dic
             games.append({
                 "date": game_date,
                 "event_id": game["event_id"],
+                "neutral_site": str(game.get("neutral_site", False)).lower(),
                 "home_id": home["item_id"],
                 "home_team": team_name(home),
                 "home_conference": conference(home),

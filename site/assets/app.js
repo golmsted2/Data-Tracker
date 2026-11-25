@@ -191,19 +191,52 @@ function renderSchedule(rows, games) {
   select.addEventListener("input", paint); paint();
 }
 
-function renderBubble(rows) {
-  const latest = latestRows(rows).map(row => {
-    const win = number(row.win_pct), avgDiff = number(row.games_played) ? number(row.point_diff) / number(row.games_played) : 0;
-    const score = Math.round(win * 70 + Math.max(-10, Math.min(20, avgDiff)) * 1.5 + Math.min(20, number(row.games_played)) * 0.5);
-    const tier = win >= 0.75 && avgDiff >= 5 ? "Projected field" : win >= 0.58 && avgDiff >= 0 ? "Bubble watch" : "Needs work";
-    return {...row, score, tier, avgDiff};
-  }).sort((a, b) => b.score - a.score);
-  const filter = document.querySelector("#bubble-filter"), conference = document.querySelector("#bubble-conference"), conferences = [...new Set(latest.map(row => row.conference))].sort();
+function bubbleLocation(game, itemId) {
+  if (String(game.neutral_site).toLowerCase() === "true") return "neutral";
+  return game.home_id === itemId ? "home" : "away";
+}
+
+function bubbleQuadrant(rank, location) {
+  if (!rank) return "Q4";
+  const limits = {home: [30, 75, 160], neutral: [50, 100, 200], away: [75, 135, 240]}[location] || [75, 135, 240];
+  if (rank <= limits[0]) return "Q1";
+  if (rank <= limits[1]) return "Q2";
+  if (rank <= limits[2]) return "Q3";
+  return "Q4";
+}
+
+function renderBubble(rows, games) {
+  const snapshot = latestRows(rows), ranked = rankRows(snapshot), teams = teamMap(snapshot), rankMap = Object.fromEntries(ranked.map(row => [row.item_id, row.rank]));
+  const conferenceValues = {};
+  snapshot.forEach(row => { conferenceValues[row.conference] ??= []; conferenceValues[row.conference].push(number(row.win_pct)); });
+  const conferenceStrength = Object.fromEntries(Object.entries(conferenceValues).map(([conference, values]) => [conference, values.reduce((sum, value) => sum + value, 0) / values.length]));
+  const profiles = snapshot.map(row => {
+    const teamGames = selectedTeamIds(games, row.item_id).sort((a, b) => a.date.localeCompare(b.date));
+    const quadrants = {Q1: {wins: 0, losses: 0}, Q2: {wins: 0, losses: 0}, Q3: {wins: 0, losses: 0}, Q4: {wins: 0, losses: 0}};
+    let opponentStrength = 0, countedOpponents = 0;
+    teamGames.forEach(game => {
+      const opponent = teams[gameOpponent(game, row.item_id)];
+      if (!opponent) return;
+      opponentStrength += number(opponent.win_pct); countedOpponents += 1;
+      const quadrant = bubbleQuadrant(rankMap[opponent.item_id], bubbleLocation(game, row.item_id));
+      if (game.winner_id === row.item_id) quadrants[quadrant].wins += 1; else quadrants[quadrant].losses += 1;
+    });
+    const recent = teamGames.slice(-10), recentWins = recent.filter(game => game.winner_id === row.item_id).length, recentLosses = recent.length - recentWins, recentPct = recent.length ? recentWins / recent.length : 0;
+    const avgDiff = number(row.games_played) ? number(row.point_diff) / number(row.games_played) : 0;
+    const sos = countedOpponents ? opponentStrength / countedOpponents : 0;
+    const qualityWins = quadrants.Q1.wins + quadrants.Q2.wins;
+    const badLosses = quadrants.Q3.losses + quadrants.Q4.losses;
+    const marginScore = (Math.max(-10, Math.min(20, avgDiff)) + 10) / 30 * 10;
+    const score = Math.max(0, Math.min(100, Math.round(number(row.win_pct) * 45 + sos * 20 + number(conferenceStrength[row.conference]) * 5 + recentPct * 10 + marginScore + quadrants.Q1.wins * 2 + quadrants.Q2.wins * 0.75 - quadrants.Q1.losses * 1.5 - badLosses * 2)));
+    const tier = score >= 70 && badLosses === 0 ? "Projected field" : score >= 55 && badLosses <= 2 ? "Bubble watch" : "Needs work";
+    return {...row, score, tier, avgDiff, sos, recentPct, recentWins, recentLosses, qualityWins, badLosses, conferenceStrength: conferenceStrength[row.conference], quadrants};
+  }).sort((a, b) => b.score - a.score || number(b.win_pct) - number(a.win_pct) || number(b.wins) - number(a.wins));
+  const filter = document.querySelector("#bubble-filter"), conference = document.querySelector("#bubble-conference"), conferences = [...new Set(profiles.map(row => row.conference))].sort();
   conferences.forEach(value => conference.insertAdjacentHTML("beforeend", `<option value="${safe(value)}">${safe(value)}</option>`));
   function paint() {
-    const filtered = latest.filter(row => (!filter.value || row.tier === filter.value) && (!conference.value || row.conference === conference.value));
+    const filtered = profiles.filter(row => (!filter.value || row.tier === filter.value) && (!conference.value || row.conference === conference.value));
     document.querySelector("#bubble-count").textContent = `${filtered.length} teams shown`;
-    document.querySelector("#bubble-table tbody").innerHTML = filtered.map((row, index) => `<tr><td>${index + 1}</td><td><strong>${safe(row.item)}</strong></td><td>${safe(row.conference)}</td><td>${safe(row.tier)}</td><td>${row.score}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${row.avgDiff >= 0 ? "+" : ""}${row.avgDiff.toFixed(1)}</td></tr>`).join("");
+    document.querySelector("#bubble-table tbody").innerHTML = filtered.map((row, index) => `<tr><td>${index + 1}</td><td><strong>${safe(row.item)}</strong></td><td>${safe(row.conference)}</td><td>${safe(row.tier)}</td><td>${row.score}</td><td>${pct(row.sos)}</td><td>${pct(row.conferenceStrength)}</td><td>${row.quadrants.Q1.wins}-${row.quadrants.Q1.losses}</td><td>${row.quadrants.Q2.wins}-${row.quadrants.Q2.losses}</td><td>${row.badLosses}</td><td>${row.recentWins}-${row.recentLosses}</td></tr>`).join("");
   }
   [filter, conference].forEach(element => element.addEventListener("input", paint)); paint();
 }
@@ -239,7 +272,7 @@ loadData().then(({history, games, status}) => {
   if (page === "conferences") renderConferences(history, games);
   if (page === "compare") renderCompare(history, games);
   if (page === "schedule") renderSchedule(history, games);
-  if (page === "bubble") renderBubble(history);
+  if (page === "bubble") renderBubble(history, games);
   if (page === "trends") renderTrends(history, games);
 }).catch(error => {
   document.querySelector("main").insertAdjacentHTML("afterbegin", `<section class="panel"><strong>Data unavailable.</strong><p class="muted">${safe(error.message)}</p></section>`);

@@ -33,7 +33,7 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 | `src/pipeline.py` | Fetches raw games and rebuilds history/status files |
 | `data/raw/<date>/` | Compressed source response for each game date |
 | `data/history.csv` | One season-to-date row per configured team per date |
-| `data/games.csv` | One normalized row per completed matchup |
+| `data/games.csv` | One normalized row per completed matchup, including neutral-site flags |
 | `data/status.json` | Latest run and source status |
 | `site/index.html` | Today dashboard |
 | `site/browse.html` | Searchable, sortable team table |
@@ -68,7 +68,7 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 
 The configured roster is the fixed item universe. The `item_id` key keeps the same team aligned across dates even if the displayed team name changes.
 
-The site also provides national rankings, daily movers, conference filters, upset alerts, daily recaps, recent-form charts, and data-quality status. The bubble board is deliberately labeled exploratory because it uses a transparent project heuristic rather than official selection-committee data.
+The site also provides national rankings, daily movers, conference filters, upset alerts, daily recaps, recent-form charts, and data-quality status. The bubble board uses a transparent NET-style proxy with location-aware quadrants, SOS, quality wins, bad losses, conference strength, and recent form; it remains exploratory because official NET data is not part of the ESPN scoreboard feed.
 
 ## Mover rule
 

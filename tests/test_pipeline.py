@@ -16,6 +16,7 @@ def payload_for(date_value="2026-11-23", score_a=82, score_b=74):
             "date": f"{date_value}T23:00Z",
             "status": {"type": {"completed": True, "name": "STATUS_FINAL"}},
             "competitions": [{
+                "neutralSite": False,
                 "competitors": [
                     {"homeAway": "home", "score": str(score_a), "team": {"id": "1", "displayName": "Alpha"}},
                     {"homeAway": "away", "score": str(score_b), "team": {"id": "2", "displayName": "Beta"}},
@@ -77,6 +78,7 @@ class PipelineTests(unittest.TestCase):
         games = pipeline.build_games(teams, [("2026-11-23", payload_for())])
         self.assertEqual(len(games), 1)
         self.assertEqual(games[0]["winner_id"], "1")
+        self.assertEqual(games[0]["neutral_site"], "false")
         self.assertEqual(games[0]["margin"], 8)
         self.assertEqual(games[0]["total_points"], 156)
 
