@@ -309,13 +309,26 @@ function renderToday(rows, games, live, status, rankings) {
   const scoreboardGames = live?.date === liveDate ? (live.games || []) : completedScoreboardGames;
   const scoreboard = document.querySelector("#scoreboard");
   const scoreboardCount = document.querySelector("#scoreboard-count");
+  const scoreboardToggle = document.querySelector("#scoreboard-toggle");
   if (scoreboard && scoreboardCount) {
+    const collapsedScoreboardCount = 8;
+    let scoreboardExpanded = false;
     scoreboardCount.textContent = `${scoreboardGames.length} ${scoreboardGames.length === 1 ? "game" : "games"}`;
-    scoreboard.innerHTML = scoreboardGames.length ? scoreboardGames.map(game => {
-      const homeWon = game.winner_id === game.home_id, awayWon = game.winner_id === game.away_id;
-      const statusLabel = game.status || "Final", statusDetail = statusLabel === "Scheduled" ? (formatCentralDateTime(game.start_time) || game.status_detail || "Upcoming") : game.status_detail || "", homeScore = game.home_score === "" || game.home_score == null ? "—" : game.home_score, awayScore = game.away_score === "" || game.away_score == null ? "—" : game.away_score;
-      return `<article class="score-card"><div class="score-card-top"><span class="badge${statusLabel === "In progress" ? " live" : ""}">${safe(statusLabel)}</span><span>${safe(statusDetail || (String(game.neutral_site).toLowerCase() === "true" ? "Neutral" : ""))}</span></div><div class="score-line ${homeWon ? "score-winner" : ""}">${teamLogo({item_id: game.home_id, item: game.home_team}, {showFavorite: false})}<strong>${safe(homeScore)}</strong></div><div class="score-line ${awayWon ? "score-winner" : ""}">${teamLogo({item_id: game.away_id, item: game.away_team}, {showFavorite: false})}<strong>${safe(awayScore)}</strong></div></article>`;
-    }).join("") : `<p class="muted">No games scheduled or completed for the latest scoreboard date.</p>`;
+    function paintScoreboard() {
+      const visibleGames = scoreboardExpanded ? scoreboardGames : scoreboardGames.slice(0, collapsedScoreboardCount);
+      scoreboard.innerHTML = scoreboardGames.length ? visibleGames.map(game => {
+        const homeWon = game.winner_id === game.home_id, awayWon = game.winner_id === game.away_id;
+        const statusLabel = game.status || "Final", statusDetail = statusLabel === "Scheduled" ? (formatCentralDateTime(game.start_time) || game.status_detail || "Upcoming") : game.status_detail || "", homeScore = game.home_score === "" || game.home_score == null ? "—" : game.home_score, awayScore = game.away_score === "" || game.away_score == null ? "—" : game.away_score;
+        return `<article class="score-card"><div class="score-card-top"><span class="badge${statusLabel === "In progress" ? " live" : ""}">${safe(statusLabel)}</span><span>${safe(statusDetail || (String(game.neutral_site).toLowerCase() === "true" ? "Neutral" : ""))}</span></div><div class="score-line ${homeWon ? "score-winner" : ""}">${teamLogo({item_id: game.home_id, item: game.home_team}, {showFavorite: false})}<strong>${safe(homeScore)}</strong></div><div class="score-line ${awayWon ? "score-winner" : ""}">${teamLogo({item_id: game.away_id, item: game.away_team}, {showFavorite: false})}<strong>${safe(awayScore)}</strong></div></article>`;
+      }).join("") : `<p class="muted">No games scheduled or completed for the latest scoreboard date.</p>`;
+      if (!scoreboardToggle) return;
+      const hasMore = scoreboardGames.length > collapsedScoreboardCount;
+      scoreboardToggle.hidden = !hasMore;
+      scoreboardToggle.textContent = scoreboardExpanded ? "Show less" : `View all ${scoreboardGames.length}`;
+      scoreboardToggle.setAttribute("aria-expanded", String(scoreboardExpanded));
+    }
+    if (scoreboardToggle) scoreboardToggle.onclick = () => { scoreboardExpanded = !scoreboardExpanded; paintScoreboard(); };
+    paintScoreboard();
   }
   const recap = [
     ["Biggest win", [...todayGames].sort((a, b) => number(b.margin) - number(a.margin))[0], game => game ? `${safe(game.winner_id === game.home_id ? game.home_team : game.away_team)} won by ${game.margin}` : "No games logged"],

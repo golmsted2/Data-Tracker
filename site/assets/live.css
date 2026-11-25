@@ -1,12 +1,42 @@
 .scoreboard-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
   overflow: visible;
 }
 
 .score-card {
   min-width: 0;
+  padding: 9px;
+}
+
+.scoreboard-heading-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.scoreboard-toggle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  white-space: nowrap;
+}
+
+.score-card-top {
+  margin-bottom: 2px;
+}
+
+.score-line {
+  padding: 3px 0;
+}
+
+.score-line .team-cell {
+  font-size: .76rem;
 }
 
 .score-card-top > span:last-child {
@@ -30,4 +60,5 @@
 
 @media (max-width:760px) {
   .scoreboard-strip { grid-template-columns: 1fr; }
+  .scoreboard-heading-actions { gap: 7px; }
 }
