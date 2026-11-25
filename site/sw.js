@@ -1,4 +1,4 @@
-const CACHE = "power-hoops-v7";
+const CACHE = "power-hoops-v8";
 const SHELL = ["index.html", "browse.html", "conferences.html", "compare.html", "schedule.html", "trends.html", "bubble.html", "assets/style.css", "assets/app.js", "manifest.webmanifest"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
