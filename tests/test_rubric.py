@@ -52,3 +52,32 @@ def test_failed_source_still_writes_status_and_returns_success(tmp_path, monkeyp
     status = json.loads((tmp_path / "data" / "status.json").read_text(encoding="utf-8"))
     assert status["failed_dates"] == ["2026-11-24"]
     assert status["sources"][0]["ok"] is False
+
+
+def test_live_poll_writes_completed_game_and_skips_duplicate_poll(tmp_path, monkeypatch):
+    teams_path = tmp_path / "teams.csv"
+    teams_path.write_text("item_id,item,conference\n" + "".join(f"{i},Team {i},Test\n" for i in range(1, 11)), encoding="utf-8")
+    monkeypatch.setattr(pipeline, "ROOT", tmp_path)
+    monkeypatch.setattr(pipeline, "TEAMS_PATH", teams_path)
+    monkeypatch.setattr(pipeline, "RAW_DIR", tmp_path / "data" / "raw")
+    monkeypatch.setattr(pipeline, "HISTORY_PATH", tmp_path / "data" / "history.csv")
+    monkeypatch.setattr(pipeline, "GAMES_PATH", tmp_path / "data" / "games.csv")
+    monkeypatch.setattr(pipeline, "STATUS_PATH", tmp_path / "data" / "status.json")
+    monkeypatch.setattr(pipeline, "RANKINGS_PATH", tmp_path / "data" / "rankings.json")
+    payload = {
+        "events": [{
+            "id": "live-game-1",
+            "status": {"type": {"completed": True, "name": "STATUS_FINAL"}},
+            "competitions": [{
+                "neutralSite": False,
+                "competitors": [
+                    {"homeAway": "home", "score": "82", "team": {"id": "1", "displayName": "Team 1"}},
+                    {"homeAway": "away", "score": "74", "team": {"id": "2", "displayName": "Team 2"}},
+                ],
+            }],
+        }],
+    }
+    monkeypatch.setattr(pipeline, "fetch_scoreboard", lambda game_date, opener: payload)
+    assert pipeline.run_live("2026-11-25") == 0
+    assert len(pipeline.read_csv_rows(tmp_path / "data" / "games.csv")) == 1
+    assert pipeline.run_live("2026-11-25") == 0

@@ -182,6 +182,17 @@ def read_raw_files() -> list[tuple[str, dict]]:
     return files
 
 
+def read_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
+def canonical_rows(rows: list[dict], fields: list[str]) -> list[dict[str, str]]:
+    return [{field: str(row.get(field, "")) for field in fields} for row in rows]
+
+
 def _score(value) -> int | None:
     try:
         return int(float(value))
@@ -526,6 +537,51 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
     return 0
 
 
+def run_live(game_date: str, opener=urlopen) -> int:
+    """Poll the current scoreboard and write only when a completed game changes data."""
+    teams = load_teams()
+    try:
+        payload = fetch_scoreboard(game_date, opener=opener)
+    except (HTTPError, URLError, TimeoutError, OSError, RuntimeError, ValueError) as exc:
+        print(f"Live scoreboard poll failed: {exc}", file=sys.stderr)
+        return 0
+    completed = completed_games(payload, teams)
+    existing_raw = read_raw_files()
+    if not completed and not any(existing_date == game_date for existing_date, _ in existing_raw):
+        print("No completed tracked games yet; skipping live update.")
+        return 0
+    raw_files = [(existing_date, existing_payload) for existing_date, existing_payload in existing_raw if existing_date != game_date]
+    raw_files.append((game_date, payload))
+    raw_files.sort(key=lambda pair: pair[0])
+    history_rows = build_history(teams, raw_files)
+    game_rows = build_games(teams, raw_files)
+    if (canonical_rows(history_rows, HISTORY_FIELDS) == canonical_rows(read_csv_rows(HISTORY_PATH), HISTORY_FIELDS)
+            and canonical_rows(game_rows, GAME_FIELDS) == canonical_rows(read_csv_rows(GAMES_PATH), GAME_FIELDS)):
+        print("No completed-game data changes detected; skipping live update.")
+        return 0
+    write_raw(game_date, payload)
+    write_history(history_rows)
+    write_games(game_rows)
+    rankings_data = None
+    if RANKINGS_PATH.exists():
+        try:
+            rankings_data = json.loads(RANKINGS_PATH.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            rankings_data = None
+    write_status(
+        teams,
+        raw_files,
+        latest_payload=payload,
+        ok=True,
+        requested_dates=[game_date],
+        history_rows=history_rows,
+        game_rows=game_rows,
+        rankings_data=rankings_data,
+    )
+    print(f"Live update wrote {len(completed)} completed tracked games for {game_date}.")
+    return 0
+
+
 def date_range(start_date: str, end_date: str):
     start = date.fromisoformat(start_date)
     end = date.fromisoformat(end_date)
@@ -547,10 +603,21 @@ def previous_utc_date() -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--date", default=previous_utc_date(), help="Scoreboard date in YYYY-MM-DD format")
+    parser.add_argument("--date", help="Scoreboard date in YYYY-MM-DD format")
     parser.add_argument("--start-date", help="First date in a backfill range")
     parser.add_argument("--end-date", help="Last date in a backfill range")
+    parser.add_argument("--live", action="store_true", help="Poll the current date and write only completed-game changes")
     args = parser.parse_args()
+    if args.live:
+        if args.start_date or args.end_date:
+            parser.error("--live cannot be combined with a date range")
+        target_date = args.date or utc_now().date().isoformat()
+        try:
+            date.fromisoformat(target_date)
+        except ValueError:
+            parser.error("--date must use YYYY-MM-DD")
+        return run_live(target_date)
+    target_date = args.date or previous_utc_date()
     try:
         if bool(args.start_date) != bool(args.end_date):
             parser.error("--start-date and --end-date must be provided together")
@@ -558,12 +625,12 @@ def main() -> int:
             date.fromisoformat(args.start_date)
             date.fromisoformat(args.end_date)
         else:
-            date.fromisoformat(args.date)
+            date.fromisoformat(target_date)
     except ValueError:
         parser.error("--date must use YYYY-MM-DD")
     if args.start_date and args.end_date:
         return run_range(args.start_date, args.end_date)
-    return run(args.date)
+    return run(target_date)
 
 
 if __name__ == "__main__":

@@ -58,6 +58,7 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 | `src/__init__.py` | Python package marker |
 | `tests/__init__.py` | Test package marker |
 | `.github/workflows/daily.yml` | Scheduled pipeline, pytest run, daily Issue, and data commit |
+| `.github/workflows/live.yml` | Fifteen-minute current-scoreboard polling during game windows |
 | `.github/workflows/backfill.yml` | Manual season-to-date backfill |
 | `.github/workflows/tests.yml` | pytest on every push and pull request |
 | `.github/workflows/pages.yml` | pytest and GitHub Pages deployment |
@@ -115,7 +116,7 @@ The backfill command replaces each requested date's raw response and rebuilds th
 
 ## GitHub Actions and Pages
 
-The daily workflow runs at 09:00 UTC, after the prior U.S. game date has normally completed, and queries the previous UTC date. It commits new raw/history/status files and synchronizes a dated GitHub Issue. Source failures are recorded in `data/status.json`; the pipeline still rebuilds, tests, creates the Issue, and commits the run. The Pages workflow runs pytest, copies the current data into the static site, and deploys `site/` to GitHub Pages.
+The daily workflow runs at 09:00 UTC, after the prior U.S. game date has normally completed, and queries the previous UTC date. The live workflow polls the current UTC date every fifteen minutes from 16:00 through 06:45 UTC, covering the normal college basketball game window. It writes and commits only when a completed tracked game changes the normalized history or game log. Each live commit triggers the Pages deployment. The daily workflow commits new raw/history/status files and synchronizes a dated GitHub Issue. Source failures are recorded in `data/status.json`; the pipeline still rebuilds, tests, creates the Issue, and commits the run. The Pages workflow runs pytest, copies the current data into the static site, and deploys `site/` to GitHub Pages.
 
 For the GitHub Actions schedule to commit successfully, the repository workflow setting must allow `GITHUB_TOKEN` to write contents. Enable Pages with **GitHub Actions** as the deployment source in the repository settings.
 
