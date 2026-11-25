@@ -1,4 +1,4 @@
-"""Fetch and rebuild the Power Conference college basketball tracker."""
+"""Fetch and rebuild the NCAA Division I college basketball tracker."""
 
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ def load_teams(path: Path | None = None) -> dict[str, dict[str, str]]:
 
 def fetch_scoreboard(game_date: str, opener=urlopen) -> dict:
     url = f"{SOURCE_URL}?dates={game_date.replace('-', '')}&groups=50&limit=400"
-    request = Request(url, headers={"User-Agent": "power-conference-tracker/1.0"})
+    request = Request(url, headers={"User-Agent": "ncaa-division-i-tracker/1.0"})
     with opener(request, timeout=45) as response:
         if getattr(response, "status", 200) != 200:
             raise RuntimeError(f"Scoreboard returned HTTP {response.status}")
