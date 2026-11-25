@@ -1,6 +1,6 @@
 {
   "date": "2026-11-25",
-  "fetched_at": "2026-11-25T05:43:17.041625Z",
+  "fetched_at": "2026-11-25T16:02:29.948174Z",
   "games": [
     {
       "date": "2026-11-25",
@@ -9,15 +9,15 @@
       "home_id": "2057",
       "home_team": "Belmont",
       "home_conference": "Missouri Valley Conference",
-      "home_score": 0,
+      "home_score": 39,
       "away_id": "179",
       "away_team": "St. Bonaventure",
       "away_conference": "Atlantic 10 Conference",
-      "away_score": 0,
+      "away_score": 26,
       "winner_id": "",
       "completed": false,
-      "status": "Scheduled",
-      "status_detail": "11/25 - 10:00 AM EST",
+      "status": "In progress",
+      "status_detail": "Halftime",
       "start_time": "2026-11-25T15:00Z"
     },
     {
@@ -31,11 +31,11 @@
       "away_id": "242",
       "away_team": "Rice",
       "away_conference": "American Athletic Conference",
-      "away_score": 0,
+      "away_score": 2,
       "winner_id": "",
       "completed": false,
-      "status": "Scheduled",
-      "status_detail": "11/25 - 11:00 AM EST",
+      "status": "In progress",
+      "status_detail": "19:02 - 1st",
       "start_time": "2026-11-25T16:00Z"
     },
     {
@@ -52,8 +52,8 @@
       "away_score": 0,
       "winner_id": "",
       "completed": false,
-      "status": "Scheduled",
-      "status_detail": "11/25 - 11:00 AM EST",
+      "status": "In progress",
+      "status_detail": "19:02 - 1st",
       "start_time": "2026-11-25T16:00Z"
     },
     {
@@ -940,6 +940,42 @@
     },
     {
       "date": "2026-11-25",
+      "event_id": "401921671",
+      "neutral_site": "true",
+      "home_id": "38",
+      "home_team": "Colorado",
+      "home_conference": "Big 12 Conference",
+      "home_score": 0,
+      "away_id": "2253",
+      "away_team": "Grand Canyon",
+      "away_conference": "Mountain West Conference",
+      "away_score": 0,
+      "winner_id": "",
+      "completed": false,
+      "status": "Scheduled",
+      "status_detail": "11/25 - 9:30 PM EST",
+      "start_time": "2026-11-26T02:30Z"
+    },
+    {
+      "date": "2026-11-25",
+      "event_id": "401921713",
+      "neutral_site": "true",
+      "home_id": "2670",
+      "home_team": "VCU",
+      "home_conference": "Atlantic 10 Conference",
+      "home_score": 0,
+      "away_id": "264",
+      "away_team": "Washington",
+      "away_conference": "Big Ten Conference",
+      "away_score": 0,
+      "winner_id": "",
+      "completed": false,
+      "status": "Scheduled",
+      "status_detail": "11/25 - 10:00 PM EST",
+      "start_time": "2026-11-26T03:00Z"
+    },
+    {
+      "date": "2026-11-25",
       "event_id": "401917544",
       "neutral_site": "true",
       "home_id": "55",
@@ -973,6 +1009,42 @@
       "status": "Scheduled",
       "status_detail": "11/25 - 11:59 PM EST",
       "start_time": "2026-11-26T04:59Z"
+    },
+    {
+      "date": "2026-11-25",
+      "event_id": "401921672",
+      "neutral_site": "true",
+      "home_id": "139",
+      "home_team": "Saint Louis",
+      "home_conference": "Atlantic 10 Conference",
+      "home_score": 0,
+      "away_id": "24",
+      "away_team": "Stanford",
+      "away_conference": "Atlantic Coast Conference",
+      "away_score": 0,
+      "winner_id": "",
+      "completed": false,
+      "status": "Scheduled",
+      "status_detail": "11/25 - 11:59 PM EST",
+      "start_time": "2026-11-26T04:59Z"
+    },
+    {
+      "date": "2026-11-25",
+      "event_id": "401921714",
+      "neutral_site": "true",
+      "home_id": "36",
+      "home_team": "Colorado State",
+      "home_conference": "Pac-12 Conference",
+      "home_score": 0,
+      "away_id": "228",
+      "away_team": "Clemson",
+      "away_conference": "Atlantic Coast Conference",
+      "away_score": 0,
+      "winner_id": "",
+      "completed": false,
+      "status": "Scheduled",
+      "status_detail": "11/26 - 12:30 AM EST",
+      "start_time": "2026-11-26T05:30Z"
     }
   ]
 }
