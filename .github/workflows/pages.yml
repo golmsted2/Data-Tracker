@@ -8,6 +8,7 @@ on:
     workflows:
       - "Daily basketball pipeline"
       - "Backfill season to date"
+      - "Live basketball updates"
     types: [completed]
 
 permissions:
