@@ -162,9 +162,16 @@ function renderConferences(rows, games) {
 }
 
 function renderCompare(rows, games) {
-  const latest = rankRows(latestRows(rows)), map = teamMap(latest), selects = [document.querySelector("#compare-team-a"), document.querySelector("#compare-team-b")];
-  selects.forEach(select => select.innerHTML = latest.map(row => `<option value="${row.item_id}">${safe(row.item)}</option>`).join(""));
-  selects[0].value = latest[0]?.item_id || ""; selects[1].value = latest[1]?.item_id || latest[0]?.item_id || "";
+  const latest = rankRows(latestRows(rows)), map = teamMap(latest), search = document.querySelector("#compare-search"), selects = [document.querySelector("#compare-team-a"), document.querySelector("#compare-team-b")];
+  function populateOptions() {
+    const query = search.value.trim().toLowerCase(), choices = latest.filter(row => row.item.toLowerCase().includes(query));
+    selects.forEach((select, index) => {
+      const current = select.value;
+      select.innerHTML = choices.map(row => `<option value="${row.item_id}">${safe(row.item)}</option>`).join("");
+      select.value = choices.some(row => row.item_id === current) ? current : choices[index]?.item_id || choices[0]?.item_id || "";
+    });
+    paint();
+  }
   function form(itemId) {
     return selectedTeamIds(games, itemId).sort((a, b) => a.date.localeCompare(b.date)).slice(-5).map(game => `<span class="form-dot ${resultClass(resultFor(game, itemId))}" title="${dateLabel(game.date)}">${resultFor(game, itemId)}</span>`).join("") || `<span class="muted">No games</span>`;
   }
@@ -177,7 +184,9 @@ function renderCompare(rows, games) {
     const meetings = games.filter(game => (game.home_id === a.item_id && game.away_id === b.item_id) || (game.home_id === b.item_id && game.away_id === a.item_id)).sort((x, y) => y.date.localeCompare(x.date));
     document.querySelector("#head-to-head tbody").innerHTML = meetings.length ? meetings.map(game => `<tr><td>${dateLabel(game.date)}</td><td>${safe(game.home_team)} ${game.home_score}</td><td>${safe(game.away_team)} ${game.away_score}</td><td>${safe(game.winner_id === a.item_id ? a.item : b.item)}</td></tr>`).join("") : `<tr><td colspan="4" class="muted">No head-to-head games in the collected data.</td></tr>`;
   }
-  selects.forEach(select => select.addEventListener("input", paint)); paint();
+  selects.forEach(select => select.addEventListener("input", paint));
+  search.addEventListener("input", populateOptions);
+  populateOptions();
 }
 
 function renderSchedule(rows, games) {
