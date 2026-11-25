@@ -62,7 +62,11 @@ class PipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             teams_path = root / "teams.csv"
-            teams_path.write_text("item_id,item,conference\n1,Alpha,Test\n2,Beta,Test\n", encoding="utf-8")
+            teams_path.write_text(
+                "item_id,item,conference\n"
+                + "".join(f"{item_id},Team {item_id},Test\n" for item_id in range(1, 11)),
+                encoding="utf-8",
+            )
             with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()):
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
@@ -71,7 +75,7 @@ class PipelineTests(unittest.TestCase):
                     self.assertEqual(len(json.load(handle)["events"]), 1)
                 with (root / "data" / "history.csv").open(newline="", encoding="utf-8") as handle:
                     rows = list(csv.DictReader(handle))
-                self.assertEqual(len(rows), 2)
+                self.assertEqual(len(rows), 10)
                 self.assertEqual(rows[0]["games_played"], "1")
 
 
