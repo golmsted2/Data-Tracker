@@ -301,6 +301,42 @@ def _snapshot_row(game_date: str, state: dict) -> dict[str, str | int | float]:
     }
 
 
+def movement_summary(history_rows: list[dict], limit: int = 8) -> dict:
+    dates = sorted({row.get("date", "") for row in history_rows if row.get("date")})
+    current_date = dates[-1] if dates else None
+    previous_date = dates[-2] if len(dates) > 1 else None
+    current = {str(row["item_id"]): row for row in history_rows if row.get("date") == current_date}
+    previous = {str(row["item_id"]): row for row in history_rows if row.get("date") == previous_date}
+    movers = []
+    if previous_date:
+        for item_id in sorted(current):
+            if item_id not in previous:
+                continue
+            current_row, previous_row = current[item_id], previous[item_id]
+            win_pct_delta = float(current_row.get("win_pct", 0) or 0) - float(previous_row.get("win_pct", 0) or 0)
+            point_diff_delta = int(float(current_row.get("point_diff", 0) or 0)) - int(float(previous_row.get("point_diff", 0) or 0))
+            if win_pct_delta or point_diff_delta:
+                movers.append({
+                    "item_id": item_id,
+                    "item": current_row.get("item", item_id),
+                    "win_pct_old": float(previous_row.get("win_pct", 0) or 0),
+                    "win_pct_new": float(current_row.get("win_pct", 0) or 0),
+                    "win_pct_delta": win_pct_delta,
+                    "point_diff_old": int(float(previous_row.get("point_diff", 0) or 0)),
+                    "point_diff_new": int(float(current_row.get("point_diff", 0) or 0)),
+                    "point_diff_delta": point_diff_delta,
+                })
+    movers.sort(key=lambda row: (abs(row["win_pct_delta"]), abs(row["point_diff_delta"])), reverse=True)
+    current_ids, previous_ids = set(current), set(previous)
+    return {
+        "current_date": current_date,
+        "previous_date": previous_date,
+        "movers": movers[:limit],
+        "appeared": sorted(current_ids - previous_ids) if previous_date else [],
+        "disappeared": sorted(previous_ids - current_ids) if previous_date else [],
+    }
+
+
 def build_history(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]]) -> list[dict]:
     state = _initial_state(teams)
     seen_games: set[str] = set()
@@ -487,7 +523,7 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
         rankings_data=rankings_data,
         rankings_error=rankings_error,
     )
-    return 1 if failed_dates else 0
+    return 0
 
 
 def date_range(start_date: str, end_date: str):

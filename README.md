@@ -36,6 +36,7 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 | --- | --- |
 | `config/teams.csv` | Frozen 365-team roster and conference metadata |
 | `src/pipeline.py` | Fetches raw games and rebuilds history/status files |
+| `src/github_issue.py` | Opens or updates the dated daily movement Issue and closes the prior one |
 | `data/raw/<date>/` | Compressed source response for each game date |
 | `data/history.csv` | One season-to-date row per configured team per date |
 | `data/games.csv` | One normalized row per completed matchup, including neutral-site flags |
@@ -51,8 +52,18 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 | `site/bubble.html` | Exploratory March Madness bubble board |
 | `site/bracket.html` | Score-seeded 64-team tournament bracket and local prediction game |
 | `site/assets/` | Shared CSS and browser logic |
-| `.github/workflows/` | Daily pipeline, tests, and Pages deployment |
-| `tests/` | Pipeline tests |
+| `site/manifest.webmanifest` | Installable web-app manifest |
+| `site/sw.js` | Offline shell and network-first service worker |
+| `requirements.txt` | pytest test-runner dependency |
+| `src/__init__.py` | Python package marker |
+| `tests/__init__.py` | Test package marker |
+| `.github/workflows/daily.yml` | Scheduled pipeline, pytest run, daily Issue, and data commit |
+| `.github/workflows/backfill.yml` | Manual season-to-date backfill |
+| `.github/workflows/tests.yml` | pytest on every push and pull request |
+| `.github/workflows/pages.yml` | pytest and GitHub Pages deployment |
+| `tests/test_pipeline.py` | Pipeline conversion, history, duplicate, and same-day replacement tests |
+| `tests/test_rubric.py` | pytest coverage for the mover rule, Issue body, and failed-source handling |
+| `submission.txt` | Four-line submission information required by the assignment |
 
 ## History columns
 
@@ -76,11 +87,11 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 
 The configured roster is the fixed item universe. The `item_id` key keeps the same team aligned across dates even if the displayed team name changes.
 
-The site also provides national rankings, daily movers, conference filters, upset alerts, daily recaps, recent-form charts, and data-quality status. The bubble board uses a transparent NET-style proxy with location-aware quadrants, SOS, quality wins, bad losses, conference strength, and recent form; it remains exploratory because official NET data is not part of the ESPN scoreboard feed.
+The site also provides national rankings, daily movers, conference filters, upset alerts, daily recaps, recent-form charts, and data-quality status. The Trends page calculates a selectable history metric plus four finding sections directly from `data/history.csv`. The bubble board uses a transparent NET-style proxy with location-aware quadrants, SOS, quality wins, bad losses, conference strength, and recent form; it remains exploratory because official NET data is not part of the ESPN scoreboard feed.
 
 ## Mover rule
 
-The Today page ranks teams by changes in winning percentage and cumulative `point_diff` from the previous available date. It also highlights the best current records, daily recap, and heuristic upset alerts. On a day with no completed games, the snapshot is unchanged and the mover list is empty.
+The Today page ranks teams by changes in winning percentage and cumulative `point_diff` from the previous available date. The daily Issue lists the old and new values for the largest movers, plus appeared and disappeared items. It also highlights the best current records, daily recap, and heuristic upset alerts. On a day with no completed games, the snapshot is unchanged, the mover list is empty, and an Issue is still opened for that date.
 
 ## Run locally
 
@@ -89,7 +100,7 @@ Python 3.11 or newer is recommended. The pipeline uses only the Python standard 
 ```bash
 python src/pipeline.py --date 2026-11-23
 python src/pipeline.py --start-date 2026-11-01 --end-date 2026-11-24
-python -m unittest discover -s tests -v
+python -m pytest -q
 ```
 
 The first command downloads one scoreboard response and writes:
@@ -104,7 +115,7 @@ The backfill command replaces each requested date's raw response and rebuilds th
 
 ## GitHub Actions and Pages
 
-The daily workflow runs at 09:00 UTC, after the prior U.S. game date has normally completed, and queries the previous UTC date. It commits new raw/history/status files. The Pages workflow runs the tests, copies the current data into the static site, and deploys `site/` to GitHub Pages.
+The daily workflow runs at 09:00 UTC, after the prior U.S. game date has normally completed, and queries the previous UTC date. It commits new raw/history/status files and synchronizes a dated GitHub Issue. Source failures are recorded in `data/status.json`; the pipeline still rebuilds, tests, creates the Issue, and commits the run. The Pages workflow runs pytest, copies the current data into the static site, and deploys `site/` to GitHub Pages.
 
 For the GitHub Actions schedule to commit successfully, the repository workflow setting must allow `GITHUB_TOKEN` to write contents. Enable Pages with **GitHub Actions** as the deployment source in the repository settings.
 

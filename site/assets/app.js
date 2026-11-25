@@ -154,6 +154,18 @@ function conferenceRecord(itemId, conference, games) {
 }
 function average(value, games) { return games ? (number(value) / games).toFixed(1) : "0.0"; }
 function averagePointDiff(row) { const games = number(row.games_played); return games ? number(row.point_diff) / games : 0; }
+function historyMetric(row, key) {
+  if (key === "point_diff") return number(row.point_diff);
+  if (key === "win_pct") return number(row.win_pct);
+  if (key === "avg_points_for") return number(row.avg_points_for);
+  if (key === "avg_points_against") return number(row.avg_points_against);
+  return number(row[key]);
+}
+function formatHistoryMetric(key, value) {
+  if (key === "win_pct") return `${(value * 100).toFixed(1)}%`;
+  if (["point_diff", "avg_points_for", "avg_points_against"].includes(key)) return `${value >= 0 ? "+" : ""}${value.toFixed(1)}`;
+  return value.toFixed(0);
+}
 
 function initPreferences() {
   try {
@@ -532,16 +544,40 @@ function drawChart(canvas, points, color, formatter) {
 }
 
 function renderTrends(rows, games) {
-  const teams = [...new Map(rows.map(row => [row.item_id, row])).values()].sort((a, b) => a.item.localeCompare(b.item)), select = document.querySelector("#trend-team");
+  const teams = [...new Map(rows.map(row => [row.item_id, row])).values()].sort((a, b) => a.item.localeCompare(b.item));
+  const select = document.querySelector("#trend-team"), metricSelect = document.querySelector("#trend-metric");
+  const metricLabels = {games_played: "Games played", wins: "Wins", losses: "Losses", win_pct: "Winning percentage", points_for: "Points scored", points_against: "Points allowed", point_diff: "Point differential", avg_points_for: "Average points scored", avg_points_against: "Average points allowed"};
   select.innerHTML = teams.map(team => `<option value="${team.item_id}">${safe(team.item)}</option>`).join("");
+  function setFinding(key, title, text, entries, color, formatter) {
+    document.querySelector(`#trend-finding-${key}-title`).textContent = title;
+    document.querySelector(`#trend-finding-${key}-text`).textContent = text;
+    drawChart(document.querySelector(`#trend-finding-${key}-chart`), entries.map(entry => entry.value), color, formatter);
+  }
+  function paintFindings() {
+    const dates = latestDates(rows), latestDate = dates.at(-1), previousDate = dates.at(-2), latest = latestRows(rows), previous = teamMap(rows.filter(row => row.date === previousDate));
+    const winChanges = latest.map(row => { const prior = previous[row.item_id]; return prior ? {item: row.item, value: number(row.win_pct) - number(prior.win_pct), oldValue: number(prior.win_pct), newValue: number(row.win_pct)} : null; }).filter(Boolean).sort((a, b) => b.value - a.value);
+    const diffChanges = latest.map(row => { const prior = previous[row.item_id]; return prior ? {item: row.item, value: averagePointDiff(row) - averagePointDiff(prior), oldValue: averagePointDiff(prior), newValue: averagePointDiff(row)} : null; }).filter(Boolean).sort((a, b) => b.value - a.value);
+    const activity = latest.map(row => ({item: row.item, value: number(row.games_played)})).sort((a, b) => b.value - a.value);
+    const scoring = latest.map(row => ({item: row.item, value: number(row.avg_points_for)})).sort((a, b) => b.value - a.value);
+    const topWin = winChanges[0], topDiff = diffChanges[0], topActivity = activity[0], topScoring = scoring[0];
+    const winText = topWin ? `${topWin.item} moved from ${pct(topWin.oldValue)} to ${pct(topWin.newValue)} (${topWin.value >= 0 ? "+" : ""}${(topWin.value * 100).toFixed(1)} points). The chart shows the five largest changes, computed by comparing win_pct in the ${previousDate || "previous"} and ${latestDate || "latest"} rows of data/history.csv.` : "There are not yet two snapshots to compare. This chart will use consecutive dates from data/history.csv.";
+    const diffText = topDiff ? `${topDiff.item} changed from ${topDiff.oldValue >= 0 ? "+" : ""}${topDiff.oldValue.toFixed(1)} to ${topDiff.newValue >= 0 ? "+" : ""}${topDiff.newValue.toFixed(1)} points per game. The chart shows the five largest changes in average point diff., computed from point_diff divided by games_played in data/history.csv.` : "There are not yet two snapshots to compare. This chart will use average point diff. from consecutive dates in data/history.csv.";
+    const activityText = topActivity ? `${topActivity.item} has played ${topActivity.value} games in the latest snapshot. The chart shows the five most active teams, computed from the latest games_played column in data/history.csv.` : "No activity data is available yet.";
+    const scoringText = topScoring ? `${topScoring.item} is scoring ${topScoring.value.toFixed(1)} points per game. The chart shows the five highest scoring averages, computed from avg_points_for in the latest data/history.csv snapshot.` : "No scoring data is available yet.";
+    setFinding("movement", topWin?.value > 0 ? "Largest winning percentage gain" : "Largest winning percentage change", winText, winChanges.slice(0, 5), "#2f80ed", value => `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%`);
+    setFinding("diff", topDiff?.value > 0 ? "Largest average point-diff improvement" : "Largest average point-diff change", diffText, diffChanges.slice(0, 5), "#ef8354", value => `${value >= 0 ? "+" : ""}${value.toFixed(1)}`);
+    setFinding("activity", "Most games played", activityText, activity.slice(0, 5), "#7c3aed", value => value.toFixed(0));
+    setFinding("scoring", "Highest scoring average", scoringText, scoring.slice(0, 5), "#2d9d78", value => value.toFixed(1));
+  }
   function paint() {
-    const selected = select.value, timeline = rows.filter(row => row.item_id === selected).sort((a, b) => a.date.localeCompare(b.date)), teamGames = selectedTeamIds(games, selected).sort((a, b) => a.date.localeCompare(b.date));
-    const wins = timeline.map(row => number(row.win_pct)), diffs = timeline.map(row => averagePointDiff(row)), scoring = timeline.map(row => number(row.avg_points_for));
-    document.querySelector("#trend-win-label").textContent = pct(wins.at(-1)); document.querySelector("#trend-diff-label").textContent = `${diffs.at(-1) >= 0 ? "+" : ""}${diffs.at(-1).toFixed(0)}`; document.querySelector("#trend-scoring-label").textContent = `${scoring.at(-1).toFixed(1)} PPG`;
-    drawChart(document.querySelector("#win-chart"), wins, "#2f80ed", pct); drawChart(document.querySelector("#diff-chart"), diffs, "#ef8354", value => value.toFixed(0)); drawChart(document.querySelector("#scoring-chart"), scoring, "#2d9d78", value => value.toFixed(1));
+    const selected = select.value, metricKey = metricSelect.value, timeline = rows.filter(row => row.item_id === selected).sort((a, b) => a.date.localeCompare(b.date)), teamGames = selectedTeamIds(games, selected).sort((a, b) => a.date.localeCompare(b.date));
+    const selectedValues = timeline.map(row => historyMetric(row, metricKey)), wins = timeline.map(row => number(row.win_pct)), diffs = timeline.map(row => averagePointDiff(row)), scoring = timeline.map(row => number(row.avg_points_for));
+    document.querySelector("#trend-selected-label").textContent = metricLabels[metricKey]; document.querySelector("#trend-selected-value").textContent = selectedValues.length ? formatHistoryMetric(metricKey, selectedValues.at(-1)) : "—";
+    document.querySelector("#trend-win-label").textContent = wins.length ? pct(wins.at(-1)) : "—"; document.querySelector("#trend-diff-label").textContent = diffs.length ? `${diffs.at(-1) >= 0 ? "+" : ""}${diffs.at(-1).toFixed(1)}` : "—"; document.querySelector("#trend-scoring-label").textContent = scoring.length ? `${scoring.at(-1).toFixed(1)} PPG` : "—";
+    drawChart(document.querySelector("#trend-selected-chart"), selectedValues, "#7c3aed", value => formatHistoryMetric(metricKey, value)); drawChart(document.querySelector("#win-chart"), wins, "#2f80ed", pct); drawChart(document.querySelector("#diff-chart"), diffs, "#ef8354", value => `${value >= 0 ? "+" : ""}${value.toFixed(1)}`); drawChart(document.querySelector("#scoring-chart"), scoring, "#2d9d78", value => value.toFixed(1));
     document.querySelector("#recent-form").innerHTML = teamGames.slice(-10).reverse().map(game => `<span class="form-dot ${resultClass(resultFor(game, selected))}" title="${dateLabel(game.date)} vs ${safe(gameTeamName(game, gameOpponent(game, selected)))}">${resultFor(game, selected)}</span>`).join("") || `<span class="muted">No games logged</span>`;
   }
-  select.addEventListener("change", paint); paint();
+  select.addEventListener("change", paint); metricSelect.addEventListener("change", paint); paint(); paintFindings();
 }
 
 initPreferences();
