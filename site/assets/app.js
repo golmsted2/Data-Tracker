@@ -68,8 +68,7 @@ async function loadData() {
 
 function renderQuality(status) {
   const target = document.querySelector("#data-quality");
-  const days = document.querySelector("#days-ran");
-  if (days) days.textContent = `Days ran: ${status.days_with_success ?? "—"}`;
+  document.querySelectorAll("#days-ran, [data-days-ran]").forEach(days => { days.textContent = `Days ran: ${status.days_with_success ?? "—"}`; });
   if (!target) return;
   const quality = status.data_quality;
   target.textContent = quality?.ok === false ? `Data checks need attention · ${quality.issues?.length || 0} issue(s)` : `Data checks passed · ${status.games_logged || quality?.games_logged || 0} games logged`;
