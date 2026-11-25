@@ -49,6 +49,7 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 | `site/schedule.html` | Team schedules and results |
 | `site/trends.html` | Team trend charts |
 | `site/bubble.html` | Exploratory March Madness bubble board |
+| `site/bracket.html` | Score-seeded 64-team tournament bracket and local prediction game |
 | `site/assets/` | Shared CSS and browser logic |
 | `.github/workflows/` | Daily pipeline, tests, and Pages deployment |
 | `tests/` | Pipeline tests |
