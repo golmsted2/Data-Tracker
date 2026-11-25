@@ -162,31 +162,31 @@ function renderConferences(rows, games) {
 }
 
 function renderCompare(rows, games) {
-  const latest = rankRows(latestRows(rows)), map = teamMap(latest), search = document.querySelector("#compare-search"), selects = [document.querySelector("#compare-team-a"), document.querySelector("#compare-team-b")];
-  function populateOptions() {
-    const query = search.value.trim().toLowerCase(), choices = latest.filter(row => row.item.toLowerCase().includes(query));
-    selects.forEach((select, index) => {
-      const current = select.value;
-      select.innerHTML = choices.map(row => `<option value="${row.item_id}">${safe(row.item)}</option>`).join("");
-      select.value = choices.some(row => row.item_id === current) ? current : choices[index]?.item_id || choices[0]?.item_id || "";
-    });
+  const latest = rankRows(latestRows(rows)), inputs = [document.querySelector("#compare-team-a"), document.querySelector("#compare-team-b")], lists = [document.querySelector("#compare-team-a-options"), document.querySelector("#compare-team-b-options")];
+  function populateOptions(index) {
+    const query = inputs[index].value.trim().toLowerCase(), choices = latest.filter(row => row.item.toLowerCase().includes(query));
+    lists[index].innerHTML = choices.map(row => `<option value="${safe(row.item)}"></option>`).join("");
     paint();
   }
   function form(itemId) {
     return selectedTeamIds(games, itemId).sort((a, b) => a.date.localeCompare(b.date)).slice(-5).map(game => `<span class="form-dot ${resultClass(resultFor(game, itemId))}" title="${dateLabel(game.date)}">${resultFor(game, itemId)}</span>`).join("") || `<span class="muted">No games</span>`;
   }
   function paint() {
-    const a = map[selects[0].value], b = map[selects[1].value];
-    if (!a || !b) return;
+    const findTeam = input => latest.find(row => row.item.toLowerCase() === input.value.trim().toLowerCase());
+    const a = findTeam(inputs[0]), b = findTeam(inputs[1]);
+    if (!a || !b) {
+      document.querySelector("#compare-cards").innerHTML = `<p class="muted">Choose a team from each searchable dropdown.</p>`;
+      return;
+    }
     const metrics = [["Win %", pct(a.win_pct), pct(b.win_pct), number(a.win_pct), number(b.win_pct)], ["Record", record(a), record(b), number(a.win_pct), number(b.win_pct)], ["Scoring avg", average(a.points_for, a.games_played), average(b.points_for, b.games_played), number(a.avg_points_for), number(b.avg_points_for)], ["Point diff", number(a.point_diff).toFixed(0), number(b.point_diff).toFixed(0), number(a.point_diff), number(b.point_diff)]];
     document.querySelector("#compare-cards").innerHTML = [a, b].map(row => `<div class="team-card"><span class="eyebrow">${safe(row.conference)}</span><h3>${safe(row.item)}</h3><strong>${record(row)}</strong><span>${pct(row.win_pct)} win rate · ${safe(row.streak)}</span><div class="form-strip">${form(row.item_id)}</div></div>`).join("");
     document.querySelector("#comparison-bars").innerHTML = metrics.map(([label, av, bv, an, bn]) => { const total = Math.max(Math.abs(an), Math.abs(bn), 1); return `<div class="comparison-row"><span>${label}</span><strong>${av}</strong><div class="compare-bar"><i style="width:${Math.min(100, Math.abs(an) / total * 100)}%"></i><em style="width:${Math.min(100, Math.abs(bn) / total * 100)}%"></em></div><strong>${bv}</strong></div>`; }).join("");
     const meetings = games.filter(game => (game.home_id === a.item_id && game.away_id === b.item_id) || (game.home_id === b.item_id && game.away_id === a.item_id)).sort((x, y) => y.date.localeCompare(x.date));
     document.querySelector("#head-to-head tbody").innerHTML = meetings.length ? meetings.map(game => `<tr><td>${dateLabel(game.date)}</td><td>${safe(game.home_team)} ${game.home_score}</td><td>${safe(game.away_team)} ${game.away_score}</td><td>${safe(game.winner_id === a.item_id ? a.item : b.item)}</td></tr>`).join("") : `<tr><td colspan="4" class="muted">No head-to-head games in the collected data.</td></tr>`;
   }
-  selects.forEach(select => select.addEventListener("input", paint));
-  search.addEventListener("input", populateOptions);
-  populateOptions();
+  inputs[0].value = latest[0]?.item || ""; inputs[1].value = latest[1]?.item || latest[0]?.item || "";
+  inputs.forEach((input, index) => input.addEventListener("input", () => populateOptions(index)));
+  populateOptions(0); populateOptions(1);
 }
 
 function renderSchedule(rows, games) {
