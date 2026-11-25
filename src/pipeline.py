@@ -51,7 +51,9 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def load_teams(path: Path = TEAMS_PATH) -> dict[str, dict[str, str]]:
+def load_teams(path: Path | None = None) -> dict[str, dict[str, str]]:
+    if path is None:
+        path = TEAMS_PATH
     with path.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
     teams: dict[str, dict[str, str]] = {}
