@@ -153,6 +153,7 @@ function conferenceRecord(itemId, conference, games) {
   return {wins, losses, total: wins + losses};
 }
 function average(value, games) { return games ? (number(value) / games).toFixed(1) : "0.0"; }
+function averagePointDiff(row) { const games = number(row.games_played); return games ? number(row.point_diff) / games : 0; }
 
 function initPreferences() {
   try {
@@ -202,7 +203,8 @@ function saveBracketPicks() {
 function compareLeaderboard(a, b, field) {
   if (field === "item" || field === "conference") return String(a[field]).localeCompare(String(b[field]));
   if (field === "record") return number(a.wins) - number(b.wins) || number(a.losses) - number(b.losses);
-  if (field === "win_pct") return number(a.win_pct) - number(b.win_pct) || number(a.wins) - number(b.wins) || number(a.point_diff) - number(b.point_diff);
+  if (field === "win_pct") return number(a.win_pct) - number(b.win_pct) || number(a.wins) - number(b.wins) || averagePointDiff(a) - averagePointDiff(b);
+  if (field === "point_diff") return averagePointDiff(a) - averagePointDiff(b);
   if (field === "streak") {
     const streakA = Number(String(a.streak).slice(1)) || 0, streakB = Number(String(b.streak).slice(1)) || 0;
     return streakA - streakB || String(a.streak).localeCompare(String(b.streak));
@@ -258,7 +260,7 @@ function renderToday(rows, games, status, rankings) {
   const leaderHeaders = [...document.querySelectorAll("#leaders th[data-sort]")];
   function paintLeaderboard() {
     const sorted = sortedLeaderboard(leaderSnapshot, leaderSortField, leaderSortDirection);
-    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 25).map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 25).map(row => { const avgDiff = averagePointDiff(row); return `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${avgDiff >= 0 ? "+" : ""}${avgDiff.toFixed(1)}</td><td>${safe(row.streak)}</td></tr>`; }).join("");
     leaderHeaders.forEach(header => {
       const active = header.dataset.sort === leaderSortField;
       header.classList.toggle("sort-active", active);
@@ -306,9 +308,9 @@ function renderBrowse(rows) {
   [...new Set(latest.map(row => row.conference))].sort().forEach(value => conference.insertAdjacentHTML("beforeend", `<option value="${safe(value)}">${safe(value)}</option>`));
   function paint() {
     const query = search.value.toLowerCase(), selected = conference.value, field = sort.value;
-    const filtered = latest.filter(row => row.item.toLowerCase().includes(query) && (!selected || row.conference === selected) && (!favoritesOnly?.checked || favoriteIds.has(String(row.item_id)))).sort((a, b) => field === "item" ? a.item.localeCompare(b.item) : number(b[field]) - number(a[field]));
+    const filtered = latest.filter(row => row.item.toLowerCase().includes(query) && (!selected || row.conference === selected) && (!favoritesOnly?.checked || favoriteIds.has(String(row.item_id)))).sort((a, b) => field === "item" ? a.item.localeCompare(b.item) : field === "point_diff" ? averagePointDiff(b) - averagePointDiff(a) : number(b[field]) - number(a[field]));
     count.textContent = `${filtered.length} teams shown`;
-    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => { const avgDiff = averagePointDiff(row); return `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${avgDiff >= 0 ? "+" : ""}${avgDiff.toFixed(1)}</td><td>${safe(row.streak)}</td></tr>`; }).join("");
   }
   [search, conference, sort, favoritesOnly].filter(Boolean).forEach(element => element.addEventListener("input", paint));
   document.addEventListener("favoriteschange", paint); paint();
@@ -318,10 +320,10 @@ function renderConferences(rows, games) {
   const latest = latestRows(rows), conferences = document.querySelector("#conference-filter"), title = document.querySelector("#conference-title");
   [...new Set(latest.map(row => row.conference))].sort().forEach(value => conferences.insertAdjacentHTML("beforeend", `<option value="${safe(value)}">${safe(value)}</option>`));
   function paint() {
-    const selected = conferences.value, teams = latest.filter(row => !selected || row.conference === selected).map(row => ({...row, conferenceRecord: conferenceRecord(row.item_id, row.conference, games)})).sort((a, b) => b.conferenceRecord.wins - a.conferenceRecord.wins || a.conferenceRecord.losses - b.conferenceRecord.losses || number(b.wins) - number(a.wins) || number(a.losses) - number(b.losses) || number(b.win_pct) - number(a.win_pct) || number(b.point_diff) - number(a.point_diff));
+    const selected = conferences.value, teams = latest.filter(row => !selected || row.conference === selected).map(row => ({...row, conferenceRecord: conferenceRecord(row.item_id, row.conference, games)})).sort((a, b) => b.conferenceRecord.wins - a.conferenceRecord.wins || a.conferenceRecord.losses - b.conferenceRecord.losses || number(b.wins) - number(a.wins) || number(a.losses) - number(b.losses) || number(b.win_pct) - number(a.win_pct) || averagePointDiff(b) - averagePointDiff(a));
     title.innerHTML = selected ? conferenceLabel(selected, {large: true, accent: true}) : "All conferences";
     document.querySelector("#conference-summary").innerHTML = selected ? `<div class="metric"><strong>${teams.length}</strong><span>Teams</span></div><div class="metric"><strong>${teams.filter(row => row.conferenceRecord.wins > row.conferenceRecord.losses).length}</strong><span>Teams above .500 in conference</span></div><div class="metric"><strong>${teams.length ? pct(teams.reduce((sum, row) => sum + number(row.win_pct), 0) / teams.length) : "0.0%"}</strong><span>Average overall win %</span></div>` : `<p class="muted">Choose a conference to see its table and conference records.</p>`;
-    document.querySelector("#conference-table tbody").innerHTML = teams.map((row, index) => `<tr class="conference-team-row" style="--team-accent:${teamAccent(row)}"><td>${index + 1}</td><td>${teamLogo(row, {accent: true})}</td><td>${conferenceLabel(row.conference, {accent: true})}</td><td>${row.conferenceRecord.wins}-${row.conferenceRecord.losses}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td></tr>`).join("");
+    document.querySelector("#conference-table tbody").innerHTML = teams.map((row, index) => { const avgDiff = averagePointDiff(row); return `<tr class="conference-team-row" style="--team-accent:${teamAccent(row)}"><td>${index + 1}</td><td>${teamLogo(row, {accent: true})}</td><td>${conferenceLabel(row.conference, {accent: true})}</td><td>${row.conferenceRecord.wins}-${row.conferenceRecord.losses}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${avgDiff >= 0 ? "+" : ""}${avgDiff.toFixed(1)}</td></tr>`; }).join("");
   }
   conferences.addEventListener("input", paint); paint();
 }
@@ -441,7 +443,7 @@ function renderTeam(rows, games, rankings) {
   title.textContent = team.item;
   subtitle.innerHTML = `${conferenceLabel(team.conference, {accent: true})} <span class="muted">· ${record(team)} · ${dateLabel(team.date)}</span>`;
   document.querySelector("#team-hero-logo").innerHTML = teamLogo(team, {link: false, accent: true});
-  document.querySelector("#team-summary").innerHTML = [[record(team), "Overall record"], [pct(team.win_pct), "Win percentage"], [`${pointDiffPerGame >= 0 ? "+" : ""}${pointDiffPerGame.toFixed(1)}`, "Point diff. / game"], [`AP ${ap ? `#${ap.rank}` : "NR"}`, `Coaches ${coaches ? `#${coaches.rank}` : "NR"}`]].map(([value, label]) => `<div class="metric"><strong>${safe(value)}</strong><span>${safe(label)}</span></div>`).join("");
+  document.querySelector("#team-summary").innerHTML = [[record(team), "Overall record"], [pct(team.win_pct), "Win percentage"], [`${pointDiffPerGame >= 0 ? "+" : ""}${pointDiffPerGame.toFixed(1)}`, "Average point diff."], [`AP ${ap ? `#${ap.rank}` : "NR"}`, `Coaches ${coaches ? `#${coaches.rank}` : "NR"}`]].map(([value, label]) => `<div class="metric"><strong>${safe(value)}</strong><span>${safe(label)}</span></div>`).join("");
   document.querySelector("#team-polls").innerHTML = [["AP Top 25", ap], ["Coaches Poll", coaches]].map(([label, entry]) => `<div class="team-poll-row"><span>${label}</span><strong>${entry ? `#${entry.rank}` : "NR"}</strong><small>${entry ? `${safe(entry.record)} · ${pollTrend(entry.trend)}` : "Not ranked"}</small></div>`).join("");
   const recent = teamGames.slice(-10).reverse(), recentWins = recent.filter(game => game.winner_id === itemId).length;
   document.querySelector("#team-form-record").textContent = `${recentWins}-${recent.length - recentWins}`;
@@ -534,7 +536,7 @@ function renderTrends(rows, games) {
   select.innerHTML = teams.map(team => `<option value="${team.item_id}">${safe(team.item)}</option>`).join("");
   function paint() {
     const selected = select.value, timeline = rows.filter(row => row.item_id === selected).sort((a, b) => a.date.localeCompare(b.date)), teamGames = selectedTeamIds(games, selected).sort((a, b) => a.date.localeCompare(b.date));
-    const wins = timeline.map(row => number(row.win_pct)), diffs = timeline.map(row => number(row.point_diff)), scoring = timeline.map(row => number(row.avg_points_for));
+    const wins = timeline.map(row => number(row.win_pct)), diffs = timeline.map(row => averagePointDiff(row)), scoring = timeline.map(row => number(row.avg_points_for));
     document.querySelector("#trend-win-label").textContent = pct(wins.at(-1)); document.querySelector("#trend-diff-label").textContent = `${diffs.at(-1) >= 0 ? "+" : ""}${diffs.at(-1).toFixed(0)}`; document.querySelector("#trend-scoring-label").textContent = `${scoring.at(-1).toFixed(1)} PPG`;
     drawChart(document.querySelector("#win-chart"), wins, "#2f80ed", pct); drawChart(document.querySelector("#diff-chart"), diffs, "#ef8354", value => value.toFixed(0)); drawChart(document.querySelector("#scoring-chart"), scoring, "#2d9d78", value => value.toFixed(1));
     document.querySelector("#recent-form").innerHTML = teamGames.slice(-10).reverse().map(game => `<span class="form-dot ${resultClass(resultFor(game, selected))}" title="${dateLabel(game.date)} vs ${safe(gameTeamName(game, gameOpponent(game, selected)))}">${resultFor(game, selected)}</span>`).join("") || `<span class="muted">No games logged</span>`;
