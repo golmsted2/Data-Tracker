@@ -1275,9 +1275,12 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-24,401915942,true,97,Louisville,Atlantic Coast Conference,72,2641,Texas Tech,Big 12 Conference,64,97,2641,8,136
 2026-11-24,401921710,true,12,Arizona,Big 12 Conference,84,2507,Providence,Big East Conference,66,12,2507,18,150
 2026-11-24,401906853,true,120,Maryland,Big Ten Conference,64,2633,Tennessee,Southeastern Conference,72,2633,120,8,136
+2026-11-24,401915943,true,2599,St. John's,Big East Conference,90,2483,Oregon,Big Ten Conference,79,2599,2483,11,169
 2026-11-24,401916319,false,194,Ohio State,Big Ten Conference,66,238,Vanderbilt,Southeastern Conference,72,238,194,6,138
+2026-11-24,401906762,true,333,Alabama,Southeastern Conference,63,239,Baylor,Big 12 Conference,68,239,333,5,131
 2026-11-24,401915941,true,2628,TCU,Big 12 Conference,84,2390,Miami,Atlantic Coast Conference,71,2628,2390,13,155
 2026-11-24,401921709,true,252,BYU,Big 12 Conference,63,145,Ole Miss,Southeastern Conference,73,145,252,10,136
+2026-11-24,401909800,true,2306,Kansas State,Big 12 Conference,61,2250,Gonzaga,Pac-12 Conference,101,2250,2306,40,162
 2026-11-24,401916291,false,84,Indiana,Big Ten Conference,82,294,Jacksonville,Atlantic Sun Conference,64,84,294,18,146
 2026-11-24,401927398,true,179,St. Bonaventure,Atlantic 10 Conference,72,2750,Wright State,Horizon League,70,179,2750,2,142
 2026-11-24,401928791,true,166,New Mexico State,Conference USA,68,195,Ohio,Mid-American Conference,69,195,166,1,137
@@ -1352,3 +1355,6 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-24,401921817,false,142,Missouri,Southeastern Conference,78,339,Evansville,Missouri Valley Conference,67,142,339,11,145
 2026-11-24,401911535,true,232,Charleston,Coastal Athletic Association,69,2638,UTEP,Mountain West Conference,80,2638,232,11,149
 2026-11-24,401909699,false,52,Florida State,Atlantic Coast Conference,97,2427,UNC Asheville,Big South Conference,61,52,2427,36,158
+2026-11-24,401911253,true,2253,Grand Canyon,Mountain West Conference,91,139,Saint Louis,Atlantic 10 Conference,88,2253,139,3,179
+2026-11-24,401921712,true,36,Colorado State,Pac-12 Conference,81,2670,VCU,Atlantic 10 Conference,84,2670,36,3,165
+2026-11-24,401909763,true,24,Stanford,Atlantic Coast Conference,65,38,Colorado,Big 12 Conference,70,38,24,5,135
