@@ -36,6 +36,7 @@ function initials(name) {
 const THEME_KEY = "power-hoops-theme";
 const FAVORITES_KEY = "power-hoops-favorites";
 let favoriteIds = new Set();
+let rosterIds = new Set();
 function favoriteButton(team) {
   const itemId = String(team.item_id || "");
   if (!itemId) return "";
@@ -89,7 +90,9 @@ function conferenceLabel(conference, options = {}) {
 function teamLogo(team, options = {}) {
   const itemId = String(team.item_id || "");
   const favorite = options.showFavorite === false ? "" : favoriteButton(team);
-  return `<span class="team-cell"><span class="logo-frame"><img class="team-logo" src="https://a.espncdn.com/i/teamlogos/ncaa/500/${encodeURIComponent(itemId)}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="logo-fallback">${initials(team.item)}</span></span><span class="team-name">${safe(team.item)}</span>${favorite}</span>`;
+  const identity = `<span class="logo-frame"><img class="team-logo" src="https://a.espncdn.com/i/teamlogos/ncaa/500/${encodeURIComponent(itemId)}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="logo-fallback">${initials(team.item)}</span></span><span class="team-name">${safe(team.item)}</span>`;
+  const linkedIdentity = options.link === false || !itemId || (rosterIds.size && !rosterIds.has(itemId)) ? identity : `<a class="team-link" href="team.html?id=${encodeURIComponent(itemId)}">${identity}</a>`;
+  return `<span class="team-cell">${linkedIdentity}${favorite}</span>`;
 }
 function rankMovement(itemId, currentRanks, previousRanks) {
   const current = currentRanks[itemId], previous = previousRanks[itemId];
@@ -384,6 +387,36 @@ function renderBubble(rows, games) {
   [filter, conference].forEach(element => element.addEventListener("input", paint)); paint();
 }
 
+function renderTeam(rows, games, rankings) {
+  const itemId = new URLSearchParams(window.location.search).get("id"), latest = latestRows(rows), team = latest.find(row => row.item_id === itemId);
+  const title = document.querySelector("#team-title"), subtitle = document.querySelector("#team-subtitle");
+  if (!team) {
+    title.textContent = "Team not found";
+    subtitle.innerHTML = `Choose a team from <a class="text-link" href="browse.html">Browse</a> to open its profile.`;
+    return;
+  }
+  const teamGames = selectedTeamIds(games, itemId).sort((a, b) => a.date.localeCompare(b.date));
+  const rankEntries = Object.fromEntries((rankings?.polls || []).map(poll => [poll.key, poll.ranks.find(entry => String(entry.team_id) === String(itemId))]));
+  const ap = rankEntries.ap, coaches = rankEntries.coaches;
+  const conferenceGames = teamGames.filter(game => game.home_conference === team.conference && game.away_conference === team.conference);
+  const conferenceWins = conferenceGames.filter(game => game.winner_id === itemId).length;
+  const pointDiffPerGame = number(team.games_played) ? number(team.point_diff) / number(team.games_played) : 0;
+  title.textContent = team.item;
+  subtitle.innerHTML = `${conferenceLabel(team.conference)} <span class="muted">· ${record(team)} · ${dateLabel(team.date)}</span>`;
+  document.querySelector("#team-hero-logo").innerHTML = teamLogo(team, {link: false});
+  document.querySelector("#team-summary").innerHTML = [[record(team), "Overall record"], [pct(team.win_pct), "Win percentage"], [`${pointDiffPerGame >= 0 ? "+" : ""}${pointDiffPerGame.toFixed(1)}`, "Point diff. / game"], [`AP ${ap ? `#${ap.rank}` : "NR"}`, `Coaches ${coaches ? `#${coaches.rank}` : "NR"}`]].map(([value, label]) => `<div class="metric"><strong>${safe(value)}</strong><span>${safe(label)}</span></div>`).join("");
+  document.querySelector("#team-polls").innerHTML = [["AP Top 25", ap], ["Coaches Poll", coaches]].map(([label, entry]) => `<div class="team-poll-row"><span>${label}</span><strong>${entry ? `#${entry.rank}` : "NR"}</strong><small>${entry ? `${safe(entry.record)} · ${pollTrend(entry.trend)}` : "Not ranked"}</small></div>`).join("");
+  const recent = teamGames.slice(-10).reverse(), recentWins = recent.filter(game => game.winner_id === itemId).length;
+  document.querySelector("#team-form-record").textContent = `${recentWins}-${recent.length - recentWins}`;
+  document.querySelector("#team-form").innerHTML = recent.length ? recent.map(game => `<span class="form-dot ${resultClass(resultFor(game, itemId))}" title="${dateLabel(game.date)} vs ${safe(gameTeamName(game, gameOpponent(game, itemId)))}">${resultFor(game, itemId)}</span>`).join("") : `<span class="muted">No completed games</span>`;
+  document.querySelector("#team-conference-record").textContent = `${conferenceWins}-${conferenceGames.length - conferenceWins} conference record`;
+  document.querySelector("#team-games-count").textContent = `${teamGames.length} completed games`;
+  const timeline = rows.filter(row => row.item_id === itemId).sort((a, b) => a.date.localeCompare(b.date));
+  drawChart(document.querySelector("#team-win-chart"), timeline.map(row => number(row.win_pct)), "#2f80ed", pct);
+  drawChart(document.querySelector("#team-diff-chart"), timeline.map(row => number(row.games_played) ? number(row.point_diff) / number(row.games_played) : 0), "#ef8354", value => `${value >= 0 ? "+" : ""}${value.toFixed(1)}`);
+  document.querySelector("#team-schedule tbody").innerHTML = teamGames.slice().reverse().map(game => { const opponentId = gameOpponent(game, itemId), opponent = gameTeamName(game, opponentId), result = resultFor(game, itemId), type = game.home_conference === team.conference && game.away_conference === team.conference ? "Conference" : "Non-conference"; return `<tr><td>${dateLabel(game.date)}</td><td><span class="badge ${resultClass(result)}">${result}</span></td><td>${teamLogo({item_id: opponentId, item: opponent})}</td><td>${gameScore(game, itemId)}-${opponentScore(game, itemId)}</td><td>${number(game.margin)}</td><td>${type}</td></tr>`; }).join("") || `<tr><td colspan="6" class="muted">No completed games logged.</td></tr>`;
+}
+
 function drawChart(canvas, points, color, formatter) {
   const context = canvas.getContext("2d"), width = canvas.clientWidth || 700, height = 240, ratio = window.devicePixelRatio || 1;
   canvas.width = width * ratio; canvas.height = height * ratio; context.setTransform(ratio, 0, 0, ratio, 0, 0); context.clearRect(0, 0, width, height);
@@ -409,6 +442,7 @@ function renderTrends(rows, games) {
 
 initPreferences();
 loadData().then(({history, games, status, rankings}) => {
+  rosterIds = new Set(history.map(row => row.item_id));
   renderQuality(status);
   const page = document.body.dataset.page;
   if (page === "today") renderToday(history, games, status, rankings);
@@ -418,6 +452,7 @@ loadData().then(({history, games, status, rankings}) => {
   if (page === "schedule") renderSchedule(history, games);
   if (page === "bubble") renderBubble(history, games);
   if (page === "trends") renderTrends(history, games);
+  if (page === "team") renderTeam(history, games, rankings);
 }).catch(error => {
   document.querySelector("main").insertAdjacentHTML("afterbegin", `<section class="panel"><strong>Data unavailable.</strong><p class="muted">${safe(error.message)}</p></section>`);
 });

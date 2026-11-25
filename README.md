@@ -43,6 +43,7 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 | `data/status.json` | Latest run and source status |
 | `site/index.html` | Today dashboard |
 | `site/browse.html` | Searchable, sortable team table |
+| `site/team.html` | Individual team profile, polls, trends, and schedule |
 | `site/conferences.html` | Conference standings and records |
 | `site/compare.html` | Head-to-head team comparison |
 | `site/schedule.html` | Team schedules and results |
