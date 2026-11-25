@@ -1,0 +1,10 @@
+{
+  "name": "Power Conference Basketball Tracker",
+  "short_name": "Power Hoops",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f7f9fc",
+  "theme_color": "#102a43",
+  "description": "Daily performance tracker for NCAA men's power-conference basketball teams."
+}
+

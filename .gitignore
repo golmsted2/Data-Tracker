@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.pytest_cache/
+site/data/history.csv
+site/data/status.json
+data/raw/*
+!data/raw/.gitkeep
+
