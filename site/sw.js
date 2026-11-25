@@ -1,5 +1,5 @@
-const CACHE = "power-hoops-v25";
-const SHELL = ["index.html", "browse.html", "conferences.html", "compare.html", "schedule.html", "trends.html", "bubble.html", "team.html", "bracket.html", "assets/style.css?v=24", "assets/app.js?v=24", "assets/ncaa-logo.svg", "manifest.webmanifest"];
+const CACHE = "power-hoops-v26";
+const SHELL = ["index.html", "browse.html", "conferences.html", "compare.html", "schedule.html", "trends.html", "bubble.html", "team.html", "bracket.html", "assets/style.css?v=25", "assets/app.js?v=25", "assets/ncaa-logo.svg", "manifest.webmanifest"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", event => {
