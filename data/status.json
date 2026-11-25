@@ -1,5 +1,5 @@
 {
-  "run_time": "2026-11-25T01:20:14.339107Z",
+  "run_time": "2026-11-25T02:18:15.124428Z",
   "first_run_date": "2026-11-01",
   "days_with_success": 24,
   "dates_requested": [
@@ -32,13 +32,13 @@
   "items": 365,
   "new_today": [],
   "gone_today": [],
-  "games_logged": 1300,
+  "games_logged": 1328,
   "data_quality": {
     "ok": true,
     "issues": [],
     "latest_date": "2026-11-24",
     "history_rows": 8760,
-    "games_logged": 1300
+    "games_logged": 1328
   },
   "sources": [
     {
