@@ -126,25 +126,34 @@ def completed_games(payload: dict, teams: dict[str, dict[str, str]]) -> list[dic
         if len(competitors) < 2:
             continue
         parsed = []
-        for competitor in competitors:
+        for competitor in competitors[:2]:
             team = competitor.get("team") or {}
             item_id = str(team.get("id", ""))
-            score = _score(competitor.get("score"))
-            if item_id not in teams or score is None:
-                parsed = []
-                break
             parsed.append({
                 "item_id": item_id,
-                "score": score,
+                "score": _score(competitor.get("score")),
                 "home_away": competitor.get("homeAway"),
             })
-        if len(parsed) != 2 or parsed[0]["score"] == parsed[1]["score"]:
+        if len(parsed) != 2 or any(row["score"] is None for row in parsed):
             continue
-        winner = max(parsed, key=lambda row: row["score"])["item_id"]
+        if parsed[0]["score"] == parsed[1]["score"]:
+            continue
+        tracked = []
+        for competitor in parsed:
+            if competitor["item_id"] not in teams:
+                continue
+            opponent = next(row for row in parsed if row is not competitor)
+            tracked.append({
+                "item_id": competitor["item_id"],
+                "score": competitor["score"],
+                "opponent_score": opponent["score"],
+                "home_away": competitor["home_away"],
+            })
+        if not tracked:
+            continue
         games.append({
             "event_id": str(event.get("id", "")),
-            "teams": parsed,
-            "winner": winner,
+            "teams": tracked,
         })
     return games
 
@@ -167,14 +176,13 @@ def _initial_state(teams: dict[str, dict[str, str]]) -> dict[str, dict]:
 def _apply_game(state: dict[str, dict], game: dict) -> None:
     for team in game["teams"]:
         item_id = team["item_id"]
-        other = next(row for row in game["teams"] if row["item_id"] != item_id)
-        won = item_id == game["winner"]
+        won = team["score"] > team["opponent_score"]
         row = state[item_id]
         row["games_played"] += 1
         row["wins"] += int(won)
         row["losses"] += int(not won)
         row["points_for"] += team["score"]
-        row["points_against"] += other["score"]
+        row["points_against"] += team["opponent_score"]
         row["streak_results"].append("W" if won else "L")
 
 
@@ -238,13 +246,15 @@ def write_history(rows: list[dict]) -> None:
     os.replace(temporary, HISTORY_PATH)
 
 
-def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]], latest_payload: dict | None, ok: bool, error: str | None = None) -> None:
+def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]], latest_payload: dict | None, ok: bool, error: str | None = None, requested_dates: list[str] | None = None, failed_dates: list[str] | None = None) -> None:
     dates = [game_date for game_date, _ in raw_files]
     latest_rows = [row for row in build_history(teams, raw_files) if dates and row["date"] == dates[-1]]
     status = {
         "run_time": utc_now().isoformat().replace("+00:00", "Z"),
         "first_run_date": min(dates) if dates else None,
         "days_with_success": len(dates),
+        "dates_requested": requested_dates or dates,
+        "failed_dates": failed_dates or [],
         "items": len(teams),
         "new_today": [],
         "gone_today": [],
@@ -264,20 +274,45 @@ def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, di
     os.replace(temporary, STATUS_PATH)
 
 
-def run(game_date: str, opener=urlopen) -> int:
+def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
     teams = load_teams()
-    try:
-        payload = fetch_scoreboard(game_date, opener=opener)
-        write_raw(game_date, payload)
-        raw_files = read_raw_files()
-        write_history(build_history(teams, raw_files))
-        write_status(teams, raw_files, payload, ok=True)
-        return 0
-    except (HTTPError, URLError, TimeoutError, OSError, RuntimeError, ValueError) as exc:
-        raw_files = read_raw_files()
-        write_status(teams, raw_files, None, ok=False, error=str(exc))
-        print(f"Pipeline failed: {exc}", file=sys.stderr)
-        return 1
+    requested_dates = [value.isoformat() for value in date_range(start_date, end_date)]
+    failed_dates = []
+    latest_payload = None
+    for game_date in requested_dates:
+        try:
+            latest_payload = fetch_scoreboard(game_date, opener=opener)
+            write_raw(game_date, latest_payload)
+        except (HTTPError, URLError, TimeoutError, OSError, RuntimeError, ValueError) as exc:
+            failed_dates.append(game_date)
+            print(f"Pipeline failed for {game_date}: {exc}", file=sys.stderr)
+    raw_files = read_raw_files()
+    write_history(build_history(teams, raw_files))
+    write_status(
+        teams,
+        raw_files,
+        latest_payload,
+        ok=not failed_dates,
+        error=f"Failed dates: {', '.join(failed_dates)}" if failed_dates else None,
+        requested_dates=requested_dates,
+        failed_dates=failed_dates,
+    )
+    return 1 if failed_dates else 0
+
+
+def date_range(start_date: str, end_date: str):
+    start = date.fromisoformat(start_date)
+    end = date.fromisoformat(end_date)
+    if end < start:
+        raise ValueError("end date must not be earlier than start date")
+    current = start
+    while current <= end:
+        yield current
+        current += timedelta(days=1)
+
+
+def run(game_date: str, opener=urlopen) -> int:
+    return run_range(game_date, game_date, opener=opener)
 
 
 def previous_utc_date() -> str:
@@ -287,11 +322,21 @@ def previous_utc_date() -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", default=previous_utc_date(), help="Scoreboard date in YYYY-MM-DD format")
+    parser.add_argument("--start-date", help="First date in a backfill range")
+    parser.add_argument("--end-date", help="Last date in a backfill range")
     args = parser.parse_args()
     try:
-        datetime.strptime(args.date, "%Y-%m-%d")
+        if bool(args.start_date) != bool(args.end_date):
+            parser.error("--start-date and --end-date must be provided together")
+        if args.start_date and args.end_date:
+            date.fromisoformat(args.start_date)
+            date.fromisoformat(args.end_date)
+        else:
+            date.fromisoformat(args.date)
     except ValueError:
         parser.error("--date must use YYYY-MM-DD")
+    if args.start_date and args.end_date:
+        return run_range(args.start_date, args.end_date)
     return run(args.date)
 
 

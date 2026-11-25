@@ -1,0 +1,36 @@
+name: Backfill season to date
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "First scoreboard date to fetch"
+        required: true
+        default: "2026-11-01"
+      end_date:
+        description: "Last completed scoreboard date to fetch"
+        required: true
+        default: "2026-11-24"
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch requested date range
+        run: python src/pipeline.py --start-date "${{ inputs.start_date }}" --end-date "${{ inputs.end_date }}"
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Commit backfilled data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "data: backfill basketball season"
+          git push

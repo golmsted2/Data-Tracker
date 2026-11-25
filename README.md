@@ -14,7 +14,7 @@ Each configured team is an item identified by its ESPN team ID. The history file
 - current win/loss streak;
 - conference membership.
 
-The pipeline downloads the daily Division I scoreboard, keeps games involving configured teams, and rebuilds the full history from the compressed raw files. A team that does not play on a particular day carries forward its latest season-to-date values.
+The pipeline downloads the daily Division I scoreboard, keeps every completed game involving at least one configured team—including games against non-power-conference opponents—and rebuilds the full history from the compressed raw files. A team that does not play on a particular day carries forward its latest season-to-date values.
 
 ## Data source
 
@@ -72,6 +72,7 @@ Python 3.11 or newer is recommended. The pipeline uses only the Python standard 
 
 ```bash
 python src/pipeline.py --date 2026-11-23
+python src/pipeline.py --start-date 2026-11-01 --end-date 2026-11-24
 python -m unittest discover -s tests -v
 ```
 
@@ -82,6 +83,8 @@ The first command downloads one scoreboard response and writes:
 - `data/status.json`
 
 Running the same date again replaces that date's raw file and rebuilds the history, so a second run does not duplicate games.
+
+The backfill command replaces each requested date's raw response and rebuilds the entire history. The manual `Backfill season to date` workflow runs the same command on GitHub Actions.
 
 ## GitHub Actions and Pages
 

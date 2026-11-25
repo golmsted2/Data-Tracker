@@ -33,7 +33,18 @@ class PipelineTests(unittest.TestCase):
         }
         games = pipeline.completed_games(payload_for(), teams)
         self.assertEqual(len(games), 1)
-        self.assertEqual(games[0]["winner"], "1")
+        self.assertEqual(games[0]["teams"][0]["item_id"], "1")
+
+    def test_game_against_untracked_opponent_is_counted(self):
+        teams = {"1": {"item_id": "1", "item": "Alpha", "conference": "Test"}}
+        payload = payload_for()
+        payload["events"][0]["competitions"][0]["competitors"][1]["team"] = {"id": "999", "displayName": "Other Division I Team"}
+        games = pipeline.completed_games(payload, teams)
+        self.assertEqual(len(games), 1)
+        self.assertEqual(games[0]["teams"][0]["opponent_score"], 74)
+        rows = pipeline.build_history(teams, [("2026-11-23", payload)])
+        self.assertEqual(rows[0]["games_played"], 1)
+        self.assertEqual(rows[0]["wins"], 1)
 
     def test_history_accumulates_and_carries_forward(self):
         teams = {
