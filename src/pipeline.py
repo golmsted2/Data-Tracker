@@ -15,6 +15,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +28,10 @@ STATUS_PATH = ROOT / "data" / "status.json"
 RANKINGS_PATH = ROOT / "data" / "rankings.json"
 SOURCE_NAME = "ESPN Men's College Basketball Scoreboard"
 RANKINGS_SOURCE_NAME = "ESPN Men's College Basketball Rankings"
+try:
+    CENTRAL_TZ = ZoneInfo("America/Chicago")
+except ZoneInfoNotFoundError:
+    CENTRAL_TZ = timezone(timedelta(hours=-6), name="CST")
 SOURCE_URL = (
     "https://site.api.espn.com/apis/site/v2/sports/basketball/"
     "mens-college-basketball/scoreboard"
@@ -75,6 +80,18 @@ GAME_FIELDS = [
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def central_now() -> datetime:
+    return utc_now().astimezone(CENTRAL_TZ)
+
+
+def current_scoreboard_date() -> str:
+    return central_now().date().isoformat()
+
+
+def previous_scoreboard_date() -> str:
+    return (central_now().date() - timedelta(days=1)).isoformat()
 
 
 def load_teams(path: Path | None = None) -> dict[str, dict[str, str]]:
@@ -575,8 +592,6 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
             failed_dates.append(game_date)
             print(f"Pipeline failed for {game_date}: {exc}", file=sys.stderr)
     raw_files = read_raw_files()
-    if latest_payload is not None and requested_dates:
-        write_live_games(requested_dates[-1], scoreboard_games(requested_dates[-1], latest_payload, teams))
     history_rows = build_history(teams, raw_files)
     game_rows = build_games(teams, raw_files)
     write_history(history_rows)
@@ -673,10 +688,6 @@ def run(game_date: str, opener=urlopen) -> int:
     return run_range(game_date, game_date, opener=opener)
 
 
-def previous_utc_date() -> str:
-    return (utc_now().date() - timedelta(days=1)).isoformat()
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", help="Scoreboard date in YYYY-MM-DD format")
@@ -687,13 +698,13 @@ def main() -> int:
     if args.live:
         if args.start_date or args.end_date:
             parser.error("--live cannot be combined with a date range")
-        target_date = args.date or utc_now().date().isoformat()
+        target_date = args.date or current_scoreboard_date()
         try:
             date.fromisoformat(target_date)
         except ValueError:
             parser.error("--date must use YYYY-MM-DD")
         return run_live(target_date)
-    target_date = args.date or previous_utc_date()
+    target_date = args.date or previous_scoreboard_date()
     try:
         if bool(args.start_date) != bool(args.end_date):
             parser.error("--start-date and --end-date must be provided together")

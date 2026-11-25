@@ -149,6 +149,10 @@ class PipelineTests(unittest.TestCase):
                 encoding="utf-8",
             )
             with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "GAMES_PATH", root / "data" / "games.csv"), patch.object(pipeline, "LIVE_GAMES_PATH", root / "data" / "live_games.json"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "RANKINGS_PATH", root / "data" / "rankings.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()), patch.object(pipeline, "fetch_rankings", return_value=rankings_payload()):
+                live_path = root / "data" / "live_games.json"
+                live_path.parent.mkdir(parents=True, exist_ok=True)
+                original_live = {"date": "2026-11-25", "games": [{"event_id": "current-live-game"}]}
+                live_path.write_text(json.dumps(original_live), encoding="utf-8")
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 raw = root / "data" / "raw" / "2026-11-23" / "espn_scoreboard.json.gz"
@@ -161,6 +165,7 @@ class PipelineTests(unittest.TestCase):
                 with (root / "data" / "games.csv").open(newline="", encoding="utf-8") as handle:
                     games = list(csv.DictReader(handle))
                 self.assertEqual(len(games), 1)
+                self.assertEqual(json.loads(live_path.read_text(encoding="utf-8")), original_live)
 
 
 if __name__ == "__main__":

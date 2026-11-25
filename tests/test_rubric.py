@@ -1,7 +1,13 @@
 import json
+from datetime import datetime, timezone
 
 from src import pipeline
 from src.github_issue import build_issue_body
+
+
+def test_current_scoreboard_date_uses_central_calendar_date(monkeypatch):
+    monkeypatch.setattr(pipeline, "utc_now", lambda: datetime(2026, 11, 26, 5, 30, tzinfo=timezone.utc))
+    assert pipeline.current_scoreboard_date() == "2026-11-25"
 
 
 def test_movement_rule_reports_old_and_new_values():

@@ -173,6 +173,12 @@ function formatCentralDateTime(value) {
   if (Number.isNaN(parsed.getTime())) return "";
   return parsed.toLocaleString("en-US", {timeZone: "America/Chicago", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short"});
 }
+function centralDateKey(value = new Date()) {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit"}).formatToParts(parsed).map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
 
 function initPreferences() {
   try {
@@ -305,7 +311,7 @@ function renderToday(rows, games, live, status, rankings) {
 
   const todayGames = games.filter(game => game.date === dates.at(-1));
   const completedScoreboardGames = todayGames.map(game => ({...game, status: "Final", completed: true, status_detail: ""}));
-  const liveDate = new Date().toISOString().slice(0, 10);
+  const liveDate = centralDateKey();
   const scoreboardGames = live?.date === liveDate ? (live.games || []) : completedScoreboardGames;
   const scoreboard = document.querySelector("#scoreboard");
   const scoreboardCount = document.querySelector("#scoreboard-count");
