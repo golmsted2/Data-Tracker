@@ -26,7 +26,52 @@ def payload_for(date_value="2026-11-23", score_a=82, score_b=74):
     }
 
 
+def rankings_payload():
+    return {
+        "requestedSeason": {"displayName": "2026-27", "week": {"displayValue": "Week 4"}},
+        "latestWeek": {"displayValue": "Week 4"},
+        "rankings": [
+            {
+                "name": "AP Top 25",
+                "shortName": "AP Poll",
+                "ranks": [{
+                    "current": 1,
+                    "previous": 3,
+                    "trend": "+2",
+                    "points": 1500,
+                    "firstPlaceVotes": 50,
+                    "recordSummary": "6-0",
+                    "date": "2026-11-23T08:00Z",
+                    "team": {"id": "1", "location": "Alpha", "logo": "https://example.test/alpha.png"},
+                }],
+            },
+            {
+                "name": "Coaches Poll",
+                "shortName": "Coaches Poll",
+                "ranks": [{
+                    "current": 2,
+                    "previous": 1,
+                    "trend": "-1",
+                    "points": 1400,
+                    "firstPlaceVotes": 2,
+                    "recordSummary": "6-0",
+                    "date": "2026-11-23T08:00Z",
+                    "team": {"id": "1", "location": "Alpha", "logo": "https://example.test/alpha.png"},
+                }],
+            },
+        ],
+    }
+
+
 class PipelineTests(unittest.TestCase):
+    def test_rankings_are_normalized_for_ap_and_coaches_polls(self):
+        rankings = pipeline.normalize_rankings(rankings_payload())
+        self.assertEqual(rankings["season"], "2026-27")
+        self.assertEqual(rankings["week"], "Week 4")
+        self.assertEqual([poll["key"] for poll in rankings["polls"]], ["ap", "coaches"])
+        self.assertEqual(rankings["polls"][0]["ranks"][0]["previous_rank"], 3)
+        self.assertEqual(rankings["polls"][1]["ranks"][0]["trend"], "-1")
+
     def test_completed_game_is_normalized_for_both_teams(self):
         teams = {
             "1": {"item_id": "1", "item": "Alpha", "conference": "Test"},
@@ -103,7 +148,7 @@ class PipelineTests(unittest.TestCase):
                 + "".join(f"{item_id},Team {item_id},Test\n" for item_id in range(1, 11)),
                 encoding="utf-8",
             )
-            with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "GAMES_PATH", root / "data" / "games.csv"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()):
+            with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "GAMES_PATH", root / "data" / "games.csv"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "RANKINGS_PATH", root / "data" / "rankings.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()), patch.object(pipeline, "fetch_rankings", return_value=rankings_payload()):
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 raw = root / "data" / "raw" / "2026-11-23" / "espn_scoreboard.json.gz"

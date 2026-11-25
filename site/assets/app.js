@@ -2,6 +2,7 @@ const DATA = {
   history: "data/history.csv",
   games: "data/games.csv",
   status: "data/status.json",
+  rankings: "data/rankings.json",
 };
 
 function parseCSV(text) {
@@ -112,6 +113,10 @@ function gameScore(game, itemId) { return game.home_id === itemId ? number(game.
 function opponentScore(game, itemId) { return game.home_id === itemId ? number(game.away_score) : number(game.home_score); }
 function resultFor(game, itemId) { return game.winner_id === itemId ? "W" : "L"; }
 function resultClass(result) { return result === "W" ? "winner" : "loser"; }
+function pollTrend(value) {
+  const trend = String(value || "—"), direction = trend.startsWith("+") ? "up" : trend.startsWith("-") ? "down" : "neutral";
+  return `<span class="poll-trend ${direction}">${safe(trend)}</span>`;
+}
 function conferenceRecord(itemId, conference, games) {
   let wins = 0, losses = 0;
   games.forEach(game => {
@@ -182,13 +187,14 @@ function sortedLeaderboard(rows, field, direction) {
 }
 
 async function loadData() {
-  const [historyResponse, gamesResponse, statusResponse] = await Promise.all([
-    fetch(DATA.history), fetch(DATA.games), fetch(DATA.status),
+  const [historyResponse, gamesResponse, statusResponse, rankingsResponse] = await Promise.all([
+    fetch(DATA.history), fetch(DATA.games), fetch(DATA.status), fetch(DATA.rankings),
   ]);
   const history = historyResponse.ok ? parseCSV(await historyResponse.text()) : [];
   const games = gamesResponse.ok ? parseCSV(await gamesResponse.text()) : [];
   const status = statusResponse.ok ? await statusResponse.json() : {};
-  return {history, games, status};
+  const rankings = rankingsResponse.ok ? await rankingsResponse.json() : {};
+  return {history, games, status, rankings};
 }
 
 function renderQuality(status) {
@@ -200,7 +206,14 @@ function renderQuality(status) {
   target.className = quality?.ok === false ? "status-warn" : "status-good";
 }
 
-function renderToday(rows, games, status) {
+function renderPolls(rankings) {
+  const target = document.querySelector("#polls"), week = document.querySelector("#poll-week"), polls = rankings?.polls || [];
+  if (!target) return;
+  week.textContent = rankings?.week || "Latest poll";
+  target.innerHTML = polls.length ? polls.map(poll => `<div class="poll-card"><div class="poll-card-heading"><div><p class="eyebrow">Weekly national poll</p><h3>${safe(poll.short_name || poll.name)}</h3></div><span class="pill">${poll.date ? dateLabel(poll.date.slice(0, 10)) : "Latest"}</span></div><div class="poll-list">${poll.ranks.map(entry => { const notes = [entry.record, entry.points ? `${Math.round(number(entry.points))} pts` : "", entry.first_place_votes ? `${entry.first_place_votes} first-place` : ""].filter(Boolean).join(" · "); return `<div class="poll-row"><span class="poll-rank">${safe(entry.rank)}</span>${teamLogo({item_id: entry.team_id, item: entry.team}, {showFavorite: false})}<span class="poll-meta">${safe(notes)}</span>${pollTrend(entry.trend)}</div>`; }).join("")}</div></div>`).join("") : `<p class="muted">AP and Coaches poll data is not available yet.</p>`;
+}
+
+function renderToday(rows, games, status, rankings) {
   const dates = latestDates(rows), latest = rankRows(latestRows(rows)), previous = dates.length > 1 ? teamMap(rows.filter(row => row.date === dates.at(-2))) : {};
   const currentRanks = Object.fromEntries(latest.map(row => [row.item_id, row.rank])), previousRanks = Object.fromEntries(rankRows(Object.values(previous)).map(row => [row.item_id, row.rank]));
   const averageWin = latest.length ? latest.reduce((sum, row) => sum + number(row.win_pct), 0) / latest.length : 0;
@@ -208,6 +221,7 @@ function renderToday(rows, games, status) {
   document.querySelector("#run-status").textContent = status.run_time ? `Last pipeline run ${new Date(status.run_time).toLocaleString()}` : "No pipeline status available";
   document.querySelector("#latest-date").textContent = dateLabel(dates.at(-1));
   document.querySelector("#metrics").innerHTML = [[latest.length, "Teams tracked"], [averageWin, "Average win %", true], [latest[0]?.item || "—", "Current leader"], [status.games_logged || 0, "Games logged"]].map(([value, label, isPct]) => `<div class="metric"><strong>${isPct ? pct(value) : safe(value)}</strong><span>${label}</span></div>`).join("");
+  renderPolls(rankings);
   const leaderSnapshot = latestRows(rows);
   let leaderSortField = "win_pct", leaderSortDirection = "desc";
   const leaderHeaders = [...document.querySelectorAll("#leaders th[data-sort]")];
@@ -394,10 +408,10 @@ function renderTrends(rows, games) {
 }
 
 initPreferences();
-loadData().then(({history, games, status}) => {
+loadData().then(({history, games, status, rankings}) => {
   renderQuality(status);
   const page = document.body.dataset.page;
-  if (page === "today") renderToday(history, games, status);
+  if (page === "today") renderToday(history, games, status, rankings);
   if (page === "browse") renderBrowse(history);
   if (page === "conferences") renderConferences(history, games);
   if (page === "compare") renderCompare(history, games);

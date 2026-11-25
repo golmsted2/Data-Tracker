@@ -13,6 +13,7 @@ Each configured team is an item identified by its ESPN team ID. The history file
 - point differential and average points per game;
 - current win/loss streak;
 - conference membership;
+- weekly AP Top 25 and Coaches Poll rankings, including movement, points, and first-place votes;
 - game-level results for standings, schedules, recaps, comparisons, and alerts.
 
 The pipeline downloads the daily Division I scoreboard, keeps every completed game involving at least one configured team—including games against opponents outside that team's conference—and rebuilds the full history and game log from the compressed raw files. A team that does not play on a particular day carries forward its latest season-to-date values.
@@ -25,6 +26,10 @@ The daily source is ESPN's public men's college basketball scoreboard endpoint:
 
 The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA scoreboard is the reference site for the sport. The ESPN endpoint is public but not formally documented, so the pipeline records source failures and the README identifies the endpoint clearly.
 
+Weekly national polls come from ESPN's public men's college basketball rankings endpoint:
+
+`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/rankings`
+
 ## Repository layout
 
 | Path | Purpose |
@@ -34,6 +39,7 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 | `data/raw/<date>/` | Compressed source response for each game date |
 | `data/history.csv` | One season-to-date row per configured team per date |
 | `data/games.csv` | One normalized row per completed matchup, including neutral-site flags |
+| `data/rankings.json` | Latest AP Top 25 and Coaches Poll rankings |
 | `data/status.json` | Latest run and source status |
 | `site/index.html` | Today dashboard |
 | `site/browse.html` | Searchable, sortable team table |

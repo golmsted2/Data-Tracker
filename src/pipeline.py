@@ -23,10 +23,16 @@ RAW_DIR = ROOT / "data" / "raw"
 HISTORY_PATH = ROOT / "data" / "history.csv"
 GAMES_PATH = ROOT / "data" / "games.csv"
 STATUS_PATH = ROOT / "data" / "status.json"
+RANKINGS_PATH = ROOT / "data" / "rankings.json"
 SOURCE_NAME = "ESPN Men's College Basketball Scoreboard"
+RANKINGS_SOURCE_NAME = "ESPN Men's College Basketball Rankings"
 SOURCE_URL = (
     "https://site.api.espn.com/apis/site/v2/sports/basketball/"
     "mens-college-basketball/scoreboard"
+)
+RANKINGS_URL = (
+    "https://site.api.espn.com/apis/site/v2/sports/basketball/"
+    "mens-college-basketball/rankings"
 )
 
 HISTORY_FIELDS = [
@@ -97,6 +103,57 @@ def fetch_scoreboard(game_date: str, opener=urlopen) -> dict:
         if getattr(response, "status", 200) != 200:
             raise RuntimeError(f"Scoreboard returned HTTP {response.status}")
         return json.loads(response.read().decode("utf-8"))
+
+
+def fetch_rankings(opener=urlopen) -> dict:
+    request = Request(RANKINGS_URL, headers={"User-Agent": "ncaa-division-i-tracker/1.0"})
+    with opener(request, timeout=45) as response:
+        if getattr(response, "status", 200) != 200:
+            raise RuntimeError(f"Rankings returned HTTP {response.status}")
+        return json.loads(response.read().decode("utf-8"))
+
+
+def normalize_rankings(payload: dict) -> dict:
+    polls = []
+    for ranking in payload.get("rankings", []):
+        name = ranking.get("name", "")
+        key = "ap" if "AP" in name else "coaches" if "Coach" in name else ""
+        if not key:
+            continue
+        ranks = []
+        for entry in ranking.get("ranks", []):
+            team = entry.get("team") or {}
+            ranks.append({
+                "rank": entry.get("current"),
+                "previous_rank": entry.get("previous"),
+                "trend": entry.get("trend", ""),
+                "points": entry.get("points", 0),
+                "first_place_votes": entry.get("firstPlaceVotes", 0),
+                "team_id": str(team.get("id", "")),
+                "team": team.get("location") or team.get("shortName") or team.get("name", ""),
+                "record": entry.get("recordSummary", ""),
+                "logo": team.get("logo", ""),
+            })
+        polls.append({
+            "key": key,
+            "name": name,
+            "short_name": ranking.get("shortName", name),
+            "date": next((entry.get("date") for entry in ranking.get("ranks", []) if entry.get("date")), ""),
+            "last_updated": next((entry.get("lastUpdated") for entry in ranking.get("ranks", []) if entry.get("lastUpdated")), ""),
+            "ranks": ranks,
+        })
+    polls.sort(key=lambda poll: {"ap": 0, "coaches": 1}.get(poll["key"], 2))
+    if not polls:
+        raise ValueError("Rankings response contained no AP or Coaches poll")
+    requested = payload.get("requestedSeason") or payload.get("latestSeason") or {}
+    week = payload.get("latestWeek") or requested.get("week") or {}
+    return {
+        "source": RANKINGS_SOURCE_NAME,
+        "fetched_at": utc_now().isoformat().replace("+00:00", "Z"),
+        "season": requested.get("displayName", ""),
+        "week": week.get("displayValue") or week.get("display", ""),
+        "polls": polls,
+    }
 
 
 def raw_path(game_date: str) -> Path:
@@ -320,6 +377,13 @@ def write_games(rows: list[dict]) -> None:
     os.replace(temporary, GAMES_PATH)
 
 
+def write_rankings(rows: dict) -> None:
+    RANKINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    temporary = RANKINGS_PATH.with_suffix(".tmp")
+    temporary.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+    os.replace(temporary, RANKINGS_PATH)
+
+
 def validate_dataset(teams: dict[str, dict[str, str]], history_rows: list[dict], game_rows: list[dict]) -> dict:
     issues: list[str] = []
     latest_date = max((row["date"] for row in history_rows), default=None)
@@ -344,7 +408,7 @@ def validate_dataset(teams: dict[str, dict[str, str]], history_rows: list[dict],
     }
 
 
-def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]], latest_payload: dict | None, ok: bool, error: str | None = None, requested_dates: list[str] | None = None, failed_dates: list[str] | None = None, history_rows: list[dict] | None = None, game_rows: list[dict] | None = None) -> None:
+def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]], latest_payload: dict | None, ok: bool, error: str | None = None, requested_dates: list[str] | None = None, failed_dates: list[str] | None = None, history_rows: list[dict] | None = None, game_rows: list[dict] | None = None, rankings_data: dict | None = None, rankings_error: str | None = None) -> None:
     dates = [game_date for game_date, _ in raw_files]
     history_rows = history_rows if history_rows is not None else build_history(teams, raw_files)
     game_rows = game_rows if game_rows is not None else build_games(teams, raw_files)
@@ -367,6 +431,14 @@ def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, di
             "count": len((latest_payload or {}).get("events", [])) if ok else 0,
         }],
     }
+    if rankings_data is not None or rankings_error:
+        status["sources"].append({
+            "name": RANKINGS_SOURCE_NAME,
+            "ok": rankings_error is None,
+            "count": sum(len(poll.get("ranks", [])) for poll in (rankings_data or {}).get("polls", [])),
+        })
+        if rankings_error:
+            status["rankings_error"] = rankings_error
     if latest_rows:
         status["items"] = len(latest_rows)
     if error:
@@ -382,6 +454,8 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
     requested_dates = [value.isoformat() for value in date_range(start_date, end_date)]
     failed_dates = []
     latest_payload = None
+    rankings_data = None
+    rankings_error = None
     for game_date in requested_dates:
         try:
             latest_payload = fetch_scoreboard(game_date, opener=opener)
@@ -394,6 +468,12 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
     game_rows = build_games(teams, raw_files)
     write_history(history_rows)
     write_games(game_rows)
+    try:
+        rankings_data = normalize_rankings(fetch_rankings(opener=opener))
+        write_rankings(rankings_data)
+    except (HTTPError, URLError, TimeoutError, OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
+        rankings_error = str(exc)
+        print(f"Rankings fetch failed: {exc}", file=sys.stderr)
     write_status(
         teams,
         raw_files,
@@ -404,6 +484,8 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
         failed_dates=failed_dates,
         history_rows=history_rows,
         game_rows=game_rows,
+        rankings_data=rankings_data,
+        rankings_error=rankings_error,
     )
     return 1 if failed_dates else 0
 
