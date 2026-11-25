@@ -35,7 +35,7 @@ function initials(name) {
 }
 const THEME_KEY = "power-hoops-theme";
 const FAVORITES_KEY = "power-hoops-favorites";
-const BRACKET_KEY = "power-hoops-bracket-picks-v3";
+const BRACKET_KEY = "power-hoops-bracket-picks-v4";
 let favoriteIds = new Set();
 let rosterIds = new Set();
 let bracketPicks = {};
@@ -433,7 +433,7 @@ function renderBracket(rows, games) {
     regionsTarget.innerHTML = `<p class="muted">The bracket needs at least 64 scored teams.</p>`;
     return;
   }
-  const regionNames = ["East", "West", "South", "Midwest"], roundNames = ["Round of 64", "Round of 32", "Sweet 16", "Elite 8"];
+  const regionNames = ["East", "West", "South", "Midwest"], seedOrder = [1, 16, 8, 9, 4, 13, 5, 12, 2, 15, 7, 10, 3, 14, 6, 11], roundNames = ["Round of 64", "Round of 32", "Sweet 16", "Elite 8"];
   function createGame(region, round, index, teamA, teamB) {
     return {id: `${region}-${round}-${index}`, round, teamA, teamB, modelWinner: teamA && teamB ? (teamA.score >= teamB.score ? teamA : teamB) : null};
   }
@@ -442,10 +442,11 @@ function renderBracket(rows, games) {
     return [game.teamA, game.teamB].find(team => team && team.item_id === picked) || null;
   }
   function buildRegion(region, regionIndex) {
+    const regionalTeams = Array.from({length: 16}, (_, seedIndex) => { const overallSeed = seedIndex * 4 + regionIndex + 1; return {...profiles[overallSeed - 1], seed: seedIndex + 1, overallSeed}; });
     const firstRound = [];
     for (let index = 0; index < 8; index += 1) {
-      const overallSeedA = regionIndex * 8 + index + 1, overallSeedB = 65 - overallSeedA;
-      firstRound.push(createGame(`${regionIndex}`, 1, index, {...profiles[overallSeedA - 1], seed: index + 1, overallSeed: overallSeedA}, {...profiles[overallSeedB - 1], seed: 16 - index, overallSeed: overallSeedB}));
+      const seedA = seedOrder[index * 2], seedB = seedOrder[index * 2 + 1];
+      firstRound.push(createGame(`${regionIndex}`, 1, index, regionalTeams[seedA - 1], regionalTeams[seedB - 1]));
     }
     const rounds = [firstRound];
     for (let round = 2; round <= 4; round += 1) {
