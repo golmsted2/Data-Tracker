@@ -35,7 +35,7 @@ function initials(name) {
 }
 const THEME_KEY = "power-hoops-theme";
 const FAVORITES_KEY = "power-hoops-favorites";
-const BRACKET_KEY = "power-hoops-bracket-picks";
+const BRACKET_KEY = "power-hoops-bracket-picks-v2";
 let favoriteIds = new Set();
 let rosterIds = new Set();
 let bracketPicks = {};
@@ -435,11 +435,11 @@ function renderBracket(rows, games) {
   }
   const regionNames = ["East", "West", "South", "Midwest"], seedOrder = [1, 16, 8, 9, 4, 13, 5, 12, 2, 15, 7, 10, 3, 14, 6, 11], roundNames = ["Round of 64", "Round of 32", "Sweet 16", "Elite 8"];
   function createGame(region, round, index, teamA, teamB) {
-    return {id: `${region}-${round}-${index}`, round, teamA, teamB, modelWinner: teamA.score >= teamB.score ? teamA : teamB};
+    return {id: `${region}-${round}-${index}`, round, teamA, teamB, modelWinner: teamA && teamB ? (teamA.score >= teamB.score ? teamA : teamB) : null};
   }
   function winnerOf(game) {
     const picked = bracketPicks[game.id];
-    return [game.teamA, game.teamB].find(team => team.item_id === picked) || game.modelWinner;
+    return [game.teamA, game.teamB].find(team => team && team.item_id === picked) || null;
   }
   function buildRegion(region, regionIndex) {
     const pool = profiles.slice(regionIndex * 16, regionIndex * 16 + 16), firstRound = [];
@@ -456,23 +456,38 @@ function renderBracket(rows, games) {
     return {name: region, rounds, champion: winnerOf(rounds[3][0])};
   }
   function gameCard(game) {
-    const selected = bracketPicks[game.id] === game.teamA.item_id || bracketPicks[game.id] === game.teamB.item_id;
-    const pickButton = team => `<button class="bracket-pick${bracketPicks[game.id] === team.item_id ? " selected" : ""}" type="button" data-bracket-game="${safe(game.id)}" data-bracket-team="${safe(team.item_id)}" aria-pressed="${bracketPicks[game.id] === team.item_id}"><span class="bracket-seed">${team.seed || ""}</span>${teamLogo(team, {link: false, showFavorite: false})}<strong class="bracket-score">${team.score}</strong></button>`;
-    return `<div class="bracket-game"><div class="bracket-seed-label">${selected ? "Your pick" : "Score model"}</div>${pickButton(game.teamA)}${pickButton(game.teamB)}<small>Model: ${safe(game.modelWinner.item)}</small></div>`;
+    const selected = [game.teamA, game.teamB].some(team => team && bracketPicks[game.id] === team.item_id);
+    const canPick = game.round === 1 || (game.teamA && game.teamB);
+    const pickButton = team => team ? `<button class="bracket-pick${bracketPicks[game.id] === team.item_id ? " selected" : ""}" type="button"${canPick ? "" : " disabled"} data-bracket-game="${safe(game.id)}" data-bracket-team="${safe(team.item_id)}" aria-pressed="${bracketPicks[game.id] === team.item_id}"><span class="bracket-seed">${team.seed || ""}</span>${teamLogo(team, {link: false, showFavorite: false})}<strong class="bracket-score">${team.score}</strong></button>` : `<div class="bracket-slot empty"><span class="bracket-seed">—</span><span>Awaiting winner</span></div>`;
+    const label = game.round === 1 ? "Field of 64" : selected ? "Your pick" : game.teamA && game.teamB ? "Choose winner" : "Waiting on previous round";
+    const note = game.round === 1 ? "Seeded by résumé score" : game.teamA && game.teamB ? "Click a team to advance" : "Pick both teams above to unlock";
+    return `<div class="bracket-game"><div class="bracket-seed-label">${label}</div>${pickButton(game.teamA)}${pickButton(game.teamB)}<small>${note}</small></div>`;
   }
   function paint() {
     const regionData = regionNames.map((name, index) => buildRegion(name, index));
     const semifinalA = createGame("final", 4, 0, regionData[0].champion, regionData[1].champion), semifinalB = createGame("final", 4, 1, regionData[2].champion, regionData[3].champion), championship = createGame("final", 5, 0, winnerOf(semifinalA), winnerOf(semifinalB));
     regionsTarget.innerHTML = regionData.map((region, index) => `<section class="panel bracket-region ${index % 2 ? "right" : "left"}"><div class="panel-heading"><div><p class="eyebrow">Score-seeded region</p><h2>${region.name}</h2></div><span class="pill">16 teams</span></div><div class="bracket-rounds">${region.rounds.map((round, roundIndex) => `<div class="bracket-round"><h3>${roundNames[roundIndex]}</h3><div class="bracket-games">${round.map(gameCard).join("")}</div></div>`).join("")}</div></section>`).join("");
     finalTarget.innerHTML = `<div class="final-four-board"><div class="final-four-game"><p class="eyebrow">East vs West</p>${gameCard(semifinalA)}</div><div class="final-four-game"><p class="eyebrow">South vs Midwest</p>${gameCard(semifinalB)}</div><div class="championship-game"><p class="eyebrow">National championship</p>${gameCard(championship)}</div></div>`;
-    const allGames = [...regionData.flatMap(region => region.rounds.flat()), semifinalA, semifinalB, championship], validPicks = allGames.filter(game => bracketPicks[game.id] === game.teamA.item_id || bracketPicks[game.id] === game.teamB.item_id).length;
+    const allGames = [...regionData.flatMap(region => region.rounds.flat()), semifinalA, semifinalB, championship], validPicks = allGames.filter(game => [game.teamA, game.teamB].some(team => team && bracketPicks[game.id] === team.item_id)).length;
     document.querySelector("#bracket-field").textContent = `${profiles.length} teams`;
     document.querySelector("#bracket-picks").textContent = `${validPicks}/${allGames.length}`;
-    document.querySelector("#bracket-model-champion").textContent = championship.modelWinner.item;
-    document.querySelector("#bracket-your-champion").textContent = winnerOf(championship).item;
+    document.querySelector("#bracket-model-champion").textContent = championship.modelWinner?.item || "—";
+    document.querySelector("#bracket-your-champion").textContent = winnerOf(championship)?.item || "—";
     document.querySelectorAll("[data-bracket-game][data-bracket-team]").forEach(button => button.addEventListener("click", () => { bracketPicks[button.dataset.bracketGame] = button.dataset.bracketTeam; saveBracketPicks(); paint(); }));
   }
-  document.querySelector("#use-model-picks").onclick = () => { bracketPicks = {}; paint(); const regionData = regionNames.map((name, index) => buildRegion(name, index)); regionData.flatMap(region => region.rounds.flat()).forEach(game => { bracketPicks[game.id] = game.modelWinner.item_id; }); const semifinalA = createGame("final", 4, 0, regionData[0].champion, regionData[1].champion), semifinalB = createGame("final", 4, 1, regionData[2].champion, regionData[3].champion), championship = createGame("final", 5, 0, winnerOf(semifinalA), winnerOf(semifinalB)); [semifinalA, semifinalB, championship].forEach(game => { bracketPicks[game.id] = game.modelWinner.item_id; }); saveBracketPicks(); paint(); };
+  document.querySelector("#use-model-picks").onclick = () => {
+    bracketPicks = {};
+    let regionData = regionNames.map((name, index) => buildRegion(name, index));
+    for (let round = 0; round < 4; round += 1) {
+      regionData.flatMap(region => region.rounds[round]).forEach(game => { if (game.modelWinner) bracketPicks[game.id] = game.modelWinner.item_id; });
+      regionData = regionNames.map((name, index) => buildRegion(name, index));
+    }
+    const semifinalA = createGame("final", 4, 0, regionData[0].champion, regionData[1].champion), semifinalB = createGame("final", 4, 1, regionData[2].champion, regionData[3].champion);
+    [semifinalA, semifinalB].forEach(game => { if (game.modelWinner) bracketPicks[game.id] = game.modelWinner.item_id; });
+    const championship = createGame("final", 5, 0, winnerOf(semifinalA), winnerOf(semifinalB));
+    if (championship.modelWinner) bracketPicks[championship.id] = championship.modelWinner.item_id;
+    saveBracketPicks(); paint();
+  };
   document.querySelector("#clear-bracket-picks").onclick = () => { bracketPicks = {}; saveBracketPicks(); paint(); };
   paint();
 }
