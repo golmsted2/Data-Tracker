@@ -5,6 +5,14 @@
   "display": "standalone",
   "background_color": "#f7f9fc",
   "theme_color": "#102a43",
-  "description": "Daily performance tracker for all current NCAA men's Division I basketball teams."
+  "description": "Daily performance tracker for all current NCAA men's Division I basketball teams.",
+  "icons": [
+    {
+      "src": "assets/ncaa-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
 
