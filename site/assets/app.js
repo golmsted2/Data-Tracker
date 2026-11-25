@@ -35,7 +35,7 @@ function initials(name) {
 }
 const THEME_KEY = "power-hoops-theme";
 const FAVORITES_KEY = "power-hoops-favorites";
-const BRACKET_KEY = "power-hoops-bracket-picks-v2";
+const BRACKET_KEY = "power-hoops-bracket-picks-v3";
 let favoriteIds = new Set();
 let rosterIds = new Set();
 let bracketPicks = {};
@@ -433,7 +433,7 @@ function renderBracket(rows, games) {
     regionsTarget.innerHTML = `<p class="muted">The bracket needs at least 64 scored teams.</p>`;
     return;
   }
-  const regionNames = ["East", "West", "South", "Midwest"], seedOrder = [1, 16, 8, 9, 4, 13, 5, 12, 2, 15, 7, 10, 3, 14, 6, 11], roundNames = ["Round of 64", "Round of 32", "Sweet 16", "Elite 8"];
+  const regionNames = ["East", "West", "South", "Midwest"], roundNames = ["Round of 64", "Round of 32", "Sweet 16", "Elite 8"];
   function createGame(region, round, index, teamA, teamB) {
     return {id: `${region}-${round}-${index}`, round, teamA, teamB, modelWinner: teamA && teamB ? (teamA.score >= teamB.score ? teamA : teamB) : null};
   }
@@ -442,10 +442,10 @@ function renderBracket(rows, games) {
     return [game.teamA, game.teamB].find(team => team && team.item_id === picked) || null;
   }
   function buildRegion(region, regionIndex) {
-    const pool = profiles.slice(regionIndex * 16, regionIndex * 16 + 16), firstRound = [];
+    const firstRound = [];
     for (let index = 0; index < 8; index += 1) {
-      const seedA = seedOrder[index * 2], seedB = seedOrder[index * 2 + 1];
-      firstRound.push(createGame(`${regionIndex}`, 1, index, {...pool[seedA - 1], seed: seedA}, {...pool[seedB - 1], seed: seedB}));
+      const seedA = regionIndex * 8 + index + 1, seedB = 65 - seedA;
+      firstRound.push(createGame(`${regionIndex}`, 1, index, {...profiles[seedA - 1], seed: seedA}, {...profiles[seedB - 1], seed: seedB}));
     }
     const rounds = [firstRound];
     for (let round = 2; round <= 4; round += 1) {
@@ -471,7 +471,6 @@ function renderBracket(rows, games) {
     const allGames = [...regionData.flatMap(region => region.rounds.flat()), semifinalA, semifinalB, championship], validPicks = allGames.filter(game => [game.teamA, game.teamB].some(team => team && bracketPicks[game.id] === team.item_id)).length;
     document.querySelector("#bracket-field").textContent = `${profiles.length} teams`;
     document.querySelector("#bracket-picks").textContent = `${validPicks}/${allGames.length}`;
-    document.querySelector("#bracket-model-champion").textContent = championship.modelWinner?.item || "—";
     document.querySelector("#bracket-your-champion").textContent = winnerOf(championship)?.item || "—";
     document.querySelectorAll("[data-bracket-game][data-bracket-team]").forEach(button => button.addEventListener("click", () => { bracketPicks[button.dataset.bracketGame] = button.dataset.bracketTeam; saveBracketPicks(); paint(); }));
   }
