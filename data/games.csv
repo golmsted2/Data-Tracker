@@ -1360,6 +1360,7 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-24,401909763,true,24,Stanford,Atlantic Coast Conference,65,38,Colorado,Big 12 Conference,70,38,24,5,135
 2026-11-25,401929406,false,233,South Dakota,Summit League,86,2029,Arkansas-Pine Bluff,Southwestern Athletic Conference,50,233,2029,36,136
 2026-11-25,401926207,false,2717,Western Carolina,Southern Conference,100,2410,Montreat Cavaliers,Outside roster,42,2717,2410,58,142
+2026-11-25,401920868,false,2885,NJIT,America East Conference,70,2363,Manhattan,Metro Conference,81,2363,2885,11,151
 2026-11-25,401920428,true,269,Marquette,Big East Conference,54,258,Virginia,Atlantic Coast Conference,60,258,269,6,114
 2026-11-25,401927399,true,2057,Belmont,Missouri Valley Conference,68,179,St. Bonaventure,Atlantic 10 Conference,71,179,2057,3,139
 2026-11-25,401928845,true,195,Ohio,Mid-American Conference,74,242,Rice,American Athletic Conference,82,242,195,8,156
