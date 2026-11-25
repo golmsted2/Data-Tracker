@@ -167,6 +167,12 @@ function formatHistoryMetric(key, value) {
   if (["point_diff", "avg_points_for", "avg_points_against"].includes(key)) return `${value >= 0 ? "+" : ""}${value.toFixed(1)}`;
   return value.toFixed(0);
 }
+function formatCentralDateTime(value) {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return parsed.toLocaleString("en-US", {timeZone: "America/Chicago", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short"});
+}
 
 function initPreferences() {
   try {
@@ -265,7 +271,7 @@ function renderToday(rows, games, live, status, rankings) {
   const currentRanks = Object.fromEntries(latest.map(row => [row.item_id, row.rank])), previousRanks = Object.fromEntries(rankRows(Object.values(previous)).map(row => [row.item_id, row.rank]));
   const averageWin = latest.length ? latest.reduce((sum, row) => sum + number(row.win_pct), 0) / latest.length : 0;
   const movers = latest.map(row => ({...row, delta: number(row.win_pct) - number(previous[row.item_id]?.win_pct), pointDelta: number(row.point_diff) - number(previous[row.item_id]?.point_diff)})).filter(row => row.delta || row.pointDelta).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || Math.abs(b.pointDelta) - Math.abs(a.pointDelta)).slice(0, 8);
-  document.querySelector("#run-status").textContent = status.run_time ? `Last pipeline run ${new Date(status.run_time).toLocaleString()}` : "No pipeline status available";
+  document.querySelector("#run-status").textContent = status.run_time ? `Last pipeline run ${formatCentralDateTime(status.run_time)}` : "No pipeline status available";
   document.querySelector("#latest-date").textContent = dateLabel(dates.at(-1));
   document.querySelector("#metrics").innerHTML = [[latest.length, "Teams tracked"], [averageWin, "Average win %", true], [latest[0]?.item || "—", "Current leader"], [status.games_logged || 0, "Games logged"]].map(([value, label, isPct]) => `<div class="metric"><strong>${isPct ? pct(value) : safe(value)}</strong><span>${label}</span></div>`).join("");
   renderPolls(rankings);
@@ -307,7 +313,7 @@ function renderToday(rows, games, live, status, rankings) {
     scoreboardCount.textContent = `${scoreboardGames.length} ${scoreboardGames.length === 1 ? "game" : "games"}`;
     scoreboard.innerHTML = scoreboardGames.length ? scoreboardGames.map(game => {
       const homeWon = game.winner_id === game.home_id, awayWon = game.winner_id === game.away_id;
-      const statusLabel = game.status || "Final", statusDetail = game.status_detail || (statusLabel === "Scheduled" ? "Upcoming" : ""), homeScore = game.home_score === "" || game.home_score == null ? "—" : game.home_score, awayScore = game.away_score === "" || game.away_score == null ? "—" : game.away_score;
+      const statusLabel = game.status || "Final", statusDetail = statusLabel === "Scheduled" ? (formatCentralDateTime(game.start_time) || game.status_detail || "Upcoming") : game.status_detail || "", homeScore = game.home_score === "" || game.home_score == null ? "—" : game.home_score, awayScore = game.away_score === "" || game.away_score == null ? "—" : game.away_score;
       return `<article class="score-card"><div class="score-card-top"><span class="badge${statusLabel === "In progress" ? " live" : ""}">${safe(statusLabel)}</span><span>${safe(statusDetail || (String(game.neutral_site).toLowerCase() === "true" ? "Neutral" : ""))}</span></div><div class="score-line ${homeWon ? "score-winner" : ""}">${teamLogo({item_id: game.home_id, item: game.home_team}, {showFavorite: false})}<strong>${safe(homeScore)}</strong></div><div class="score-line ${awayWon ? "score-winner" : ""}">${teamLogo({item_id: game.away_id, item: game.away_team}, {showFavorite: false})}<strong>${safe(awayScore)}</strong></div></article>`;
     }).join("") : `<p class="muted">No games scheduled or completed for the latest scoreboard date.</p>`;
   }
