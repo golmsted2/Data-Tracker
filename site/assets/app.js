@@ -41,6 +41,50 @@ function favoriteButton(team) {
   const active = favoriteIds.has(itemId);
   return `<button class="favorite-button${active ? " is-favorite" : ""}" type="button" data-favorite-id="${safe(itemId)}" data-favorite-name="${safe(team.item)}" aria-label="${active ? "Remove" : "Add"} ${safe(team.item)} ${active ? "from" : "to"} favorites" aria-pressed="${active}" title="${active ? "Remove from favorites" : "Add to favorites"}">${active ? "★" : "☆"}</button>`;
 }
+const CONFERENCE_LOGOS = {
+  "America East Conference": "america_east",
+  "American Athletic Conference": "american",
+  "Atlantic 10 Conference": "atlantic_10",
+  "Atlantic Coast Conference": "acc",
+  "Atlantic Sun Conference": "atlantic_sun",
+  "Big 12 Conference": "big_12",
+  "Big East Conference": "big_east",
+  "Big Sky Conference": "big_sky",
+  "Big South Conference": "big_south",
+  "Big Ten Conference": "big_ten",
+  "Big West Conference": "big_west",
+  "Coastal Athletic Association": "coastal",
+  "Conference USA": "conference_usa",
+  "Horizon League": "horizon",
+  "Ivy League": "ivy",
+  "Metro Conference": "metro",
+  "Mid-American Conference": "mid_american",
+  "Mid-Eastern Athletic Conference": "meac",
+  "Missouri Valley Conference": "missouri_valley",
+  "Mountain West Conference": "mountain_west",
+  "Northeast Conference": "northeast",
+  "Ohio Valley Conference": "ohio_valley",
+  "Pac-12 Conference": "pac_12",
+  "Patriot League": "patriot_league",
+  "Southeastern Conference": "sec",
+  "Southern Conference": "southern",
+  "Southland Conference": "southland",
+  "Southwestern Athletic Conference": "swac",
+  "Summit League": "summit_league",
+  "Sun Belt Conference": "sun_belt",
+  "United Athletic Conference": "uac",
+  "West Coast Conference": "west_coast",
+};
+const CONFERENCE_SHORT = {
+  "America East Conference": "AE", "American Athletic Conference": "AAC", "Atlantic 10 Conference": "A-10", "Atlantic Coast Conference": "ACC", "Atlantic Sun Conference": "ASUN", "Big 12 Conference": "XII", "Big East Conference": "BE", "Big Sky Conference": "BSKY", "Big South Conference": "BS", "Big Ten Conference": "B1G", "Big West Conference": "BW", "Coastal Athletic Association": "CAA", "Conference USA": "C-USA", "Horizon League": "HL", "Ivy League": "IVY", "Metro Conference": "METRO", "Mid-American Conference": "MAC", "Mid-Eastern Athletic Conference": "MEAC", "Missouri Valley Conference": "MVC", "Mountain West Conference": "MW", "Northeast Conference": "NEC", "Ohio Valley Conference": "OVC", "Pac-12 Conference": "PAC-12", "Patriot League": "PAT", "Southeastern Conference": "SEC", "Southern Conference": "SOCON", "Southland Conference": "SLC", "Southwestern Athletic Conference": "SWAC", "Summit League": "SUMMIT", "Sun Belt Conference": "SBC", "United Athletic Conference": "UAC", "West Coast Conference": "WCC",
+};
+function conferenceMark(conference, options = {}) {
+  const slug = CONFERENCE_LOGOS[conference], fallback = CONFERENCE_SHORT[conference] || initials(conference);
+  return `<span class="conference-mark${options.large ? " large" : ""}"><img class="conference-logo" src="https://a.espncdn.com/i/teamlogos/ncaa_conf/500/${slug || "missing"}.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="conference-logo-fallback">${safe(fallback)}</span></span>`;
+}
+function conferenceLabel(conference, options = {}) {
+  return `<span class="conference-cell${options.large ? " conference-heading" : ""}">${conferenceMark(conference, options)}<span class="conference-name">${safe(conference)}</span></span>`;
+}
 function teamLogo(team, options = {}) {
   const itemId = String(team.item_id || "");
   const favorite = options.showFavorite === false ? "" : favoriteButton(team);
@@ -169,7 +213,7 @@ function renderToday(rows, games, status) {
   const leaderHeaders = [...document.querySelectorAll("#leaders th[data-sort]")];
   function paintLeaderboard() {
     const sorted = sortedLeaderboard(leaderSnapshot, leaderSortField, leaderSortDirection);
-    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 12).map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 12).map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
     leaderHeaders.forEach(header => {
       const active = header.dataset.sort === leaderSortField;
       header.classList.toggle("sort-active", active);
@@ -190,7 +234,7 @@ function renderToday(rows, games, status) {
   document.querySelector("#movers").innerHTML = movers.length ? movers.map(row => `<div class="stack-row"><span><strong>${safe(row.item)}</strong><br><small>${safe(row.conference)}</small></span><strong class="${row.delta > 0 ? "delta-positive" : "delta-negative"}">${row.delta > 0 ? "+" : ""}${(row.delta * 100).toFixed(1)} pts<br><small>${row.pointDelta > 0 ? "+" : ""}${row.pointDelta.toFixed(0)} diff</small></strong></div>`).join("") : `<p class="muted">No completed games changed the snapshot.</p>`;
   const conferenceMap = {};
   latest.forEach(row => { conferenceMap[row.conference] ??= []; conferenceMap[row.conference].push(number(row.win_pct)); });
-  document.querySelector("#conferences").innerHTML = Object.entries(conferenceMap).sort((a, b) => b[1].reduce((x, y) => x + y, 0) / b[1].length - a[1].reduce((x, y) => x + y, 0) / a[1].length).map(([conference, values]) => { const value = values.reduce((x, y) => x + y, 0) / values.length; return `<div class="bar-row"><span>${safe(conference)}</span><strong>${pct(value)}</strong></div>`; }).join("");
+  document.querySelector("#conferences").innerHTML = Object.entries(conferenceMap).sort((a, b) => b[1].reduce((x, y) => x + y, 0) / b[1].length - a[1].reduce((x, y) => x + y, 0) / a[1].length).map(([conference, values]) => { const value = values.reduce((x, y) => x + y, 0) / values.length; return `<div class="bar-row">${conferenceLabel(conference)}<strong>${pct(value)}</strong></div>`; }).join("");
 
   const todayGames = games.filter(game => game.date === dates.at(-1));
   const scoreboard = document.querySelector("#scoreboard");
@@ -219,7 +263,7 @@ function renderBrowse(rows) {
     const query = search.value.toLowerCase(), selected = conference.value, field = sort.value;
     const filtered = latest.filter(row => row.item.toLowerCase().includes(query) && (!selected || row.conference === selected) && (!favoritesOnly?.checked || favoriteIds.has(String(row.item_id)))).sort((a, b) => field === "item" ? a.item.localeCompare(b.item) : number(b[field]) - number(a[field]));
     count.textContent = `${filtered.length} teams shown`;
-    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
   }
   [search, conference, sort, favoritesOnly].filter(Boolean).forEach(element => element.addEventListener("input", paint));
   document.addEventListener("favoriteschange", paint); paint();
@@ -230,9 +274,9 @@ function renderConferences(rows, games) {
   [...new Set(latest.map(row => row.conference))].sort().forEach(value => conferences.insertAdjacentHTML("beforeend", `<option value="${safe(value)}">${safe(value)}</option>`));
   function paint() {
     const selected = conferences.value, teams = latest.filter(row => !selected || row.conference === selected).map(row => ({...row, conferenceRecord: conferenceRecord(row.item_id, row.conference, games)})).sort((a, b) => b.conferenceRecord.wins / Math.max(b.conferenceRecord.total, 1) - a.conferenceRecord.wins / Math.max(a.conferenceRecord.total, 1) || number(b.win_pct) - number(a.win_pct) || number(b.point_diff) - number(a.point_diff));
-    title.textContent = selected || "All conferences";
+    title.innerHTML = selected ? conferenceLabel(selected, {large: true}) : "All conferences";
     document.querySelector("#conference-summary").innerHTML = selected ? `<div class="metric"><strong>${teams.length}</strong><span>Teams</span></div><div class="metric"><strong>${teams.filter(row => row.conferenceRecord.wins > row.conferenceRecord.losses).length}</strong><span>Teams above .500 in conference</span></div><div class="metric"><strong>${teams.length ? pct(teams.reduce((sum, row) => sum + number(row.win_pct), 0) / teams.length) : "0.0%"}</strong><span>Average overall win %</span></div>` : `<p class="muted">Choose a conference to see its table and conference records.</p>`;
-    document.querySelector("#conference-table tbody").innerHTML = teams.map((row, index) => `<tr><td>${index + 1}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${row.conferenceRecord.wins}-${row.conferenceRecord.losses}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td></tr>`).join("");
+    document.querySelector("#conference-table tbody").innerHTML = teams.map((row, index) => `<tr><td>${index + 1}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${row.conferenceRecord.wins}-${row.conferenceRecord.losses}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td></tr>`).join("");
   }
   conferences.addEventListener("input", paint); paint();
 }
@@ -321,7 +365,7 @@ function renderBubble(rows, games) {
   function paint() {
     const filtered = profiles.filter(row => (!filter.value || row.tier === filter.value) && (!conference.value || row.conference === conference.value));
     document.querySelector("#bubble-count").textContent = `${filtered.length} teams shown`;
-    document.querySelector("#bubble-table tbody").innerHTML = filtered.map((row, index) => `<tr><td>${index + 1}</td><td>${teamLogo(row)}</td><td>${safe(row.conference)}</td><td>${safe(row.tier)}</td><td>${row.score}</td><td>${pct(row.sos)}</td><td>${pct(row.conferenceStrength)}</td><td>${row.quadrants.Q1.wins}-${row.quadrants.Q1.losses}</td><td>${row.quadrants.Q2.wins}-${row.quadrants.Q2.losses}</td><td>${row.badLosses}</td><td>${row.recentWins}-${row.recentLosses}</td></tr>`).join("");
+    document.querySelector("#bubble-table tbody").innerHTML = filtered.map((row, index) => `<tr><td>${index + 1}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${safe(row.tier)}</td><td>${row.score}</td><td>${pct(row.sos)}</td><td>${pct(row.conferenceStrength)}</td><td>${row.quadrants.Q1.wins}-${row.quadrants.Q1.losses}</td><td>${row.quadrants.Q2.wins}-${row.quadrants.Q2.losses}</td><td>${row.badLosses}</td><td>${row.recentWins}-${row.recentLosses}</td></tr>`).join("");
   }
   [filter, conference].forEach(element => element.addEventListener("input", paint)); paint();
 }
