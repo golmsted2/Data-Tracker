@@ -56,6 +56,21 @@ function conferenceRecord(itemId, conference, games) {
 }
 function average(value, games) { return games ? (number(value) / games).toFixed(1) : "0.0"; }
 
+function compareLeaderboard(a, b, field) {
+  if (field === "item" || field === "conference") return String(a[field]).localeCompare(String(b[field]));
+  if (field === "record") return number(a.wins) - number(b.wins) || number(a.losses) - number(b.losses);
+  if (field === "streak") {
+    const streakA = Number(String(a.streak).slice(1)) || 0, streakB = Number(String(b.streak).slice(1)) || 0;
+    return streakA - streakB || String(a.streak).localeCompare(String(b.streak));
+  }
+  return number(a[field]) - number(b[field]);
+}
+
+function sortedLeaderboard(rows, field, direction) {
+  const sign = direction === "asc" ? 1 : -1;
+  return [...rows].sort((a, b) => sign * compareLeaderboard(a, b, field)).map((row, index) => ({...row, rank: index + 1}));
+}
+
 async function loadData() {
   const [historyResponse, gamesResponse, statusResponse] = await Promise.all([
     fetch(DATA.history), fetch(DATA.games), fetch(DATA.status),
@@ -82,7 +97,29 @@ function renderToday(rows, games, status) {
   document.querySelector("#run-status").textContent = status.run_time ? `Last pipeline run ${new Date(status.run_time).toLocaleString()}` : "No pipeline status available";
   document.querySelector("#latest-date").textContent = dateLabel(dates.at(-1));
   document.querySelector("#metrics").innerHTML = [[latest.length, "Teams tracked"], [averageWin, "Average win %", true], [latest[0]?.item || "—", "Current leader"], [status.games_logged || 0, "Games logged"]].map(([value, label, isPct]) => `<div class="metric"><strong>${isPct ? pct(value) : safe(value)}</strong><span>${label}</span></div>`).join("");
-  document.querySelector("#leaders tbody").innerHTML = latest.slice(0, 12).map(row => `<tr><td class="rank-cell">${row.rank}</td><td>${safe(row.item)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+  const leaderSnapshot = latestRows(rows);
+  let leaderSortField = "win_pct", leaderSortDirection = "desc";
+  const leaderHeaders = [...document.querySelectorAll("#leaders th[data-sort]")];
+  function paintLeaderboard() {
+    const sorted = sortedLeaderboard(leaderSnapshot, leaderSortField, leaderSortDirection);
+    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 12).map(row => `<tr><td class="rank-cell">${row.rank}</td><td>${safe(row.item)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    leaderHeaders.forEach(header => {
+      const active = header.dataset.sort === leaderSortField;
+      header.classList.toggle("sort-active", active);
+      header.dataset.order = active ? leaderSortDirection : "";
+      header.setAttribute("aria-sort", active ? (leaderSortDirection === "asc" ? "ascending" : "descending") : "none");
+    });
+  }
+  leaderHeaders.forEach(header => {
+    const activate = () => {
+      if (leaderSortField === header.dataset.sort) leaderSortDirection = leaderSortDirection === "asc" ? "desc" : "asc";
+      else { leaderSortField = header.dataset.sort; leaderSortDirection = ["item", "conference"].includes(leaderSortField) ? "asc" : "desc"; }
+      paintLeaderboard();
+    };
+    header.addEventListener("click", activate);
+    header.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(); } });
+  });
+  paintLeaderboard();
   document.querySelector("#movers").innerHTML = movers.length ? movers.map(row => `<div class="stack-row"><span><strong>${safe(row.item)}</strong><br><small>${safe(row.conference)}</small></span><strong class="${row.delta > 0 ? "delta-positive" : "delta-negative"}">${row.delta > 0 ? "+" : ""}${(row.delta * 100).toFixed(1)} pts<br><small>${row.pointDelta > 0 ? "+" : ""}${row.pointDelta.toFixed(0)} diff</small></strong></div>`).join("") : `<p class="muted">No completed games changed the snapshot.</p>`;
   const conferenceMap = {};
   latest.forEach(row => { conferenceMap[row.conference] ??= []; conferenceMap[row.conference].push(number(row.win_pct)); });

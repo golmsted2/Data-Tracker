@@ -22,6 +22,10 @@ nav { display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end; } nav a {
 #browse-table th:nth-child(4), #browse-table td:nth-child(4) { width:58px; }
 #browse-table th:nth-child(5), #browse-table td:nth-child(5), #browse-table th:nth-child(6), #browse-table td:nth-child(6) { width:82px; }
 #browse-table th:nth-child(7), #browse-table td:nth-child(7), #browse-table th:nth-child(8), #browse-table td:nth-child(8), #browse-table th:nth-child(9), #browse-table td:nth-child(9), #browse-table th:nth-child(10), #browse-table td:nth-child(10) { width:78px; }
+#leaders th[data-sort] { cursor:pointer; user-select:none; }
+#leaders th[data-sort]::after { content:" ↕"; color:var(--muted); opacity:.55; }
+#leaders th[data-sort][data-order="asc"]::after { content:" ↑"; opacity:1; }
+#leaders th[data-sort][data-order="desc"]::after { content:" ↓"; opacity:1; }
 .rank-pill { display:inline-grid; place-items:center; min-width:24px; height:24px; margin-right:8px; border-radius:50%; background:#e6eef7; color:var(--ink); font-size:.72rem; font-weight:800; }
 .rank-cell { width:58px; color:var(--muted); text-align:center; font-weight:800; }
 .controls { display:flex; align-items:end; gap:14px; flex-wrap:wrap; margin-bottom:18px; } label { display:grid; gap:5px; color:var(--muted); font-size:.78rem; font-weight:700; } input,select { min-width:170px; padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:white; color:var(--ink); font:inherit; }.control-title { margin:0 0 8px auto; font-size:1rem; }.table-note { align-self:center; margin-left:auto; color:var(--muted); font-size:.82rem; }
