@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TEAMS_PATH = ROOT / "config" / "teams.csv"
 RAW_DIR = ROOT / "data" / "raw"
 HISTORY_PATH = ROOT / "data" / "history.csv"
+GAMES_PATH = ROOT / "data" / "games.csv"
 STATUS_PATH = ROOT / "data" / "status.json"
 SOURCE_NAME = "ESPN Men's College Basketball Scoreboard"
 SOURCE_URL = (
@@ -44,6 +45,23 @@ HISTORY_FIELDS = [
     "avg_points_for",
     "avg_points_against",
     "streak",
+]
+
+GAME_FIELDS = [
+    "date",
+    "event_id",
+    "home_id",
+    "home_team",
+    "home_conference",
+    "home_score",
+    "away_id",
+    "away_team",
+    "away_conference",
+    "away_score",
+    "winner_id",
+    "loser_id",
+    "margin",
+    "total_points",
 ]
 
 
@@ -131,6 +149,7 @@ def completed_games(payload: dict, teams: dict[str, dict[str, str]]) -> list[dic
             item_id = str(team.get("id", ""))
             parsed.append({
                 "item_id": item_id,
+                "item": team.get("displayName") or team.get("shortDisplayName") or item_id,
                 "score": _score(competitor.get("score")),
                 "home_away": competitor.get("homeAway"),
             })
@@ -154,6 +173,7 @@ def completed_games(payload: dict, teams: dict[str, dict[str, str]]) -> list[dic
         games.append({
             "event_id": str(event.get("id", "")),
             "teams": tracked,
+            "competitors": parsed,
         })
     return games
 
@@ -236,6 +256,46 @@ def build_history(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, d
     return history
 
 
+def build_games(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]]) -> list[dict]:
+    games: list[dict] = []
+    seen_games: set[str] = set()
+    for game_date, payload in sorted(raw_files, key=lambda pair: pair[0]):
+        for game in completed_games(payload, teams):
+            game_key = game["event_id"] or "-".join(sorted(row["item_id"] for row in game["competitors"]))
+            if game_key in seen_games:
+                continue
+            seen_games.add(game_key)
+            competitors = game["competitors"]
+            home = next((row for row in competitors if row["home_away"] == "home"), competitors[0])
+            away = next((row for row in competitors if row["home_away"] == "away"), competitors[1])
+            winner = home if home["score"] > away["score"] else away
+            loser = away if winner is home else home
+
+            def team_name(row: dict) -> str:
+                return teams.get(row["item_id"], {}).get("item", row["item"])
+
+            def conference(row: dict) -> str:
+                return teams.get(row["item_id"], {}).get("conference", "Outside roster")
+
+            games.append({
+                "date": game_date,
+                "event_id": game["event_id"],
+                "home_id": home["item_id"],
+                "home_team": team_name(home),
+                "home_conference": conference(home),
+                "home_score": home["score"],
+                "away_id": away["item_id"],
+                "away_team": team_name(away),
+                "away_conference": conference(away),
+                "away_score": away["score"],
+                "winner_id": winner["item_id"],
+                "loser_id": loser["item_id"],
+                "margin": abs(winner["score"] - loser["score"]),
+                "total_points": home["score"] + away["score"],
+            })
+    return games
+
+
 def write_history(rows: list[dict]) -> None:
     HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
     temporary = HISTORY_PATH.with_suffix(".tmp")
@@ -246,9 +306,46 @@ def write_history(rows: list[dict]) -> None:
     os.replace(temporary, HISTORY_PATH)
 
 
-def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]], latest_payload: dict | None, ok: bool, error: str | None = None, requested_dates: list[str] | None = None, failed_dates: list[str] | None = None) -> None:
+def write_games(rows: list[dict]) -> None:
+    GAMES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    temporary = GAMES_PATH.with_suffix(".tmp")
+    with temporary.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=GAME_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+    os.replace(temporary, GAMES_PATH)
+
+
+def validate_dataset(teams: dict[str, dict[str, str]], history_rows: list[dict], game_rows: list[dict]) -> dict:
+    issues: list[str] = []
+    latest_date = max((row["date"] for row in history_rows), default=None)
+    latest_rows = [row for row in history_rows if row["date"] == latest_date] if latest_date else []
+    if latest_date and len(latest_rows) != len(teams):
+        issues.append(f"latest snapshot has {len(latest_rows)} teams; expected {len(teams)}")
+    if len({row["item_id"] for row in latest_rows}) != len(latest_rows):
+        issues.append("latest snapshot contains duplicate team IDs")
+    if any(row["item_id"] not in teams for row in latest_rows):
+        issues.append("latest snapshot contains a team outside the configured roster")
+    event_ids = [row["event_id"] for row in game_rows if row["event_id"]]
+    if len(event_ids) != len(set(event_ids)):
+        issues.append("game log contains duplicate event IDs")
+    if any(row["home_score"] == "" or row["away_score"] == "" for row in game_rows):
+        issues.append("game log contains a missing score")
+    return {
+        "ok": not issues,
+        "issues": issues,
+        "latest_date": latest_date,
+        "history_rows": len(history_rows),
+        "games_logged": len(game_rows),
+    }
+
+
+def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, dict]], latest_payload: dict | None, ok: bool, error: str | None = None, requested_dates: list[str] | None = None, failed_dates: list[str] | None = None, history_rows: list[dict] | None = None, game_rows: list[dict] | None = None) -> None:
     dates = [game_date for game_date, _ in raw_files]
-    latest_rows = [row for row in build_history(teams, raw_files) if dates and row["date"] == dates[-1]]
+    history_rows = history_rows if history_rows is not None else build_history(teams, raw_files)
+    game_rows = game_rows if game_rows is not None else build_games(teams, raw_files)
+    latest_rows = [row for row in history_rows if dates and row["date"] == dates[-1]]
+    quality = validate_dataset(teams, history_rows, game_rows)
     status = {
         "run_time": utc_now().isoformat().replace("+00:00", "Z"),
         "first_run_date": min(dates) if dates else None,
@@ -258,6 +355,8 @@ def write_status(teams: dict[str, dict[str, str]], raw_files: list[tuple[str, di
         "items": len(teams),
         "new_today": [],
         "gone_today": [],
+        "games_logged": len(game_rows),
+        "data_quality": quality,
         "sources": [{
             "name": SOURCE_NAME,
             "ok": ok,
@@ -287,7 +386,10 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
             failed_dates.append(game_date)
             print(f"Pipeline failed for {game_date}: {exc}", file=sys.stderr)
     raw_files = read_raw_files()
-    write_history(build_history(teams, raw_files))
+    history_rows = build_history(teams, raw_files)
+    game_rows = build_games(teams, raw_files)
+    write_history(history_rows)
+    write_games(game_rows)
     write_status(
         teams,
         raw_files,
@@ -296,6 +398,8 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
         error=f"Failed dates: {', '.join(failed_dates)}" if failed_dates else None,
         requested_dates=requested_dates,
         failed_dates=failed_dates,
+        history_rows=history_rows,
+        game_rows=game_rows,
     )
     return 1 if failed_dates else 0
 

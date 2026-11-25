@@ -12,9 +12,10 @@ Each configured team is an item identified by its ESPN team ID. The history file
 - points scored and points allowed;
 - point differential and average points per game;
 - current win/loss streak;
-- conference membership.
+- conference membership;
+- game-level results for standings, schedules, recaps, comparisons, and alerts.
 
-The pipeline downloads the daily Division I scoreboard, keeps every completed game involving at least one configured team—including games against opponents outside that team's conference—and rebuilds the full history from the compressed raw files. A team that does not play on a particular day carries forward its latest season-to-date values.
+The pipeline downloads the daily Division I scoreboard, keeps every completed game involving at least one configured team—including games against opponents outside that team's conference—and rebuilds the full history and game log from the compressed raw files. A team that does not play on a particular day carries forward its latest season-to-date values.
 
 ## Data source
 
@@ -32,10 +33,15 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 | `src/pipeline.py` | Fetches raw games and rebuilds history/status files |
 | `data/raw/<date>/` | Compressed source response for each game date |
 | `data/history.csv` | One season-to-date row per configured team per date |
+| `data/games.csv` | One normalized row per completed matchup |
 | `data/status.json` | Latest run and source status |
 | `site/index.html` | Today dashboard |
 | `site/browse.html` | Searchable, sortable team table |
+| `site/conferences.html` | Conference standings and records |
+| `site/compare.html` | Head-to-head team comparison |
+| `site/schedule.html` | Team schedules and results |
 | `site/trends.html` | Team trend charts |
+| `site/bubble.html` | Exploratory March Madness bubble board |
 | `site/assets/` | Shared CSS and browser logic |
 | `.github/workflows/` | Daily pipeline, tests, and Pages deployment |
 | `tests/` | Pipeline tests |
@@ -48,7 +54,7 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 | `item_id` | ESPN team ID | identifier |
 | `item` | Team display name | text |
 | `source` | Source name | text |
-| `conference` | Conference at project start | text |
+| `conference` | Conference in the configured roster | text |
 | `games_played` | Completed games counted | games |
 | `wins` | Cumulative wins | games |
 | `losses` | Cumulative losses | games |
@@ -62,9 +68,11 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 
 The configured roster is the fixed item universe. The `item_id` key keeps the same team aligned across dates even if the displayed team name changes.
 
+The site also provides national rankings, daily movers, conference filters, upset alerts, daily recaps, recent-form charts, and data-quality status. The bubble board is deliberately labeled exploratory because it uses a transparent project heuristic rather than official selection-committee data.
+
 ## Mover rule
 
-The Today page ranks teams by the largest positive or negative change in cumulative `point_diff` from the previous available date. It also highlights the best current records and longest active streaks. On a day with no completed games, the snapshot is unchanged and the mover list is empty.
+The Today page ranks teams by changes in winning percentage and cumulative `point_diff` from the previous available date. It also highlights the best current records, daily recap, and heuristic upset alerts. On a day with no completed games, the snapshot is unchanged and the mover list is empty.
 
 ## Run locally
 

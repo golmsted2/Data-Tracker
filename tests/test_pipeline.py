@@ -69,6 +69,29 @@ class PipelineTests(unittest.TestCase):
         latest = [row for row in rows if row["date"] == "2026-11-24" and row["item_id"] == "1"][0]
         self.assertEqual(latest["games_played"], 1)
 
+    def test_game_log_contains_matchup_and_result_fields(self):
+        teams = {
+            "1": {"item_id": "1", "item": "Alpha", "conference": "Test"},
+            "2": {"item_id": "2", "item": "Beta", "conference": "Test"},
+        }
+        games = pipeline.build_games(teams, [("2026-11-23", payload_for())])
+        self.assertEqual(len(games), 1)
+        self.assertEqual(games[0]["winner_id"], "1")
+        self.assertEqual(games[0]["margin"], 8)
+        self.assertEqual(games[0]["total_points"], 156)
+
+    def test_data_quality_flags_duplicate_game_events(self):
+        teams = {"1": {"item_id": "1", "item": "Alpha", "conference": "Test"}}
+        game = {
+            "event_id": "game-1",
+            "home_id": "1",
+            "home_score": 80,
+            "away_score": 70,
+        }
+        quality = pipeline.validate_dataset(teams, [{"date": "2026-11-23", "item_id": "1"}], [game, game.copy()])
+        self.assertFalse(quality["ok"])
+        self.assertIn("duplicate event IDs", quality["issues"][0])
+
     def test_run_replaces_same_date_and_writes_compressed_raw_file(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -78,7 +101,7 @@ class PipelineTests(unittest.TestCase):
                 + "".join(f"{item_id},Team {item_id},Test\n" for item_id in range(1, 11)),
                 encoding="utf-8",
             )
-            with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()):
+            with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "GAMES_PATH", root / "data" / "games.csv"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()):
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 raw = root / "data" / "raw" / "2026-11-23" / "espn_scoreboard.json.gz"
@@ -88,6 +111,9 @@ class PipelineTests(unittest.TestCase):
                     rows = list(csv.DictReader(handle))
                 self.assertEqual(len(rows), 10)
                 self.assertEqual(rows[0]["games_played"], "1")
+                with (root / "data" / "games.csv").open(newline="", encoding="utf-8") as handle:
+                    games = list(csv.DictReader(handle))
+                self.assertEqual(len(games), 1)
 
 
 if __name__ == "__main__":

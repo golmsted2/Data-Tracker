@@ -11,16 +11,17 @@
 <body data-page="today">
   <header class="site-header">
     <div><p class="eyebrow">Men's NCAA Division I</p><h1>NCAA Division I Basketball</h1></div>
-    <nav><a class="active" href="index.html">Today</a><a href="browse.html">Browse</a><a href="trends.html">Trends</a></nav>
+    <nav><a class="active" href="index.html">Today</a><a href="browse.html">Browse</a><a href="conferences.html">Conferences</a><a href="compare.html">Compare</a><a href="schedule.html">Schedule</a><a href="trends.html">Trends</a><a href="bubble.html">Bubble</a></nav>
   </header>
   <main>
     <section class="hero"><div><p class="eyebrow">Daily team performance</p><h2>Who moved today?</h2><p class="muted" id="run-status">Loading tracker data…</p></div><div class="hero-mark">🏀</div></section>
     <section class="metric-grid" id="metrics"></section>
-    <section class="panel"><div class="panel-heading"><div><p class="eyebrow">Latest snapshot</p><h2>Standings leaders</h2></div><span class="pill" id="latest-date">—</span></div><div class="table-wrap"><table id="leaders"><thead><tr><th>Team</th><th>Conference</th><th>Record</th><th>Win %</th><th>Point diff.</th><th>Streak</th></tr></thead><tbody></tbody></table></div></section>
-    <section class="split-grid"><div class="panel"><p class="eyebrow">Daily movers</p><h2>Largest point-difference changes</h2><div id="movers" class="stack-list"></div></div><div class="panel"><p class="eyebrow">Conference view</p><h2>Average winning percentage</h2><div id="conferences" class="bar-list"></div></div></section>
+    <section class="panel"><div class="panel-heading"><div><p class="eyebrow">Latest snapshot</p><h2>National rankings</h2></div><span class="pill" id="latest-date">—</span></div><div class="table-wrap"><table id="leaders"><thead><tr><th>Rank</th><th>Team</th><th>Conference</th><th>Record</th><th>Win %</th><th>Point diff.</th><th>Streak</th></tr></thead><tbody></tbody></table></div></section>
+    <section class="split-grid"><div class="panel"><p class="eyebrow">Daily movers</p><h2>Biggest changes</h2><div id="movers" class="stack-list"></div></div><div class="panel"><p class="eyebrow">Conference view</p><h2>Average winning percentage</h2><div id="conferences" class="bar-list"></div></div></section>
+    <section class="panel"><div class="panel-heading"><div><p class="eyebrow">Daily recap</p><h2>What happened?</h2></div><a class="text-link" href="schedule.html">View all results →</a></div><div id="daily-recap" class="recap-grid"></div></section>
+    <section class="panel"><div class="panel-heading"><div><p class="eyebrow">Alert feed</p><h2>Upset alerts</h2></div><span class="pill">Heuristic</span></div><div id="upsets" class="stack-list"></div></section>
   </main>
-  <footer><span>NCAA Division I Basketball Tracker</span><a href="https://www.ncaa.com/scoreboard/basketball-men/d1" rel="noreferrer">Source reference</a></footer>
+  <footer><span>NCAA Division I Basketball Tracker</span><span id="data-quality">Checking data…</span><a href="https://www.ncaa.com/scoreboard/basketball-men/d1" rel="noreferrer">Source reference</a></footer>
   <script src="assets/app.js"></script>
 </body>
 </html>
-
