@@ -40,6 +40,7 @@ Weekly national polls come from ESPN's public men's college basketball rankings 
 | `data/raw/<date>/` | Compressed source response for each game date |
 | `data/history.csv` | One season-to-date row per configured team per date |
 | `data/games.csv` | One normalized row per completed matchup, including neutral-site flags |
+| `data/live_games.json` | Current-day scoreboard with scheduled, in-progress, and final game status |
 | `data/rankings.json` | Latest AP Top 25 and Coaches Poll rankings |
 | `data/status.json` | Latest run and source status |
 | `site/index.html` | Today dashboard |

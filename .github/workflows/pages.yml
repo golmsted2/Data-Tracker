@@ -36,6 +36,7 @@ jobs:
           mkdir -p site/data
           cp data/history.csv site/data/history.csv 2>/dev/null || true
           cp data/games.csv site/data/games.csv 2>/dev/null || true
+          cp data/live_games.json site/data/live_games.json 2>/dev/null || true
           cp data/rankings.json site/data/rankings.json 2>/dev/null || true
           cp data/status.json site/data/status.json 2>/dev/null || true
       - uses: actions/configure-pages@v5

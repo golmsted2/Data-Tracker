@@ -22,6 +22,7 @@ TEAMS_PATH = ROOT / "config" / "teams.csv"
 RAW_DIR = ROOT / "data" / "raw"
 HISTORY_PATH = ROOT / "data" / "history.csv"
 GAMES_PATH = ROOT / "data" / "games.csv"
+LIVE_GAMES_PATH = ROOT / "data" / "live_games.json"
 STATUS_PATH = ROOT / "data" / "status.json"
 RANKINGS_PATH = ROOT / "data" / "rankings.json"
 SOURCE_NAME = "ESPN Men's College Basketball Scoreboard"
@@ -249,6 +250,62 @@ def completed_games(payload: dict, teams: dict[str, dict[str, str]]) -> list[dic
     return games
 
 
+def scoreboard_games(game_date: str, payload: dict, teams: dict[str, dict[str, str]]) -> list[dict]:
+    games = []
+    for event in payload.get("events", []):
+        competition = (event.get("competitions") or [{}])[0]
+        competitors = competition.get("competitors") or []
+        if len(competitors) < 2:
+            continue
+        parsed = []
+        for competitor in competitors[:2]:
+            team = competitor.get("team") or {}
+            item_id = str(team.get("id", ""))
+            if item_id not in teams:
+                continue
+            parsed.append({
+                "item_id": item_id,
+                "item": teams[item_id]["item"],
+                "conference": teams[item_id]["conference"],
+                "score": _score(competitor.get("score")),
+                "home_away": competitor.get("homeAway"),
+            })
+        if len(parsed) < 2:
+            continue
+        home = next((row for row in parsed if row["home_away"] == "home"), parsed[0])
+        away = next((row for row in parsed if row["home_away"] == "away"), parsed[1])
+        status = event.get("status", {}).get("type", {})
+        status_name = str(status.get("name", "")).lower()
+        state = str(status.get("state", "")).lower()
+        completed = bool(status.get("completed")) or status_name in {"status_final", "final"}
+        in_progress = state in {"in", "live"} or any(value in status_name for value in ("progress", "halftime", "period"))
+        label = "Final" if completed else "In progress" if in_progress else "Scheduled"
+        home_score = home["score"]
+        away_score = away["score"]
+        winner_id = ""
+        if completed and home_score is not None and away_score is not None and home_score != away_score:
+            winner_id = home["item_id"] if home_score > away_score else away["item_id"]
+        games.append({
+            "date": game_date,
+            "event_id": str(event.get("id", "")),
+            "neutral_site": str(competition.get("neutralSite", False)).lower(),
+            "home_id": home["item_id"],
+            "home_team": home["item"],
+            "home_conference": home["conference"],
+            "home_score": home_score if home_score is not None else "",
+            "away_id": away["item_id"],
+            "away_team": away["item"],
+            "away_conference": away["conference"],
+            "away_score": away_score if away_score is not None else "",
+            "winner_id": winner_id,
+            "completed": completed,
+            "status": label,
+            "status_detail": status.get("shortDetail") or status.get("detail") or status.get("description") or "",
+            "start_time": event.get("date", ""),
+        })
+    return games
+
+
 def _initial_state(teams: dict[str, dict[str, str]]) -> dict[str, dict]:
     return {
         item_id: {
@@ -424,6 +481,13 @@ def write_games(rows: list[dict]) -> None:
     os.replace(temporary, GAMES_PATH)
 
 
+def write_live_games(game_date: str, rows: list[dict]) -> None:
+    LIVE_GAMES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    temporary = LIVE_GAMES_PATH.with_suffix(".tmp")
+    temporary.write_text(json.dumps({"date": game_date, "fetched_at": utc_now().isoformat().replace("+00:00", "Z"), "games": rows}, indent=2), encoding="utf-8")
+    os.replace(temporary, LIVE_GAMES_PATH)
+
+
 def write_rankings(rows: dict) -> None:
     RANKINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
     temporary = RANKINGS_PATH.with_suffix(".tmp")
@@ -511,6 +575,8 @@ def run_range(start_date: str, end_date: str, opener=urlopen) -> int:
             failed_dates.append(game_date)
             print(f"Pipeline failed for {game_date}: {exc}", file=sys.stderr)
     raw_files = read_raw_files()
+    if latest_payload is not None and requested_dates:
+        write_live_games(requested_dates[-1], scoreboard_games(requested_dates[-1], latest_payload, teams))
     history_rows = build_history(teams, raw_files)
     game_rows = build_games(teams, raw_files)
     write_history(history_rows)
@@ -545,10 +611,20 @@ def run_live(game_date: str, opener=urlopen) -> int:
     except (HTTPError, URLError, TimeoutError, OSError, RuntimeError, ValueError) as exc:
         print(f"Live scoreboard poll failed: {exc}", file=sys.stderr)
         return 0
+    live_rows = scoreboard_games(game_date, payload, teams)
+    existing_live = {}
+    if LIVE_GAMES_PATH.exists():
+        try:
+            existing_live = json.loads(LIVE_GAMES_PATH.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            existing_live = {}
+    live_changed = existing_live.get("date") != game_date or existing_live.get("games", []) != live_rows
+    if live_changed:
+        write_live_games(game_date, live_rows)
     completed = completed_games(payload, teams)
     existing_raw = read_raw_files()
     if not completed and not any(existing_date == game_date for existing_date, _ in existing_raw):
-        print("No completed tracked games yet; skipping live update.")
+        print("No completed tracked games yet; live scoreboard published.")
         return 0
     raw_files = [(existing_date, existing_payload) for existing_date, existing_payload in existing_raw if existing_date != game_date]
     raw_files.append((game_date, payload))
@@ -557,7 +633,7 @@ def run_live(game_date: str, opener=urlopen) -> int:
     game_rows = build_games(teams, raw_files)
     if (canonical_rows(history_rows, HISTORY_FIELDS) == canonical_rows(read_csv_rows(HISTORY_PATH), HISTORY_FIELDS)
             and canonical_rows(game_rows, GAME_FIELDS) == canonical_rows(read_csv_rows(GAMES_PATH), GAME_FIELDS)):
-        print("No completed-game data changes detected; skipping live update.")
+        print("No completed-game data changes detected; live scoreboard refreshed only.")
         return 0
     write_raw(game_date, payload)
     write_history(history_rows)

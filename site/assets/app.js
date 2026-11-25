@@ -1,6 +1,7 @@
 const DATA = {
   history: "data/history.csv",
   games: "data/games.csv",
+  live: "data/live_games.json",
   status: "data/status.json",
   rankings: "data/rankings.json",
 };
@@ -230,16 +231,17 @@ function sortedLeaderboard(rows, field, direction) {
 }
 
 async function loadData() {
-  const [historyResponse, gamesResponse, statusResponse, rankingsResponse, teamDirectoryResponse] = await Promise.all([
-    fetch(DATA.history), fetch(DATA.games), fetch(DATA.status), fetch(DATA.rankings), fetch(TEAM_DIRECTORY_URL).catch(() => null),
+  const [historyResponse, gamesResponse, liveResponse, statusResponse, rankingsResponse, teamDirectoryResponse] = await Promise.all([
+    fetch(DATA.history), fetch(DATA.games), fetch(DATA.live).catch(() => null), fetch(DATA.status), fetch(DATA.rankings), fetch(TEAM_DIRECTORY_URL).catch(() => null),
   ]);
   const history = historyResponse.ok ? parseCSV(await historyResponse.text()) : [];
   const games = gamesResponse.ok ? parseCSV(await gamesResponse.text()) : [];
+  const live = liveResponse?.ok ? await liveResponse.json() : {};
   const status = statusResponse.ok ? await statusResponse.json() : {};
   const rankings = rankingsResponse.ok ? await rankingsResponse.json() : {};
   let colors = {};
   if (teamDirectoryResponse?.ok) { try { colors = normalizeTeamColors(await teamDirectoryResponse.json()); } catch {} }
-  return {history, games, status, rankings, colors};
+  return {history, games, live, status, rankings, colors};
 }
 
 function renderQuality(status) {
@@ -258,7 +260,7 @@ function renderPolls(rankings) {
   target.innerHTML = polls.length ? polls.map(poll => `<div class="poll-card"><div class="poll-card-heading"><div><p class="eyebrow">Weekly national poll</p><h3>${safe(poll.short_name || poll.name)}</h3></div><span class="pill">${poll.date ? dateLabel(poll.date.slice(0, 10)) : "Latest"}</span></div><div class="poll-list">${poll.ranks.map(entry => { const notes = [entry.record, entry.points ? `${Math.round(number(entry.points))} pts` : "", entry.first_place_votes ? `${entry.first_place_votes} first-place` : ""].filter(Boolean).join(" · "); return `<div class="poll-row"><span class="poll-rank">${safe(entry.rank)}</span>${teamLogo({item_id: entry.team_id, item: entry.team}, {showFavorite: false})}<span class="poll-meta">${safe(notes)}</span>${pollTrend(entry.trend)}</div>`; }).join("")}</div></div>`).join("") : `<p class="muted">AP and Coaches poll data is not available yet.</p>`;
 }
 
-function renderToday(rows, games, status, rankings) {
+function renderToday(rows, games, live, status, rankings) {
   const dates = latestDates(rows), latest = rankRows(latestRows(rows)), previous = dates.length > 1 ? teamMap(rows.filter(row => row.date === dates.at(-2))) : {};
   const currentRanks = Object.fromEntries(latest.map(row => [row.item_id, row.rank])), previousRanks = Object.fromEntries(rankRows(Object.values(previous)).map(row => [row.item_id, row.rank]));
   const averageWin = latest.length ? latest.reduce((sum, row) => sum + number(row.win_pct), 0) / latest.length : 0;
@@ -296,14 +298,18 @@ function renderToday(rows, games, status, rankings) {
   document.querySelector("#conferences").innerHTML = Object.entries(conferenceMap).sort((a, b) => b[1].reduce((x, y) => x + y, 0) / b[1].length - a[1].reduce((x, y) => x + y, 0) / a[1].length).map(([conference, values]) => { const value = values.reduce((x, y) => x + y, 0) / values.length; return `<div class="bar-row">${conferenceLabel(conference)}<strong>${pct(value)}</strong></div>`; }).join("");
 
   const todayGames = games.filter(game => game.date === dates.at(-1));
+  const completedScoreboardGames = todayGames.map(game => ({...game, status: "Final", completed: true, status_detail: ""}));
+  const liveDate = new Date().toISOString().slice(0, 10);
+  const scoreboardGames = live?.date === liveDate ? (live.games || []) : completedScoreboardGames;
   const scoreboard = document.querySelector("#scoreboard");
   const scoreboardCount = document.querySelector("#scoreboard-count");
   if (scoreboard && scoreboardCount) {
-    scoreboardCount.textContent = `${todayGames.length} ${todayGames.length === 1 ? "game" : "games"}`;
-    scoreboard.innerHTML = todayGames.length ? todayGames.slice(0, 12).map(game => {
+    scoreboardCount.textContent = `${scoreboardGames.length} ${scoreboardGames.length === 1 ? "game" : "games"}`;
+    scoreboard.innerHTML = scoreboardGames.length ? scoreboardGames.map(game => {
       const homeWon = game.winner_id === game.home_id, awayWon = game.winner_id === game.away_id;
-      return `<article class="score-card"><div class="score-card-top"><span class="badge">FINAL</span><span>${String(game.neutral_site).toLowerCase() === "true" ? "Neutral" : ""}</span></div><div class="score-line ${homeWon ? "score-winner" : ""}">${teamLogo({item_id: game.home_id, item: game.home_team}, {showFavorite: false})}<strong>${number(game.home_score)}</strong></div><div class="score-line ${awayWon ? "score-winner" : ""}">${teamLogo({item_id: game.away_id, item: game.away_team}, {showFavorite: false})}<strong>${number(game.away_score)}</strong></div></article>`;
-    }).join("") : `<p class="muted">No completed games logged for the latest date.</p>`;
+      const statusLabel = game.status || "Final", statusDetail = game.status_detail || (statusLabel === "Scheduled" ? "Upcoming" : ""), homeScore = game.home_score === "" || game.home_score == null ? "—" : game.home_score, awayScore = game.away_score === "" || game.away_score == null ? "—" : game.away_score;
+      return `<article class="score-card"><div class="score-card-top"><span class="badge${statusLabel === "In progress" ? " live" : ""}">${safe(statusLabel)}</span><span>${safe(statusDetail || (String(game.neutral_site).toLowerCase() === "true" ? "Neutral" : ""))}</span></div><div class="score-line ${homeWon ? "score-winner" : ""}">${teamLogo({item_id: game.home_id, item: game.home_team}, {showFavorite: false})}<strong>${safe(homeScore)}</strong></div><div class="score-line ${awayWon ? "score-winner" : ""}">${teamLogo({item_id: game.away_id, item: game.away_team}, {showFavorite: false})}<strong>${safe(awayScore)}</strong></div></article>`;
+    }).join("") : `<p class="muted">No games scheduled or completed for the latest scoreboard date.</p>`;
   }
   const recap = [
     ["Biggest win", [...todayGames].sort((a, b) => number(b.margin) - number(a.margin))[0], game => game ? `${safe(game.winner_id === game.home_id ? game.home_team : game.away_team)} won by ${game.margin}` : "No games logged"],
@@ -581,12 +587,12 @@ function renderTrends(rows, games) {
 }
 
 initPreferences();
-loadData().then(({history, games, status, rankings, colors}) => {
+loadData().then(({history, games, live, status, rankings, colors}) => {
   teamColors = colors;
   rosterIds = new Set(history.map(row => row.item_id));
   renderQuality(status);
   const page = document.body.dataset.page;
-  if (page === "today") renderToday(history, games, status, rankings);
+  if (page === "today") renderToday(history, games, live, status, rankings);
   if (page === "browse") renderBrowse(history);
   if (page === "conferences") renderConferences(history, games);
   if (page === "compare") renderCompare(history, games);

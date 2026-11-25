@@ -148,7 +148,7 @@ class PipelineTests(unittest.TestCase):
                 + "".join(f"{item_id},Team {item_id},Test\n" for item_id in range(1, 11)),
                 encoding="utf-8",
             )
-            with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "GAMES_PATH", root / "data" / "games.csv"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "RANKINGS_PATH", root / "data" / "rankings.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()), patch.object(pipeline, "fetch_rankings", return_value=rankings_payload()):
+            with patch.object(pipeline, "ROOT", root), patch.object(pipeline, "TEAMS_PATH", teams_path), patch.object(pipeline, "RAW_DIR", root / "data" / "raw"), patch.object(pipeline, "HISTORY_PATH", root / "data" / "history.csv"), patch.object(pipeline, "GAMES_PATH", root / "data" / "games.csv"), patch.object(pipeline, "LIVE_GAMES_PATH", root / "data" / "live_games.json"), patch.object(pipeline, "STATUS_PATH", root / "data" / "status.json"), patch.object(pipeline, "RANKINGS_PATH", root / "data" / "rankings.json"), patch.object(pipeline, "fetch_scoreboard", return_value=payload_for()), patch.object(pipeline, "fetch_rankings", return_value=rankings_payload()):
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 self.assertEqual(pipeline.run("2026-11-23"), 0)
                 raw = root / "data" / "raw" / "2026-11-23" / "espn_scoreboard.json.gz"

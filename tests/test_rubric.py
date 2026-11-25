@@ -41,6 +41,7 @@ def test_failed_source_still_writes_status_and_returns_success(tmp_path, monkeyp
     monkeypatch.setattr(pipeline, "RAW_DIR", tmp_path / "data" / "raw")
     monkeypatch.setattr(pipeline, "HISTORY_PATH", tmp_path / "data" / "history.csv")
     monkeypatch.setattr(pipeline, "GAMES_PATH", tmp_path / "data" / "games.csv")
+    monkeypatch.setattr(pipeline, "LIVE_GAMES_PATH", tmp_path / "data" / "live_games.json")
     monkeypatch.setattr(pipeline, "STATUS_PATH", tmp_path / "data" / "status.json")
     monkeypatch.setattr(pipeline, "RANKINGS_PATH", tmp_path / "data" / "rankings.json")
     monkeypatch.setattr(pipeline, "fetch_rankings", lambda opener: {"polls": []})
@@ -62,6 +63,7 @@ def test_live_poll_writes_completed_game_and_skips_duplicate_poll(tmp_path, monk
     monkeypatch.setattr(pipeline, "RAW_DIR", tmp_path / "data" / "raw")
     monkeypatch.setattr(pipeline, "HISTORY_PATH", tmp_path / "data" / "history.csv")
     monkeypatch.setattr(pipeline, "GAMES_PATH", tmp_path / "data" / "games.csv")
+    monkeypatch.setattr(pipeline, "LIVE_GAMES_PATH", tmp_path / "data" / "live_games.json")
     monkeypatch.setattr(pipeline, "STATUS_PATH", tmp_path / "data" / "status.json")
     monkeypatch.setattr(pipeline, "RANKINGS_PATH", tmp_path / "data" / "rankings.json")
     payload = {
@@ -81,3 +83,28 @@ def test_live_poll_writes_completed_game_and_skips_duplicate_poll(tmp_path, monk
     assert pipeline.run_live("2026-11-25") == 0
     assert len(pipeline.read_csv_rows(tmp_path / "data" / "games.csv")) == 1
     assert pipeline.run_live("2026-11-25") == 0
+
+
+def test_scoreboard_games_preserves_in_progress_status():
+    teams = {
+        "1": {"item_id": "1", "item": "Alpha", "conference": "Test"},
+        "2": {"item_id": "2", "item": "Beta", "conference": "Test"},
+    }
+    payload = {
+        "events": [{
+            "id": "live-game",
+            "date": "2026-11-25T01:00Z",
+            "status": {"type": {"state": "in", "name": "STATUS_IN_PROGRESS", "detail": "2nd Half - 04:12"}},
+            "competitions": [{
+                "neutralSite": False,
+                "competitors": [
+                    {"homeAway": "home", "score": "61", "team": {"id": "1", "displayName": "Alpha"}},
+                    {"homeAway": "away", "score": "58", "team": {"id": "2", "displayName": "Beta"}},
+                ],
+            }],
+        }],
+    }
+    game = pipeline.scoreboard_games("2026-11-25", payload, teams)[0]
+    assert game["status"] == "In progress"
+    assert game["status_detail"] == "2nd Half - 04:12"
+    assert game["completed"] is False
