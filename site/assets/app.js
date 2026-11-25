@@ -82,7 +82,7 @@ function renderToday(rows, games, status) {
   document.querySelector("#run-status").textContent = status.run_time ? `Last pipeline run ${new Date(status.run_time).toLocaleString()}` : "No pipeline status available";
   document.querySelector("#latest-date").textContent = dateLabel(dates.at(-1));
   document.querySelector("#metrics").innerHTML = [[latest.length, "Teams tracked"], [averageWin, "Average win %", true], [latest[0]?.item || "—", "Current leader"], [status.games_logged || 0, "Games logged"]].map(([value, label, isPct]) => `<div class="metric"><strong>${isPct ? pct(value) : safe(value)}</strong><span>${label}</span></div>`).join("");
-  document.querySelector("#leaders tbody").innerHTML = latest.slice(0, 12).map(row => `<tr><td><span class="rank-pill">${row.rank}</span>${safe(row.item)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+  document.querySelector("#leaders tbody").innerHTML = latest.slice(0, 12).map(row => `<tr><td class="rank-cell">${row.rank}</td><td>${safe(row.item)}</td><td>${safe(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
   document.querySelector("#movers").innerHTML = movers.length ? movers.map(row => `<div class="stack-row"><span><strong>${safe(row.item)}</strong><br><small>${safe(row.conference)}</small></span><strong class="${row.delta > 0 ? "delta-positive" : "delta-negative"}">${row.delta > 0 ? "+" : ""}${(row.delta * 100).toFixed(1)} pts<br><small>${row.pointDelta > 0 ? "+" : ""}${row.pointDelta.toFixed(0)} diff</small></strong></div>`).join("") : `<p class="muted">No completed games changed the snapshot.</p>`;
   const conferenceMap = {};
   latest.forEach(row => { conferenceMap[row.conference] ??= []; conferenceMap[row.conference].push(number(row.win_pct)); });
@@ -106,7 +106,7 @@ function renderBrowse(rows) {
     const query = search.value.toLowerCase(), selected = conference.value, field = sort.value;
     const filtered = latest.filter(row => row.item.toLowerCase().includes(query) && (!selected || row.conference === selected)).sort((a, b) => field === "item" ? a.item.localeCompare(b.item) : number(b[field]) - number(a[field]));
     count.textContent = `${filtered.length} teams shown`;
-    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td><span class="rank-pill">${row.rank}</span>${safe(row.item)}</td><td>${safe(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#browse-table tbody").innerHTML = filtered.map(row => `<tr><td class="rank-cell">${row.rank}</td><td>${safe(row.item)}</td><td>${safe(row.conference)}</td><td>${row.games_played}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.points_for).toFixed(0)}</td><td>${number(row.points_against).toFixed(0)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
   }
   [search, conference, sort].forEach(element => element.addEventListener("input", paint)); paint();
 }
