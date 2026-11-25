@@ -258,7 +258,7 @@ function renderToday(rows, games, status, rankings) {
   const leaderHeaders = [...document.querySelectorAll("#leaders th[data-sort]")];
   function paintLeaderboard() {
     const sorted = sortedLeaderboard(leaderSnapshot, leaderSortField, leaderSortDirection);
-    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 12).map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
+    document.querySelector("#leaders tbody").innerHTML = sorted.slice(0, 25).map(row => `<tr><td class="rank-cell"><span class="rank-number">${row.rank}</span>${rankMovement(row.item_id, currentRanks, previousRanks)}</td><td>${teamLogo(row)}</td><td>${conferenceLabel(row.conference)}</td><td>${record(row)}</td><td>${pct(row.win_pct)}</td><td>${number(row.point_diff).toFixed(0)}</td><td>${safe(row.streak)}</td></tr>`).join("");
     leaderHeaders.forEach(header => {
       const active = header.dataset.sort === leaderSortField;
       header.classList.toggle("sort-active", active);
@@ -343,7 +343,8 @@ function renderCompare(rows, games) {
       document.querySelector("#compare-cards").innerHTML = `<p class="muted">Choose a team from each searchable dropdown.</p>`;
       return;
     }
-    const metrics = [["Win %", pct(a.win_pct), pct(b.win_pct), number(a.win_pct), number(b.win_pct)], ["Record", record(a), record(b), number(a.win_pct), number(b.win_pct)], ["Scoring avg", average(a.points_for, a.games_played), average(b.points_for, b.games_played), number(a.avg_points_for), number(b.avg_points_for)], ["Point diff", number(a.point_diff).toFixed(0), number(b.point_diff).toFixed(0), number(a.point_diff), number(b.point_diff)]];
+    const averagePointDiff = team => number(team.games_played) ? number(team.point_diff) / number(team.games_played) : 0, formatAveragePointDiff = team => `${averagePointDiff(team) >= 0 ? "+" : ""}${averagePointDiff(team).toFixed(1)}`;
+    const metrics = [["Win %", pct(a.win_pct), pct(b.win_pct), number(a.win_pct), number(b.win_pct)], ["Record", record(a), record(b), number(a.win_pct), number(b.win_pct)], ["Scoring avg", average(a.points_for, a.games_played), average(b.points_for, b.games_played), number(a.avg_points_for), number(b.avg_points_for)], ["Average point diff", formatAveragePointDiff(a), formatAveragePointDiff(b), averagePointDiff(a), averagePointDiff(b)]];
     document.querySelector("#compare-cards").innerHTML = [a, b].map(row => `<div class="team-card"><span class="eyebrow">${safe(row.conference)}</span><h3>${teamLogo(row)}</h3><strong>${record(row)}</strong><span>${pct(row.win_pct)} win rate · ${safe(row.streak)}</span><div class="form-strip">${form(row.item_id)}</div></div>`).join("");
     document.querySelector("#comparison-bars").innerHTML = metrics.map(([label, av, bv, an, bn]) => { const total = Math.max(Math.abs(an), Math.abs(bn), 1); return `<div class="comparison-row"><span>${label}</span><strong>${av}</strong><div class="compare-bar"><i style="width:${Math.min(100, Math.abs(an) / total * 100)}%"></i><em style="width:${Math.min(100, Math.abs(bn) / total * 100)}%"></em></div><strong>${bv}</strong></div>`; }).join("");
     const meetings = games.filter(game => (game.home_id === a.item_id && game.away_id === b.item_id) || (game.home_id === b.item_id && game.away_id === a.item_id)).sort((x, y) => y.date.localeCompare(x.date));
