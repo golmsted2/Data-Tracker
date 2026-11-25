@@ -1,10 +1,10 @@
 {
-  "name": "Power Conference Basketball Tracker",
-  "short_name": "Power Hoops",
+  "name": "NCAA Division I Basketball Tracker",
+  "short_name": "D-I Hoops",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f7f9fc",
   "theme_color": "#102a43",
-  "description": "Daily performance tracker for NCAA men's power-conference basketball teams."
+  "description": "Daily performance tracker for all current NCAA men's Division I basketball teams."
 }
 

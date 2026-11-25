@@ -1,8 +1,8 @@
-# Power Conference College Basketball Tracker
+# NCAA Division I College Basketball Tracker
 
-An automated daily tracker for men's NCAA Division I college basketball teams in the ACC, Big Ten, Big 12, Pac-12, and SEC.
+An automated daily tracker for all current men's NCAA Division I college basketball teams.
 
-The project starts with the 2026–27 power-conference roster and is structured so the same pipeline can later expand to every Division I team by replacing `config/teams.csv`.
+The roster currently contains 365 teams from ESPN's live Division I directory. Power conferences retain short labels; teams outside those conferences use `Other Division I` in the roster metadata.
 
 ## What it tracks
 
@@ -28,7 +28,7 @@ The endpoint is queried with `groups=50` and a date-specific `limit`. The NCAA s
 
 | Path | Purpose |
 | --- | --- |
-| `config/teams.csv` | Frozen team roster and conference metadata |
+| `config/teams.csv` | Frozen 365-team roster and conference metadata |
 | `src/pipeline.py` | Fetches raw games and rebuilds history/status files |
 | `data/raw/<date>/` | Compressed source response for each game date |
 | `data/history.csv` | One season-to-date row per configured team per date |
