@@ -34,7 +34,7 @@ function pct(value) { return `${(number(value) * 100).toFixed(1)}%`; }
 function record(row) { return `${row.wins}-${row.losses}`; }
 function dateLabel(value) { return value ? new Date(`${value}T12:00:00`).toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) : "—"; }
 function rankRows(rows) {
-  return [...rows].sort((a, b) => number(b.win_pct) - number(a.win_pct) || number(b.point_diff) - number(a.point_diff) || number(b.wins) - number(a.wins) || a.item.localeCompare(b.item)).map((row, index) => ({...row, rank: index + 1}));
+  return [...rows].sort((a, b) => number(b.win_pct) - number(a.win_pct) || number(b.wins) - number(a.wins) || number(b.point_diff) - number(a.point_diff) || a.item.localeCompare(b.item)).map((row, index) => ({...row, rank: index + 1}));
 }
 function teamMap(rows) { return Object.fromEntries(rows.map(row => [row.item_id, row])); }
 function selectedTeamIds(games, itemId) { return games.filter(game => game.home_id === itemId || game.away_id === itemId); }
@@ -59,6 +59,7 @@ function average(value, games) { return games ? (number(value) / games).toFixed(
 function compareLeaderboard(a, b, field) {
   if (field === "item" || field === "conference") return String(a[field]).localeCompare(String(b[field]));
   if (field === "record") return number(a.wins) - number(b.wins) || number(a.losses) - number(b.losses);
+  if (field === "win_pct") return number(a.win_pct) - number(b.win_pct) || number(a.wins) - number(b.wins) || number(a.point_diff) - number(b.point_diff);
   if (field === "streak") {
     const streakA = Number(String(a.streak).slice(1)) || 0, streakB = Number(String(b.streak).slice(1)) || 0;
     return streakA - streakB || String(a.streak).localeCompare(String(b.streak));
