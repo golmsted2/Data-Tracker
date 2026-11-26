@@ -1427,3 +1427,10 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-25,401929005,false,62,Hawai'i,Mountain West Conference,83,2916,Incarnate Word,Southland Conference,81,62,2916,2,164
 2026-11-25,401921714,true,36,Colorado State,Pac-12 Conference,77,228,Clemson,Atlantic Coast Conference,75,36,228,2,152
 2026-11-25,401921672,true,139,Saint Louis,Atlantic 10 Conference,66,24,Stanford,Atlantic Coast Conference,64,139,24,2,130
+2026-11-26,401906869,true,251,Texas,Southeastern Conference,92,46,Georgetown,Big East Conference,83,251,46,9,175
+2026-11-26,401929281,true,2132,Cincinnati,Big 12 Conference,83,61,Georgia,Southeastern Conference,81,2132,61,2,164
+2026-11-26,401912231,false,2636,UTSA,American Athletic Conference,61,349,Army,Patriot League,79,349,2636,18,140
+2026-11-26,401906807,true,2509,Purdue,Big Ten Conference,63,201,Oklahoma,Southeastern Conference,70,201,2509,7,133
+2026-11-26,401920528,true,21,San Diego State,Pac-12 Conference,75,120,Maryland,Big Ten Conference,71,21,120,4,146
+2026-11-26,401929282,true,2116,UCF,Big 12 Conference,73,103,Boston College,Atlantic Coast Conference,75,103,2116,2,148
+2026-11-26,401921674,true,2579,South Carolina,Southeastern Conference,80,9,Arizona State,Big 12 Conference,73,2579,9,7,153

@@ -9124,3 +9124,368 @@ date,item_id,item,source,conference,games_played,wins,losses,win_pct,points_for,
 2026-11-25,3084,Utah Valley,ESPN Men's College Basketball Scoreboard,Big West Conference,6,5,1,0.833333,498,459,39,83.0,76.5,L1
 2026-11-25,3101,Utah Tech,ESPN Men's College Basketball Scoreboard,Big Sky Conference,7,2,5,0.285714,588,559,29,84.0,79.857,W1
 2026-11-25,112358,Long Island University,ESPN Men's College Basketball Scoreboard,Northeast Conference,8,1,7,0.125,560,642,-82,70.0,80.25,L1
+2026-11-26,2,Auburn,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,4,3,0.571429,566,483,83,80.857,69.0,W1
+2026-11-26,5,UAB,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,4,3,0.571429,547,534,13,78.143,76.286,L1
+2026-11-26,6,South Alabama,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,9,5,4,0.555556,703,665,38,78.111,73.889,W2
+2026-11-26,8,Arkansas,ESPN Men's College Basketball Scoreboard,Southeastern Conference,6,4,2,0.666667,501,400,101,83.5,66.667,W1
+2026-11-26,9,Arizona State,ESPN Men's College Basketball Scoreboard,Big 12 Conference,7,5,2,0.714286,575,492,83,82.143,70.286,L2
+2026-11-26,12,Arizona,ESPN Men's College Basketball Scoreboard,Big 12 Conference,8,7,1,0.875,698,597,101,87.25,74.625,W7
+2026-11-26,13,Cal Poly,ESPN Men's College Basketball Scoreboard,Big West Conference,6,3,3,0.5,457,504,-47,76.167,84.0,W1
+2026-11-26,16,Sacramento State,ESPN Men's College Basketball Scoreboard,Big West Conference,4,1,3,0.25,288,310,-22,72.0,77.5,L3
+2026-11-26,21,San Diego State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,7,6,1,0.857143,580,483,97,82.857,69.0,W1
+2026-11-26,23,San José State,ESPN Men's College Basketball Scoreboard,Mountain West Conference,7,4,3,0.571429,572,550,22,81.714,78.571,W1
+2026-11-26,24,Stanford,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,8,5,3,0.625,586,539,47,73.25,67.375,L2
+2026-11-26,25,California,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,5,2,0.714286,593,500,93,84.714,71.429,W3
+2026-11-26,26,UCLA,ESPN Men's College Basketball Scoreboard,Big Ten Conference,6,6,0,1.0,569,360,209,94.833,60.0,W6
+2026-11-26,27,UC Riverside,ESPN Men's College Basketball Scoreboard,Big West Conference,6,3,3,0.5,461,414,47,76.833,69.0,L3
+2026-11-26,28,UC San Diego,ESPN Men's College Basketball Scoreboard,Big West Conference,6,3,3,0.5,503,530,-27,83.833,88.333,L2
+2026-11-26,30,USC,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,7,0,1.0,636,436,200,90.857,62.286,W7
+2026-11-26,36,Colorado State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,8,5,3,0.625,619,604,15,77.375,75.5,W1
+2026-11-26,38,Colorado,ESPN Men's College Basketball Scoreboard,Big 12 Conference,7,3,4,0.428571,513,499,14,73.286,71.286,L1
+2026-11-26,41,UConn,ESPN Men's College Basketball Scoreboard,Big East Conference,6,4,2,0.666667,480,394,86,80.0,65.667,L2
+2026-11-26,43,Yale,ESPN Men's College Basketball Scoreboard,Ivy League,9,5,4,0.555556,649,643,6,72.111,71.444,W2
+2026-11-26,44,American University,ESPN Men's College Basketball Scoreboard,Patriot League,6,4,2,0.666667,430,415,15,71.667,69.167,W4
+2026-11-26,45,George Washington,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,5,2,0.714286,568,431,137,81.143,61.571,L2
+2026-11-26,46,Georgetown,ESPN Men's College Basketball Scoreboard,Big East Conference,7,6,1,0.857143,585,493,92,83.571,70.429,L1
+2026-11-26,47,Howard,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,7,4,3,0.571429,529,500,29,75.571,71.429,W1
+2026-11-26,48,Delaware,ESPN Men's College Basketball Scoreboard,Conference USA,7,4,3,0.571429,532,470,62,76.0,67.143,L1
+2026-11-26,50,Florida A&M,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,0,7,0.0,441,618,-177,63.0,88.286,L7
+2026-11-26,52,Florida State,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,6,1,0.857143,629,473,156,89.857,67.571,W4
+2026-11-26,55,Jacksonville State,ESPN Men's College Basketball Scoreboard,Conference USA,7,4,3,0.571429,548,523,25,78.286,74.714,W2
+2026-11-26,56,Stetson,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,7,1,6,0.142857,469,571,-102,67.0,81.571,L2
+2026-11-26,57,Florida,ESPN Men's College Basketball Scoreboard,Southeastern Conference,8,7,1,0.875,652,553,99,81.5,69.125,W2
+2026-11-26,58,South Florida,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,4,3,0.571429,591,510,81,84.429,72.857,W1
+2026-11-26,59,Georgia Tech,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,5,2,0.714286,586,542,44,83.714,77.429,L2
+2026-11-26,61,Georgia,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,6,1,0.857143,603,508,95,86.143,72.571,L1
+2026-11-26,62,Hawai'i,ESPN Men's College Basketball Scoreboard,Mountain West Conference,6,4,2,0.666667,473,412,61,78.833,68.667,W1
+2026-11-26,66,Iowa State,ESPN Men's College Basketball Scoreboard,Big 12 Conference,5,4,1,0.8,390,297,93,78.0,59.4,W4
+2026-11-26,68,Boise State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,6,4,2,0.666667,575,469,106,95.833,78.167,W1
+2026-11-26,70,Idaho,ESPN Men's College Basketball Scoreboard,Big Sky Conference,7,4,3,0.571429,592,505,87,84.571,72.143,W2
+2026-11-26,71,Bradley,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,7,3,4,0.428571,435,422,13,62.143,60.286,L2
+2026-11-26,77,Northwestern,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,4,3,0.571429,485,464,21,69.286,66.286,W1
+2026-11-26,79,Southern Illinois,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,7,3,4,0.428571,567,519,48,81.0,74.143,L1
+2026-11-26,82,UIC,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,7,4,3,0.571429,505,450,55,72.143,64.286,L2
+2026-11-26,84,Indiana,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,7,0,1.0,609,488,121,87.0,69.714,W7
+2026-11-26,85,IU Indianapolis,ESPN Men's College Basketball Scoreboard,Horizon League,7,4,3,0.571429,574,528,46,82.0,75.429,L1
+2026-11-26,87,Notre Dame,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,8,7,1,0.875,704,586,118,88.0,73.25,W3
+2026-11-26,88,Southern Indiana,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,8,2,6,0.25,602,611,-9,75.25,76.375,L2
+2026-11-26,91,Bellarmine,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,9,4,5,0.444444,638,690,-52,70.889,76.667,W3
+2026-11-26,93,Murray State,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,7,6,1,0.857143,615,482,133,87.857,68.857,W1
+2026-11-26,94,Northern Kentucky,ESPN Men's College Basketball Scoreboard,Horizon League,8,3,5,0.375,597,658,-61,74.625,82.25,L2
+2026-11-26,96,Kentucky,ESPN Men's College Basketball Scoreboard,Southeastern Conference,6,4,2,0.666667,485,452,33,80.833,75.333,L1
+2026-11-26,97,Louisville,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,5,4,1,0.8,424,358,66,84.8,71.6,W2
+2026-11-26,98,Western Kentucky,ESPN Men's College Basketball Scoreboard,Conference USA,7,5,2,0.714286,569,467,102,81.286,66.714,W2
+2026-11-26,99,LSU,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,7,0,1.0,642,472,170,91.714,67.429,W7
+2026-11-26,103,Boston College,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,7,0,1.0,524,415,109,74.857,59.286,W7
+2026-11-26,104,Boston University,ESPN Men's College Basketball Scoreboard,Patriot League,8,6,2,0.75,627,585,42,78.375,73.125,W1
+2026-11-26,107,Holy Cross,ESPN Men's College Basketball Scoreboard,Patriot League,7,1,6,0.142857,447,556,-109,63.857,79.429,W1
+2026-11-26,108,Harvard,ESPN Men's College Basketball Scoreboard,Ivy League,8,3,5,0.375,545,541,4,68.125,67.625,L1
+2026-11-26,111,Northeastern,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,7,2,5,0.285714,528,603,-75,75.429,86.143,L3
+2026-11-26,113,Massachusetts,ESPN Men's College Basketball Scoreboard,Mid-American Conference,5,3,2,0.6,353,320,33,70.6,64.0,W1
+2026-11-26,116,Mount St. Mary's,ESPN Men's College Basketball Scoreboard,Metro Conference,6,2,4,0.333333,389,482,-93,64.833,80.333,W1
+2026-11-26,119,Towson,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,7,3,4,0.428571,478,460,18,68.286,65.714,L2
+2026-11-26,120,Maryland,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,3,4,0.428571,567,489,78,81.0,69.857,L2
+2026-11-26,127,Michigan State,ESPN Men's College Basketball Scoreboard,Big Ten Conference,6,5,1,0.833333,509,396,113,84.833,66.0,W1
+2026-11-26,130,Michigan,ESPN Men's College Basketball Scoreboard,Big Ten Conference,6,3,3,0.5,514,480,34,85.667,80.0,L2
+2026-11-26,135,Minnesota,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,7,0,1.0,576,429,147,82.286,61.286,W7
+2026-11-26,139,Saint Louis,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,4,3,0.571429,597,532,65,85.286,76.0,W1
+2026-11-26,140,Kansas City,ESPN Men's College Basketball Scoreboard,Summit League,8,3,5,0.375,578,592,-14,72.25,74.0,L2
+2026-11-26,142,Missouri,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,6,1,0.857143,631,434,197,90.143,62.0,W5
+2026-11-26,145,Ole Miss,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,6,1,0.857143,586,419,167,83.714,59.857,L1
+2026-11-26,147,Montana State,ESPN Men's College Basketball Scoreboard,Big Sky Conference,7,3,4,0.428571,551,494,57,78.714,70.571,W1
+2026-11-26,149,Montana,ESPN Men's College Basketball Scoreboard,Big Sky Conference,6,3,3,0.5,439,401,38,73.167,66.833,W1
+2026-11-26,150,Duke,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,5,2,0.714286,593,464,129,84.714,66.286,W2
+2026-11-26,151,East Carolina,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,3,4,0.428571,526,515,11,75.143,73.571,L3
+2026-11-26,152,NC State,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,6,1,0.857143,589,468,121,84.143,66.857,W1
+2026-11-26,153,North Carolina,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,6,5,1,0.833333,508,400,108,84.667,66.667,W2
+2026-11-26,154,Wake Forest,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,6,1,0.857143,554,461,93,79.143,65.857,W5
+2026-11-26,155,North Dakota,ESPN Men's College Basketball Scoreboard,Summit League,8,4,4,0.5,614,631,-17,76.75,78.875,L1
+2026-11-26,156,Creighton,ESPN Men's College Basketball Scoreboard,Big East Conference,6,5,1,0.833333,498,412,86,83.0,68.667,W3
+2026-11-26,158,Nebraska,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,7,0,1.0,619,450,169,88.429,64.286,W7
+2026-11-26,159,Dartmouth,ESPN Men's College Basketball Scoreboard,Ivy League,7,4,3,0.571429,589,490,99,84.143,70.0,L1
+2026-11-26,160,New Hampshire,ESPN Men's College Basketball Scoreboard,America East Conference,8,4,4,0.5,534,506,28,66.75,63.25,L2
+2026-11-26,161,Fairleigh Dickinson,ESPN Men's College Basketball Scoreboard,Northeast Conference,8,5,3,0.625,591,585,6,73.875,73.125,W3
+2026-11-26,163,Princeton,ESPN Men's College Basketball Scoreboard,Ivy League,7,5,2,0.714286,501,460,41,71.571,65.714,W2
+2026-11-26,164,Rutgers,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,5,2,0.714286,622,507,115,88.857,72.429,W2
+2026-11-26,166,New Mexico State,ESPN Men's College Basketball Scoreboard,Conference USA,7,1,6,0.142857,476,545,-69,68.0,77.857,L6
+2026-11-26,167,New Mexico,ESPN Men's College Basketball Scoreboard,Mountain West Conference,6,4,2,0.666667,533,446,87,88.833,74.333,W1
+2026-11-26,171,Columbia,ESPN Men's College Basketball Scoreboard,Ivy League,7,6,1,0.857143,563,424,139,80.429,60.571,W6
+2026-11-26,172,Cornell,ESPN Men's College Basketball Scoreboard,Ivy League,7,4,3,0.571429,571,528,43,81.571,75.429,W2
+2026-11-26,179,St. Bonaventure,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,8,7,1,0.875,620,522,98,77.5,65.25,W7
+2026-11-26,183,Syracuse,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,5,2,0.714286,567,485,82,81.0,69.286,W3
+2026-11-26,189,Bowling Green,ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,4,2,0.666667,491,456,35,81.833,76.0,W1
+2026-11-26,193,Miami (OH),ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,6,0,1.0,499,429,70,83.167,71.5,W6
+2026-11-26,194,Ohio State,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,4,3,0.571429,577,510,67,82.429,72.857,L1
+2026-11-26,195,Ohio,ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,4,2,0.666667,462,454,8,77.0,75.667,L1
+2026-11-26,197,Oklahoma State,ESPN Men's College Basketball Scoreboard,Big 12 Conference,7,5,2,0.714286,646,505,141,92.286,72.143,W2
+2026-11-26,198,Oral Roberts,ESPN Men's College Basketball Scoreboard,Summit League,7,4,3,0.571429,536,473,63,76.571,67.571,W2
+2026-11-26,201,Oklahoma,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,5,2,0.714286,528,475,53,75.429,67.857,W1
+2026-11-26,202,Tulsa,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,4,3,0.571429,533,480,53,76.143,68.571,L3
+2026-11-26,204,Oregon State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,8,8,0,1.0,720,559,161,90.0,69.875,W8
+2026-11-26,213,Penn State,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,5,2,0.714286,579,498,81,82.714,71.143,L1
+2026-11-26,218,Temple,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,3,4,0.428571,522,535,-13,74.571,76.429,L2
+2026-11-26,219,Pennsylvania,ESPN Men's College Basketball Scoreboard,Ivy League,7,4,3,0.571429,548,541,7,78.286,77.286,W3
+2026-11-26,221,Pittsburgh,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,7,0,1.0,597,469,128,85.286,67.0,W7
+2026-11-26,222,Villanova,ESPN Men's College Basketball Scoreboard,Big East Conference,7,5,2,0.714286,556,467,89,79.429,66.714,W2
+2026-11-26,225,Brown,ESPN Men's College Basketball Scoreboard,Ivy League,8,3,5,0.375,585,550,35,73.125,68.75,W1
+2026-11-26,227,Rhode Island,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,8,7,1,0.875,649,533,116,81.125,66.625,W2
+2026-11-26,228,Clemson,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,8,4,4,0.5,624,581,43,78.0,72.625,L3
+2026-11-26,231,Furman,ESPN Men's College Basketball Scoreboard,Southern Conference,8,7,1,0.875,708,544,164,88.5,68.0,W3
+2026-11-26,232,Charleston,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,7,5,2,0.714286,634,511,123,90.571,73.0,W1
+2026-11-26,233,South Dakota,ESPN Men's College Basketball Scoreboard,Summit League,9,4,5,0.444444,710,667,43,78.889,74.111,W2
+2026-11-26,235,Memphis,ESPN Men's College Basketball Scoreboard,American Athletic Conference,6,5,1,0.833333,513,479,34,85.5,79.833,W3
+2026-11-26,236,Chattanooga,ESPN Men's College Basketball Scoreboard,Southern Conference,7,4,3,0.571429,571,536,35,81.571,76.571,W1
+2026-11-26,238,Vanderbilt,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,7,0,1.0,611,431,180,87.286,61.571,W7
+2026-11-26,239,Baylor,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,5,1,0.833333,530,372,158,88.333,62.0,W2
+2026-11-26,242,Rice,ESPN Men's College Basketball Scoreboard,American Athletic Conference,8,6,2,0.75,641,592,49,80.125,74.0,W5
+2026-11-26,245,Texas A&M,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,6,1,0.857143,678,518,160,96.857,74.0,L1
+2026-11-26,248,Houston,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,6,0,1.0,535,401,134,89.167,66.833,W6
+2026-11-26,249,North Texas,ESPN Men's College Basketball Scoreboard,American Athletic Conference,5,3,2,0.6,411,339,72,82.2,67.8,L1
+2026-11-26,250,UT Arlington,ESPN Men's College Basketball Scoreboard,United Athletic Conference,8,6,2,0.75,673,572,101,84.125,71.5,L1
+2026-11-26,251,Texas,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,7,0,1.0,656,455,201,93.714,65.0,W7
+2026-11-26,252,BYU,ESPN Men's College Basketball Scoreboard,Big 12 Conference,8,7,1,0.875,715,589,126,89.375,73.625,W1
+2026-11-26,253,Southern Utah,ESPN Men's College Basketball Scoreboard,Big Sky Conference,9,3,6,0.333333,784,690,94,87.111,76.667,L6
+2026-11-26,254,Utah,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,3,3,0.5,393,395,-2,65.5,65.833,L3
+2026-11-26,256,James Madison,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,7,5,2,0.714286,596,462,134,85.143,66.0,W5
+2026-11-26,257,Richmond,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,8,5,3,0.625,670,590,80,83.75,73.75,W2
+2026-11-26,258,Virginia,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,8,8,0,1.0,707,528,179,88.375,66.0,W8
+2026-11-26,259,Virginia Tech,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,6,1,0.857143,611,515,96,87.286,73.571,L1
+2026-11-26,261,Vermont,ESPN Men's College Basketball Scoreboard,America East Conference,7,3,4,0.428571,560,506,54,80.0,72.286,L1
+2026-11-26,264,Washington,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,5,2,0.714286,564,494,70,80.571,70.571,L1
+2026-11-26,265,Washington State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,7,3,4,0.428571,559,532,27,79.857,76.0,W1
+2026-11-26,269,Marquette,ESPN Men's College Basketball Scoreboard,Big East Conference,7,4,3,0.571429,544,415,129,77.714,59.286,L1
+2026-11-26,270,Milwaukee,ESPN Men's College Basketball Scoreboard,Horizon League,7,2,5,0.285714,517,561,-44,73.857,80.143,L3
+2026-11-26,275,Wisconsin,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,5,2,0.714286,539,453,86,77.0,64.714,W1
+2026-11-26,276,Marshall,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,7,3,4,0.428571,516,505,11,73.714,72.143,W1
+2026-11-26,277,West Virginia,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,4,2,0.666667,487,401,86,81.167,66.833,L2
+2026-11-26,278,Fresno State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,6,4,2,0.666667,503,492,11,83.833,82.0,W1
+2026-11-26,279,Pacific,ESPN Men's College Basketball Scoreboard,West Coast Conference,7,5,2,0.714286,552,416,136,78.857,59.429,L1
+2026-11-26,282,Indiana State,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,7,3,4,0.428571,533,494,39,76.143,70.571,W1
+2026-11-26,284,Stonehill,ESPN Men's College Basketball Scoreboard,Northeast Conference,7,3,4,0.428571,516,538,-22,73.714,76.857,W2
+2026-11-26,288,Lipscomb,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,9,4,5,0.444444,679,730,-51,75.444,81.111,L1
+2026-11-26,290,Georgia Southern,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,8,3,5,0.375,626,656,-30,78.25,82.0,L1
+2026-11-26,292,UT Rio Grande Valley,ESPN Men's College Basketball Scoreboard,Southland Conference,6,4,2,0.666667,468,384,84,78.0,64.0,W2
+2026-11-26,294,Jacksonville,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,7,2,5,0.285714,506,559,-53,72.286,79.857,L4
+2026-11-26,295,Old Dominion,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,7,6,1,0.857143,521,436,85,74.429,62.286,W1
+2026-11-26,299,Long Beach State,ESPN Men's College Basketball Scoreboard,Big West Conference,7,2,5,0.285714,482,562,-80,68.857,80.286,W1
+2026-11-26,300,UC Irvine,ESPN Men's College Basketball Scoreboard,Big West Conference,6,3,3,0.5,466,389,77,77.667,64.833,L3
+2026-11-26,301,San Diego,ESPN Men's College Basketball Scoreboard,West Coast Conference,7,6,1,0.857143,555,486,69,79.286,69.429,W4
+2026-11-26,302,UC Davis,ESPN Men's College Basketball Scoreboard,Mountain West Conference,6,4,2,0.666667,444,409,35,74.0,68.167,W1
+2026-11-26,304,Idaho State,ESPN Men's College Basketball Scoreboard,Big Sky Conference,6,1,5,0.166667,429,512,-83,71.5,85.333,L1
+2026-11-26,305,DePaul,ESPN Men's College Basketball Scoreboard,Big East Conference,6,6,0,1.0,456,327,129,76.0,54.5,W6
+2026-11-26,309,Louisiana,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,6,2,4,0.333333,380,364,16,63.333,60.667,W1
+2026-11-26,311,Maine,ESPN Men's College Basketball Scoreboard,America East Conference,7,2,5,0.285714,434,503,-69,62.0,71.857,L1
+2026-11-26,314,Iona,ESPN Men's College Basketball Scoreboard,Metro Conference,8,3,5,0.375,499,533,-34,62.375,66.625,L1
+2026-11-26,315,Niagara,ESPN Men's College Basketball Scoreboard,Metro Conference,5,1,4,0.2,337,419,-82,67.4,83.8,W1
+2026-11-26,322,Lafayette,ESPN Men's College Basketball Scoreboard,Patriot League,7,3,4,0.428571,529,506,23,75.571,72.286,L1
+2026-11-26,324,Coastal Carolina,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,7,2,5,0.285714,488,531,-43,69.714,75.857,L3
+2026-11-26,325,Cleveland State,ESPN Men's College Basketball Scoreboard,Horizon League,8,4,4,0.5,580,615,-35,72.5,76.875,W1
+2026-11-26,326,Texas State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,8,8,0,1.0,722,508,214,90.25,63.5,W8
+2026-11-26,328,Utah State,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,6,6,0,1.0,616,412,204,102.667,68.667,W6
+2026-11-26,331,Eastern Washington,ESPN Men's College Basketball Scoreboard,Big Sky Conference,7,2,5,0.285714,526,564,-38,75.143,80.571,L2
+2026-11-26,333,Alabama,ESPN Men's College Basketball Scoreboard,Southeastern Conference,6,5,1,0.833333,560,463,97,93.333,77.167,L1
+2026-11-26,338,Kennesaw State,ESPN Men's College Basketball Scoreboard,Conference USA,8,5,3,0.625,702,578,124,87.75,72.25,L2
+2026-11-26,339,Evansville,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,7,3,4,0.428571,512,530,-18,73.143,75.714,L2
+2026-11-26,344,Mississippi State,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,5,2,0.714286,578,492,86,82.571,70.286,L1
+2026-11-26,349,Army,ESPN Men's College Basketball Scoreboard,Patriot League,8,3,5,0.375,574,554,20,71.75,69.25,W1
+2026-11-26,350,UNC Wilmington,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,7,6,1,0.857143,659,526,133,94.143,75.143,W2
+2026-11-26,356,Illinois,ESPN Men's College Basketball Scoreboard,Big Ten Conference,7,6,1,0.857143,764,498,266,109.143,71.143,W4
+2026-11-26,357,Texas A&M-Corpus Christi,ESPN Men's College Basketball Scoreboard,Southland Conference,7,2,5,0.285714,505,519,-14,72.143,74.143,L4
+2026-11-26,399,UAlbany,ESPN Men's College Basketball Scoreboard,America East Conference,9,4,5,0.444444,618,656,-38,68.667,72.889,L3
+2026-11-26,526,Florida Gulf Coast,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,8,3,5,0.375,646,592,54,80.75,74.0,W1
+2026-11-26,2000,Abilene Christian,ESPN Men's College Basketball Scoreboard,United Athletic Conference,7,4,3,0.571429,568,528,40,81.143,75.429,W3
+2026-11-26,2005,Air Force,ESPN Men's College Basketball Scoreboard,Mountain West Conference,7,4,3,0.571429,599,597,2,85.571,85.286,W1
+2026-11-26,2006,Akron,ESPN Men's College Basketball Scoreboard,Mid-American Conference,8,5,3,0.625,634,518,116,79.25,64.75,L1
+2026-11-26,2010,Alabama A&M,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,4,3,0.571429,557,491,66,79.571,70.143,L1
+2026-11-26,2011,Alabama State,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,2,5,0.285714,474,560,-86,67.714,80.0,L2
+2026-11-26,2016,Alcorn State,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,8,0,8,0.0,476,759,-283,59.5,94.875,L8
+2026-11-26,2026,App State,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,8,5,3,0.625,562,496,66,70.25,62.0,W1
+2026-11-26,2029,Arkansas-Pine Bluff,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,0,7,0.0,376,703,-327,53.714,100.429,L7
+2026-11-26,2031,Little Rock,ESPN Men's College Basketball Scoreboard,United Athletic Conference,7,3,4,0.428571,551,560,-9,78.714,80.0,W1
+2026-11-26,2032,Arkansas State,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,8,6,2,0.75,723,658,65,90.375,82.25,W5
+2026-11-26,2046,Austin Peay,ESPN Men's College Basketball Scoreboard,United Athletic Conference,6,3,3,0.5,463,409,54,77.167,68.167,L1
+2026-11-26,2050,Ball State,ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,2,4,0.333333,440,411,29,73.333,68.5,W1
+2026-11-26,2057,Belmont,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,8,5,3,0.625,580,511,69,72.5,63.875,L2
+2026-11-26,2065,Bethune-Cookman,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,1,6,0.142857,516,580,-64,73.714,82.857,L2
+2026-11-26,2066,Binghamton,ESPN Men's College Basketball Scoreboard,America East Conference,8,5,3,0.625,560,546,14,70.0,68.25,W2
+2026-11-26,2083,Bucknell,ESPN Men's College Basketball Scoreboard,Patriot League,7,1,6,0.142857,460,584,-124,65.714,83.429,L2
+2026-11-26,2084,Buffalo,ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,3,3,0.5,474,417,57,79.0,69.5,W1
+2026-11-26,2086,Butler,ESPN Men's College Basketball Scoreboard,Big East Conference,7,4,3,0.571429,587,518,69,83.857,74.0,L1
+2026-11-26,2097,Campbell,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,7,3,4,0.428571,509,538,-29,72.714,76.857,W2
+2026-11-26,2099,Canisius,ESPN Men's College Basketball Scoreboard,Metro Conference,8,4,4,0.5,564,608,-44,70.5,76.0,L1
+2026-11-26,2110,Central Arkansas,ESPN Men's College Basketball Scoreboard,United Athletic Conference,7,4,3,0.571429,566,512,54,80.857,73.143,W2
+2026-11-26,2115,Central Connecticut,ESPN Men's College Basketball Scoreboard,Northeast Conference,6,4,2,0.666667,432,438,-6,72.0,73.0,W4
+2026-11-26,2116,UCF,ESPN Men's College Basketball Scoreboard,Big 12 Conference,7,4,3,0.571429,573,552,21,81.857,78.857,L3
+2026-11-26,2117,Central Michigan,ESPN Men's College Basketball Scoreboard,Mid-American Conference,7,4,3,0.571429,550,543,7,78.571,77.571,L3
+2026-11-26,2127,Charleston Southern,ESPN Men's College Basketball Scoreboard,Big South Conference,7,2,5,0.285714,512,527,-15,73.143,75.286,L3
+2026-11-26,2130,Chicago State,ESPN Men's College Basketball Scoreboard,Northeast Conference,8,2,6,0.25,503,646,-143,62.875,80.75,L4
+2026-11-26,2132,Cincinnati,ESPN Men's College Basketball Scoreboard,Big 12 Conference,7,6,1,0.857143,568,455,113,81.143,65.0,W4
+2026-11-26,2142,Colgate,ESPN Men's College Basketball Scoreboard,Patriot League,6,2,4,0.333333,463,426,37,77.167,71.0,W2
+2026-11-26,2154,Coppin State,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,8,1,7,0.125,485,580,-95,60.625,72.5,L5
+2026-11-26,2166,Davidson,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,5,2,0.714286,503,414,89,71.857,59.143,W2
+2026-11-26,2168,Dayton,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,3,4,0.428571,532,521,11,76.0,74.429,L1
+2026-11-26,2169,Delaware State,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,7,2,5,0.285714,529,525,4,75.571,75.0,L2
+2026-11-26,2172,Denver,ESPN Men's College Basketball Scoreboard,West Coast Conference,6,1,5,0.166667,417,432,-15,69.5,72.0,L2
+2026-11-26,2174,Detroit Mercy,ESPN Men's College Basketball Scoreboard,Horizon League,7,0,7,0.0,441,638,-197,63.0,91.143,L7
+2026-11-26,2181,Drake,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,6,4,2,0.666667,487,408,79,81.167,68.0,L1
+2026-11-26,2182,Drexel,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,6,3,3,0.5,416,446,-30,69.333,74.333,L1
+2026-11-26,2184,Duquesne,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,5,2,0.714286,494,480,14,70.571,68.571,L2
+2026-11-26,2193,East Tennessee State,ESPN Men's College Basketball Scoreboard,Southern Conference,6,3,3,0.5,433,396,37,72.167,66.0,W2
+2026-11-26,2197,Eastern Illinois,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,8,2,6,0.25,535,682,-147,66.875,85.25,W1
+2026-11-26,2198,Eastern Kentucky,ESPN Men's College Basketball Scoreboard,United Athletic Conference,8,5,3,0.625,715,564,151,89.375,70.5,L1
+2026-11-26,2199,Eastern Michigan,ESPN Men's College Basketball Scoreboard,Mid-American Conference,7,5,2,0.714286,515,448,67,73.571,64.0,L1
+2026-11-26,2210,Elon,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,7,3,4,0.428571,494,505,-11,70.571,72.143,L1
+2026-11-26,2217,Fairfield,ESPN Men's College Basketball Scoreboard,Metro Conference,6,4,2,0.666667,407,420,-13,67.833,70.0,W3
+2026-11-26,2226,Florida Atlantic,ESPN Men's College Basketball Scoreboard,American Athletic Conference,6,5,1,0.833333,499,470,29,83.167,78.333,W4
+2026-11-26,2229,Florida International,ESPN Men's College Basketball Scoreboard,Conference USA,7,5,2,0.714286,605,540,65,86.429,77.143,L1
+2026-11-26,2230,Fordham,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,8,6,2,0.75,635,554,81,79.375,69.25,W1
+2026-11-26,2239,Cal State Fullerton,ESPN Men's College Basketball Scoreboard,Big West Conference,5,3,2,0.6,429,408,21,85.8,81.6,W1
+2026-11-26,2241,Gardner-Webb,ESPN Men's College Basketball Scoreboard,Big South Conference,7,1,6,0.142857,451,569,-118,64.429,81.286,L4
+2026-11-26,2244,George Mason,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,6,1,0.857143,536,415,121,76.571,59.286,W3
+2026-11-26,2247,Georgia State,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,8,3,5,0.375,643,584,59,80.375,73.0,L1
+2026-11-26,2250,Gonzaga,ESPN Men's College Basketball Scoreboard,Pac-12 Conference,5,4,1,0.8,442,344,98,88.4,68.8,W2
+2026-11-26,2253,Grand Canyon,ESPN Men's College Basketball Scoreboard,Mountain West Conference,6,6,0,1.0,559,444,115,93.167,74.0,W6
+2026-11-26,2261,Hampton,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,5,1,4,0.2,298,335,-37,59.6,67.0,L2
+2026-11-26,2272,High Point,ESPN Men's College Basketball Scoreboard,Big South Conference,7,7,0,1.0,534,438,96,76.286,62.571,W7
+2026-11-26,2275,Hofstra,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,5,2,3,0.4,346,337,9,69.2,67.4,L1
+2026-11-26,2277,Houston Christian,ESPN Men's College Basketball Scoreboard,Southland Conference,6,5,1,0.833333,540,405,135,90.0,67.5,W1
+2026-11-26,2287,Illinois State,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,8,4,4,0.5,702,579,123,87.75,72.375,W1
+2026-11-26,2294,Iowa,ESPN Men's College Basketball Scoreboard,Big Ten Conference,6,4,2,0.666667,494,377,117,82.333,62.833,W2
+2026-11-26,2296,Jackson State,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,2,5,0.285714,455,612,-157,65.0,87.429,L2
+2026-11-26,2305,Kansas,ESPN Men's College Basketball Scoreboard,Big 12 Conference,7,6,1,0.857143,628,497,131,89.714,71.0,W1
+2026-11-26,2306,Kansas State,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,3,3,0.5,467,454,13,77.833,75.667,L2
+2026-11-26,2309,Kent State,ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,3,3,0.5,446,428,18,74.333,71.333,W2
+2026-11-26,2320,Lamar,ESPN Men's College Basketball Scoreboard,Southland Conference,6,4,2,0.666667,599,423,176,99.833,70.5,W1
+2026-11-26,2325,La Salle,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,3,4,0.428571,524,524,0,74.857,74.857,W1
+2026-11-26,2329,Lehigh,ESPN Men's College Basketball Scoreboard,Patriot League,7,4,3,0.571429,519,474,45,74.143,67.714,L1
+2026-11-26,2330,Le Moyne,ESPN Men's College Basketball Scoreboard,Northeast Conference,7,3,4,0.428571,501,518,-17,71.571,74.0,W1
+2026-11-26,2335,Liberty,ESPN Men's College Basketball Scoreboard,Conference USA,7,4,3,0.571429,562,509,53,80.286,72.714,L2
+2026-11-26,2344,Longwood,ESPN Men's College Basketball Scoreboard,Big South Conference,8,4,4,0.5,659,592,67,82.375,74.0,L2
+2026-11-26,2348,Louisiana Tech,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,7,5,2,0.714286,504,424,80,72.0,60.571,W3
+2026-11-26,2349,UMass Lowell,ESPN Men's College Basketball Scoreboard,America East Conference,6,4,2,0.666667,451,380,71,75.167,63.333,L1
+2026-11-26,2350,Loyola Chicago,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,4,3,0.571429,529,488,41,75.571,69.714,L1
+2026-11-26,2351,Loyola Marymount,ESPN Men's College Basketball Scoreboard,West Coast Conference,8,5,3,0.625,657,561,96,82.125,70.125,W4
+2026-11-26,2352,Loyola Maryland,ESPN Men's College Basketball Scoreboard,Patriot League,7,2,5,0.285714,474,522,-48,67.714,74.571,W1
+2026-11-26,2363,Manhattan,ESPN Men's College Basketball Scoreboard,Metro Conference,7,2,5,0.285714,451,551,-100,64.429,78.714,W1
+2026-11-26,2368,Marist,ESPN Men's College Basketball Scoreboard,Metro Conference,6,3,3,0.5,402,402,0,67.0,67.0,W2
+2026-11-26,2377,McNeese,ESPN Men's College Basketball Scoreboard,Southland Conference,4,2,2,0.5,370,337,33,92.5,84.25,L1
+2026-11-26,2378,UMBC,ESPN Men's College Basketball Scoreboard,America East Conference,9,4,5,0.444444,626,679,-53,69.556,75.444,L1
+2026-11-26,2379,Maryland Eastern Shore,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,9,2,7,0.222222,545,660,-115,60.556,73.333,L2
+2026-11-26,2382,Mercer,ESPN Men's College Basketball Scoreboard,Southern Conference,8,3,5,0.375,628,650,-22,78.5,81.25,L1
+2026-11-26,2385,Mercyhurst,ESPN Men's College Basketball Scoreboard,Northeast Conference,9,4,5,0.444444,613,622,-9,68.111,69.111,W3
+2026-11-26,2390,Miami,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,5,2,0.714286,605,423,182,86.429,60.429,L1
+2026-11-26,2393,Middle Tennessee,ESPN Men's College Basketball Scoreboard,Conference USA,8,6,2,0.75,630,603,27,78.75,75.375,W2
+2026-11-26,2400,Mississippi Valley State,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,6,0,6,0.0,377,534,-157,62.833,89.0,L6
+2026-11-26,2405,Monmouth,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,6,1,5,0.166667,388,473,-85,64.667,78.833,L3
+2026-11-26,2413,Morehead State,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,7,3,4,0.428571,550,569,-19,78.571,81.286,L2
+2026-11-26,2415,Morgan State,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,8,4,4,0.5,611,564,47,76.375,70.5,L3
+2026-11-26,2426,Navy,ESPN Men's College Basketball Scoreboard,Patriot League,8,5,3,0.625,562,528,34,70.25,66.0,W1
+2026-11-26,2427,UNC Asheville,ESPN Men's College Basketball Scoreboard,Big South Conference,8,2,6,0.25,615,677,-62,76.875,84.625,L4
+2026-11-26,2428,North Carolina Central,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,7,2,5,0.285714,536,497,39,76.571,71.0,W1
+2026-11-26,2429,Charlotte,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,5,2,0.714286,506,467,39,72.286,66.714,W3
+2026-11-26,2430,UNC Greensboro,ESPN Men's College Basketball Scoreboard,Southern Conference,8,4,4,0.5,614,595,19,76.75,74.375,L2
+2026-11-26,2433,UL Monroe,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,9,2,7,0.222222,693,770,-77,77.0,85.556,L2
+2026-11-26,2437,Omaha,ESPN Men's College Basketball Scoreboard,Summit League,7,3,4,0.428571,493,569,-76,70.429,81.286,L2
+2026-11-26,2439,UNLV,ESPN Men's College Basketball Scoreboard,Mountain West Conference,7,4,3,0.571429,553,562,-9,79.0,80.286,W1
+2026-11-26,2440,Nevada,ESPN Men's College Basketball Scoreboard,Mountain West Conference,7,5,2,0.714286,563,495,68,80.429,70.714,W3
+2026-11-26,2441,New Haven,ESPN Men's College Basketball Scoreboard,Northeast Conference,7,4,3,0.571429,436,453,-17,62.286,64.714,W3
+2026-11-26,2443,LSU New Orleans,ESPN Men's College Basketball Scoreboard,Southland Conference,6,3,3,0.5,441,484,-43,73.5,80.667,L1
+2026-11-26,2447,Nicholls,ESPN Men's College Basketball Scoreboard,Southland Conference,7,2,5,0.285714,494,505,-11,70.571,72.143,L3
+2026-11-26,2448,North Carolina A&T,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,6,4,2,0.666667,477,411,66,79.5,68.5,W3
+2026-11-26,2449,North Dakota State,ESPN Men's College Basketball Scoreboard,Summit League,8,3,5,0.375,603,608,-5,75.375,76.0,W1
+2026-11-26,2450,Norfolk State,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,8,2,6,0.25,540,631,-91,67.5,78.875,L6
+2026-11-26,2453,North Alabama,ESPN Men's College Basketball Scoreboard,United Athletic Conference,7,5,2,0.714286,517,506,11,73.857,72.286,W3
+2026-11-26,2454,North Florida,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,8,4,4,0.5,622,637,-15,77.75,79.625,W1
+2026-11-26,2458,Northern Colorado,ESPN Men's College Basketball Scoreboard,Big Sky Conference,8,4,4,0.5,624,594,30,78.0,74.25,W1
+2026-11-26,2459,Northern Illinois,ESPN Men's College Basketball Scoreboard,Horizon League,8,5,3,0.625,616,578,38,77.0,72.25,W2
+2026-11-26,2460,Northern Iowa,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,8,3,5,0.375,627,668,-41,78.375,83.5,L2
+2026-11-26,2463,Cal State Northridge,ESPN Men's College Basketball Scoreboard,Big West Conference,6,2,4,0.333333,508,491,17,84.667,81.833,W1
+2026-11-26,2464,Northern Arizona,ESPN Men's College Basketball Scoreboard,Big Sky Conference,6,1,5,0.166667,438,499,-61,73.0,83.167,L1
+2026-11-26,2466,Northwestern State,ESPN Men's College Basketball Scoreboard,Southland Conference,7,2,5,0.285714,473,521,-48,67.571,74.429,W1
+2026-11-26,2473,Oakland,ESPN Men's College Basketball Scoreboard,Horizon League,8,1,7,0.125,539,714,-175,67.375,89.25,L2
+2026-11-26,2483,Oregon,ESPN Men's College Basketball Scoreboard,Big Ten Conference,5,3,2,0.6,435,378,57,87.0,75.6,L2
+2026-11-26,2492,Pepperdine,ESPN Men's College Basketball Scoreboard,West Coast Conference,8,5,3,0.625,763,552,211,95.375,69.0,W3
+2026-11-26,2501,Portland,ESPN Men's College Basketball Scoreboard,West Coast Conference,8,4,4,0.5,726,634,92,90.75,79.25,L2
+2026-11-26,2502,Portland State,ESPN Men's College Basketball Scoreboard,Big Sky Conference,8,4,4,0.5,683,585,98,85.375,73.125,W1
+2026-11-26,2504,Prairie View A&M,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,2,5,0.285714,494,560,-66,70.571,80.0,L5
+2026-11-26,2506,Presbyterian,ESPN Men's College Basketball Scoreboard,Big South Conference,6,2,4,0.333333,495,499,-4,82.5,83.167,W1
+2026-11-26,2507,Providence,ESPN Men's College Basketball Scoreboard,Big East Conference,8,5,3,0.625,592,533,59,74.0,66.625,L2
+2026-11-26,2509,Purdue,ESPN Men's College Basketball Scoreboard,Big Ten Conference,8,4,4,0.5,617,544,73,77.125,68.0,L2
+2026-11-26,2511,Queens University,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,7,3,4,0.428571,598,693,-95,85.429,99.0,L2
+2026-11-26,2514,Quinnipiac,ESPN Men's College Basketball Scoreboard,Metro Conference,7,3,4,0.428571,493,500,-7,70.429,71.429,W1
+2026-11-26,2515,Radford,ESPN Men's College Basketball Scoreboard,Big South Conference,6,2,4,0.333333,425,436,-11,70.833,72.667,W1
+2026-11-26,2520,Rider,ESPN Men's College Basketball Scoreboard,Metro Conference,8,2,6,0.25,491,620,-129,61.375,77.5,L1
+2026-11-26,2523,Robert Morris,ESPN Men's College Basketball Scoreboard,Horizon League,7,2,5,0.285714,474,535,-61,67.714,76.429,L1
+2026-11-26,2529,Sacred Heart,ESPN Men's College Basketball Scoreboard,Metro Conference,6,2,4,0.333333,479,465,14,79.833,77.5,L3
+2026-11-26,2534,Sam Houston,ESPN Men's College Basketball Scoreboard,Conference USA,7,3,4,0.428571,582,570,12,83.143,81.429,L1
+2026-11-26,2535,Samford,ESPN Men's College Basketball Scoreboard,Southern Conference,6,4,2,0.666667,478,458,20,79.667,76.333,W3
+2026-11-26,2539,San Francisco,ESPN Men's College Basketball Scoreboard,West Coast Conference,7,4,3,0.571429,498,488,10,71.143,69.714,L2
+2026-11-26,2540,UC Santa Barbara,ESPN Men's College Basketball Scoreboard,Big West Conference,6,6,0,1.0,521,377,144,86.833,62.833,W6
+2026-11-26,2541,Santa Clara,ESPN Men's College Basketball Scoreboard,West Coast Conference,8,6,2,0.75,678,642,36,84.75,80.25,L1
+2026-11-26,2545,SE Louisiana,ESPN Men's College Basketball Scoreboard,Southland Conference,7,3,4,0.428571,464,591,-127,66.286,84.429,W2
+2026-11-26,2546,Southeast Missouri State,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,7,3,4,0.428571,570,528,42,81.429,75.429,L2
+2026-11-26,2547,Seattle U,ESPN Men's College Basketball Scoreboard,West Coast Conference,7,5,2,0.714286,537,471,66,76.714,67.286,W4
+2026-11-26,2550,Seton Hall,ESPN Men's College Basketball Scoreboard,Big East Conference,7,6,1,0.857143,511,423,88,73.0,60.429,W3
+2026-11-26,2561,Siena,ESPN Men's College Basketball Scoreboard,Metro Conference,7,5,2,0.714286,598,605,-7,85.429,86.429,W2
+2026-11-26,2565,SIU Edwardsville,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,8,3,5,0.375,565,560,5,70.625,70.0,L1
+2026-11-26,2567,SMU,ESPN Men's College Basketball Scoreboard,Atlantic Coast Conference,7,6,1,0.857143,604,490,114,86.286,70.0,L1
+2026-11-26,2569,South Carolina State,ESPN Men's College Basketball Scoreboard,Mid-Eastern Athletic Conference,7,3,4,0.428571,502,522,-20,71.714,74.571,L4
+2026-11-26,2571,South Dakota State,ESPN Men's College Basketball Scoreboard,Summit League,7,5,2,0.714286,564,484,80,80.571,69.143,L2
+2026-11-26,2572,Southern Miss,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,8,5,3,0.625,642,624,18,80.25,78.0,W3
+2026-11-26,2579,South Carolina,ESPN Men's College Basketball Scoreboard,Southeastern Conference,7,6,1,0.857143,544,442,102,77.714,63.143,W1
+2026-11-26,2582,Southern,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,1,6,0.142857,474,600,-126,67.714,85.714,L1
+2026-11-26,2599,St. John's,ESPN Men's College Basketball Scoreboard,Big East Conference,6,6,0,1.0,560,400,160,93.333,66.667,W6
+2026-11-26,2603,Saint Joseph's,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,6,1,0.857143,567,475,92,81.0,67.857,W1
+2026-11-26,2608,Saint Mary's,ESPN Men's College Basketball Scoreboard,West Coast Conference,7,6,1,0.857143,657,540,117,93.857,77.143,W4
+2026-11-26,2612,Saint Peter's,ESPN Men's College Basketball Scoreboard,Metro Conference,7,0,7,0.0,337,453,-116,48.143,64.714,L7
+2026-11-26,2617,Stephen F. Austin,ESPN Men's College Basketball Scoreboard,Southland Conference,7,6,1,0.857143,598,463,135,85.429,66.143,W3
+2026-11-26,2619,Stony Brook,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,6,4,2,0.666667,461,356,105,76.833,59.333,W3
+2026-11-26,2623,Missouri State,ESPN Men's College Basketball Scoreboard,Conference USA,5,5,0,1.0,396,313,83,79.2,62.6,W5
+2026-11-26,2627,Tarleton State,ESPN Men's College Basketball Scoreboard,United Athletic Conference,7,4,3,0.571429,546,546,0,78.0,78.0,L2
+2026-11-26,2628,TCU,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,5,1,0.833333,556,437,119,92.667,72.833,W1
+2026-11-26,2630,UT Martin,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,8,5,3,0.625,710,573,137,88.75,71.625,W1
+2026-11-26,2633,Tennessee,ESPN Men's College Basketball Scoreboard,Southeastern Conference,6,6,0,1.0,454,345,109,75.667,57.5,W6
+2026-11-26,2634,Tennessee State,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,5,2,3,0.4,463,409,54,92.6,81.8,L2
+2026-11-26,2635,Tennessee Tech,ESPN Men's College Basketball Scoreboard,Southern Conference,8,6,2,0.75,788,625,163,98.5,78.125,W4
+2026-11-26,2636,UTSA,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,4,3,0.571429,546,534,12,78.0,76.286,L1
+2026-11-26,2638,UTEP,ESPN Men's College Basketball Scoreboard,Mountain West Conference,7,6,1,0.857143,530,440,90,75.714,62.857,W6
+2026-11-26,2640,Texas Southern,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,7,1,6,0.142857,519,641,-122,74.143,91.571,L4
+2026-11-26,2641,Texas Tech,ESPN Men's College Basketball Scoreboard,Big 12 Conference,6,5,1,0.833333,474,328,146,79.0,54.667,L1
+2026-11-26,2643,The Citadel,ESPN Men's College Basketball Scoreboard,Southern Conference,7,5,2,0.714286,562,462,100,80.286,66.0,W2
+2026-11-26,2649,Toledo,ESPN Men's College Basketball Scoreboard,Mid-American Conference,6,3,3,0.5,448,462,-14,74.667,77.0,W2
+2026-11-26,2653,Troy,ESPN Men's College Basketball Scoreboard,Sun Belt Conference,7,3,4,0.428571,498,540,-42,71.143,77.143,W1
+2026-11-26,2655,Tulane,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,2,5,0.285714,502,534,-32,71.714,76.286,L4
+2026-11-26,2670,VCU,ESPN Men's College Basketball Scoreboard,Atlantic 10 Conference,7,5,2,0.714286,570,518,52,81.429,74.0,W2
+2026-11-26,2674,Valparaiso,ESPN Men's College Basketball Scoreboard,Missouri Valley Conference,6,4,2,0.666667,504,425,79,84.0,70.833,L1
+2026-11-26,2678,VMI,ESPN Men's College Basketball Scoreboard,Southern Conference,8,5,3,0.625,623,585,38,77.875,73.125,W2
+2026-11-26,2681,Wagner,ESPN Men's College Basketball Scoreboard,Northeast Conference,7,2,5,0.285714,471,483,-12,67.286,69.0,W1
+2026-11-26,2692,Weber State,ESPN Men's College Basketball Scoreboard,Big Sky Conference,7,2,5,0.285714,525,622,-97,75.0,88.857,L1
+2026-11-26,2697,West Florida,ESPN Men's College Basketball Scoreboard,Atlantic Sun Conference,8,3,5,0.375,672,559,113,84.0,69.875,L2
+2026-11-26,2698,West Georgia,ESPN Men's College Basketball Scoreboard,United Athletic Conference,7,2,5,0.285714,524,546,-22,74.857,78.0,L1
+2026-11-26,2710,Western Illinois,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,8,2,6,0.25,552,571,-19,69.0,71.375,W1
+2026-11-26,2711,Western Michigan,ESPN Men's College Basketball Scoreboard,Mid-American Conference,7,6,1,0.857143,573,421,152,81.857,60.143,W6
+2026-11-26,2717,Western Carolina,ESPN Men's College Basketball Scoreboard,Southern Conference,7,3,4,0.428571,586,519,67,83.714,74.143,W1
+2026-11-26,2724,Wichita State,ESPN Men's College Basketball Scoreboard,American Athletic Conference,7,6,1,0.857143,609,488,121,87.0,69.714,W5
+2026-11-26,2729,William & Mary,ESPN Men's College Basketball Scoreboard,Coastal Athletic Association,8,6,2,0.75,677,614,63,84.625,76.75,W4
+2026-11-26,2737,Winthrop,ESPN Men's College Basketball Scoreboard,Big South Conference,7,0,7,0.0,587,674,-87,83.857,96.286,L7
+2026-11-26,2739,Green Bay,ESPN Men's College Basketball Scoreboard,Horizon League,8,4,4,0.5,585,580,5,73.125,72.5,W1
+2026-11-26,2747,Wofford,ESPN Men's College Basketball Scoreboard,Southern Conference,8,5,3,0.625,668,650,18,83.5,81.25,W3
+2026-11-26,2750,Wright State,ESPN Men's College Basketball Scoreboard,Horizon League,8,6,2,0.75,648,544,104,81.0,68.0,L2
+2026-11-26,2751,Wyoming,ESPN Men's College Basketball Scoreboard,Mountain West Conference,7,5,2,0.714286,562,457,105,80.286,65.286,L1
+2026-11-26,2752,Xavier,ESPN Men's College Basketball Scoreboard,Big East Conference,7,6,1,0.857143,582,456,126,83.143,65.143,W1
+2026-11-26,2754,Youngstown State,ESPN Men's College Basketball Scoreboard,Horizon League,7,3,4,0.428571,482,553,-71,68.857,79.0,W1
+2026-11-26,2755,Grambling,ESPN Men's College Basketball Scoreboard,Southwestern Athletic Conference,6,3,3,0.5,517,496,21,86.167,82.667,W2
+2026-11-26,2771,Merrimack,ESPN Men's College Basketball Scoreboard,Metro Conference,5,1,4,0.2,297,342,-45,59.4,68.4,L2
+2026-11-26,2803,Bryant,ESPN Men's College Basketball Scoreboard,America East Conference,8,3,5,0.375,516,557,-41,64.5,69.625,L1
+2026-11-26,2815,Lindenwood,ESPN Men's College Basketball Scoreboard,Ohio Valley Conference,8,2,6,0.25,607,562,45,75.875,70.25,L5
+2026-11-26,2837,East Texas A&M,ESPN Men's College Basketball Scoreboard,Southland Conference,7,4,3,0.571429,514,549,-35,73.429,78.429,W1
+2026-11-26,2856,California Baptist,ESPN Men's College Basketball Scoreboard,Big West Conference,7,2,5,0.285714,473,542,-69,67.571,77.429,W1
+2026-11-26,2870,Purdue Fort Wayne,ESPN Men's College Basketball Scoreboard,Horizon League,7,5,2,0.714286,576,499,77,82.286,71.286,W4
+2026-11-26,2885,NJIT,ESPN Men's College Basketball Scoreboard,America East Conference,9,1,8,0.111111,529,702,-173,58.778,78.0,L6
+2026-11-26,2900,St. Thomas,ESPN Men's College Basketball Scoreboard,Summit League,9,5,4,0.555556,759,678,81,84.333,75.333,L1
+2026-11-26,2908,South Carolina Upstate,ESPN Men's College Basketball Scoreboard,Big South Conference,8,1,7,0.125,561,599,-38,70.125,74.875,L4
+2026-11-26,2916,Incarnate Word,ESPN Men's College Basketball Scoreboard,Southland Conference,7,1,6,0.142857,495,555,-60,70.714,79.286,L1
+2026-11-26,2934,Cal State Bakersfield,ESPN Men's College Basketball Scoreboard,Big West Conference,6,4,2,0.666667,497,440,57,82.833,73.333,L2
+2026-11-26,3084,Utah Valley,ESPN Men's College Basketball Scoreboard,Big West Conference,6,5,1,0.833333,498,459,39,83.0,76.5,L1
+2026-11-26,3101,Utah Tech,ESPN Men's College Basketball Scoreboard,Big Sky Conference,7,2,5,0.285714,588,559,29,84.0,79.857,W1
+2026-11-26,112358,Long Island University,ESPN Men's College Basketball Scoreboard,Northeast Conference,8,1,7,0.125,560,642,-82,70.0,80.25,L1
