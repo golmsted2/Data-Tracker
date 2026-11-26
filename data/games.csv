@@ -1416,3 +1416,14 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-25,401918971,true,328,Utah State,Pac-12 Conference,93,2567,SMU,Atlantic Coast Conference,59,328,2567,34,152
 2026-11-25,401920138,false,2492,Pepperdine,West Coast Conference,70,2934,Cal State Bakersfield,Big West Conference,68,2492,2934,2,138
 2026-11-25,401911522,true,302,UC Davis,Mountain West Conference,80,2437,Omaha,Summit League,78,302,2437,2,158
+2026-11-25,401920550,true,2638,UTEP,Mountain West Conference,72,2199,Eastern Michigan,Mid-American Conference,54,2638,2199,18,126
+2026-11-25,401925880,false,147,Montana State,Big Sky Conference,110,3218,Northwest Indian RedHawks,Outside roster,43,147,3218,67,153
+2026-11-25,401924897,false,167,New Mexico,Mountain West Conference,100,2400,Mississippi Valley State,Southwestern Athletic Conference,77,167,2400,23,177
+2026-11-25,401917545,false,2351,Loyola Marymount,West Coast Conference,81,331,Eastern Washington,Big Sky Conference,72,2351,331,9,153
+2026-11-25,401929287,true,344,Mississippi State,Southeastern Conference,71,154,Wake Forest,Atlantic Coast Conference,78,154,344,7,149
+2026-11-25,401921713,true,2670,VCU,Atlantic 10 Conference,80,264,Washington,Big Ten Conference,78,2670,264,2,158
+2026-11-25,401921671,true,38,Colorado,Big 12 Conference,73,2253,Grand Canyon,Mountain West Conference,79,2253,38,6,152
+2026-11-25,401917544,true,55,Jacksonville State,Conference USA,83,279,Pacific,West Coast Conference,76,55,279,7,159
+2026-11-25,401929005,false,62,Hawai'i,Mountain West Conference,83,2916,Incarnate Word,Southland Conference,81,62,2916,2,164
+2026-11-25,401921714,true,36,Colorado State,Pac-12 Conference,77,228,Clemson,Atlantic Coast Conference,75,36,228,2,152
+2026-11-25,401921672,true,139,Saint Louis,Atlantic 10 Conference,66,24,Stanford,Atlantic Coast Conference,64,139,24,2,130
