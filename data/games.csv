@@ -1448,3 +1448,22 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-26,401909506,true,221,Pittsburgh,Atlantic Coast Conference,71,305,DePaul,Big East Conference,64,221,305,7,135
 2026-11-26,401911523,true,55,Jacksonville State,Conference USA,63,302,UC Davis,Mountain West Conference,68,302,55,5,131
 2026-11-26,401917546,true,2437,Omaha,Summit League,62,279,Pacific,West Coast Conference,71,279,2437,9,133
+2026-11-27,401920429,true,2752,Xavier,Big East Conference,71,258,Virginia,Atlantic Coast Conference,83,258,2752,12,154
+2026-11-27,401921717,true,26,UCLA,Big Ten Conference,75,46,Georgetown,Big East Conference,63,26,46,12,138
+2026-11-27,401920533,true,2599,St. John's,Big East Conference,80,66,Iowa State,Big 12 Conference,75,2599,66,5,155
+2026-11-27,401921827,false,238,Vanderbilt,Southeastern Conference,111,2582,Southern,Southwestern Athletic Conference,56,238,2582,55,167
+2026-11-27,401929288,true,154,Wake Forest,Atlantic Coast Conference,85,235,Memphis,American Athletic Conference,88,235,154,3,173
+2026-11-27,401920848,true,2335,Liberty,Conference USA,76,2900,St. Thomas,Summit League,67,2335,2900,9,143
+2026-11-27,401924810,true,261,Vermont,America East Conference,57,2771,Merrimack,Metro Conference,75,2771,261,18,132
+2026-11-27,401921416,true,2261,Hampton,Coastal Athletic Association,55,2349,UMass Lowell,America East Conference,72,2349,2261,17,127
+2026-11-27,401920753,false,2754,Youngstown State,Horizon League,96,131761,Bryant & Stratton (OH) Bobcats,Outside roster,66,2754,131761,30,162
+2026-11-27,401929407,false,233,South Dakota,Summit League,99,2965,Clarke Pride,Outside roster,47,233,2965,52,146
+2026-11-27,401929181,true,6,South Alabama,Sun Belt Conference,61,278,Fresno State,Pac-12 Conference,81,278,6,20,142
+2026-11-27,401921224,false,2217,Fairfield,Metro Conference,75,2426,Navy,Patriot League,59,2217,2426,16,134
+2026-11-27,401919786,true,2330,Le Moyne,Northeast Conference,86,311,Maine,America East Conference,90,311,2330,4,176
+2026-11-27,401928468,false,2348,Louisiana Tech,Sun Belt Conference,70,326,Texas State,Pac-12 Conference,78,326,2348,8,148
+2026-11-27,401924738,false,350,UNC Wilmington,Coastal Athletic Association,68,163,Princeton,Ivy League,66,350,163,2,134
+2026-11-27,401920542,true,239,Baylor,Big 12 Conference,69,2628,TCU,Big 12 Conference,88,2628,239,19,157
+2026-11-27,401919021,false,5,UAB,American Athletic Conference,102,2040,Auburn Montgomery Senators,Outside roster,62,5,2040,40,164
+2026-11-27,401902282,false,2086,Butler,Big East Conference,92,91,Bellarmine,Atlantic Sun Conference,56,2086,91,36,148
+2026-11-27,401920774,false,2275,Hofstra,Coastal Athletic Association,49,2142,Colgate,Patriot League,75,2142,2275,26,124

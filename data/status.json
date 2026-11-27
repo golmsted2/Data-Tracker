@@ -1,27 +1,27 @@
 {
-  "run_time": "2026-11-27T18:42:13.358685Z",
+  "run_time": "2026-11-27T22:41:48.429571Z",
   "first_run_date": "2026-11-01",
-  "days_with_success": 26,
+  "days_with_success": 27,
   "dates_requested": [
-    "2026-11-26"
+    "2026-11-27"
   ],
   "failed_dates": [],
   "items": 365,
   "new_today": [],
   "gone_today": [],
-  "games_logged": 1449,
+  "games_logged": 1468,
   "data_quality": {
     "ok": true,
     "issues": [],
-    "latest_date": "2026-11-26",
-    "history_rows": 9490,
-    "games_logged": 1449
+    "latest_date": "2026-11-27",
+    "history_rows": 9855,
+    "games_logged": 1468
   },
   "sources": [
     {
       "name": "ESPN Men's College Basketball Scoreboard",
       "ok": true,
-      "count": 21
+      "count": 55
     },
     {
       "name": "ESPN Men's College Basketball Rankings",
