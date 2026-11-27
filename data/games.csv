@@ -1427,10 +1427,19 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-25,401929005,false,62,Hawai'i,Mountain West Conference,83,2916,Incarnate Word,Southland Conference,81,62,2916,2,164
 2026-11-25,401921714,true,36,Colorado State,Pac-12 Conference,77,228,Clemson,Atlantic Coast Conference,75,36,228,2,152
 2026-11-25,401921672,true,139,Saint Louis,Atlantic 10 Conference,66,24,Stanford,Atlantic Coast Conference,64,139,24,2,130
+2026-11-26,401917547,true,2608,Saint Mary's,West Coast Conference,85,26,UCLA,Big Ten Conference,70,2608,26,15,155
 2026-11-26,401906869,true,251,Texas,Southeastern Conference,92,46,Georgetown,Big East Conference,83,251,46,9,175
+2026-11-26,401920529,true,66,Iowa State,Big 12 Conference,64,2633,Tennessee,Southeastern Conference,75,2633,66,11,139
+2026-11-26,401925757,true,127,Michigan State,Big Ten Conference,70,8,Arkansas,Southeastern Conference,67,127,8,3,137
+2026-11-26,401920537,true,130,Michigan,Big Ten Conference,70,2390,Miami,Atlantic Coast Conference,97,2390,130,27,167
+2026-11-26,401921673,true,328,Utah State,Pac-12 Conference,78,30,USC,Big Ten Conference,74,328,30,4,152
+2026-11-26,401918972,true,2567,SMU,Atlantic Coast Conference,86,99,LSU,Southeastern Conference,95,99,2567,9,181
 2026-11-26,401929281,true,2132,Cincinnati,Big 12 Conference,83,61,Georgia,Southeastern Conference,81,2132,61,2,164
 2026-11-26,401912231,false,2636,UTSA,American Athletic Conference,61,349,Army,Patriot League,79,349,2636,18,140
 2026-11-26,401906807,true,2509,Purdue,Big Ten Conference,63,201,Oklahoma,Southeastern Conference,70,201,2509,7,133
 2026-11-26,401920528,true,21,San Diego State,Pac-12 Conference,75,120,Maryland,Big Ten Conference,71,21,120,4,146
 2026-11-26,401929282,true,2116,UCF,Big 12 Conference,73,103,Boston College,Atlantic Coast Conference,75,103,2116,2,148
 2026-11-26,401921674,true,2579,South Carolina,Southeastern Conference,80,9,Arizona State,Big 12 Conference,73,2579,9,7,153
+2026-11-26,401920538,true,156,Creighton,Big East Conference,95,2628,TCU,Big 12 Conference,87,156,2628,8,182
+2026-11-26,401909506,true,221,Pittsburgh,Atlantic Coast Conference,71,305,DePaul,Big East Conference,64,221,305,7,135
+2026-11-26,401911523,true,55,Jacksonville State,Conference USA,63,302,UC Davis,Mountain West Conference,68,302,55,5,131
