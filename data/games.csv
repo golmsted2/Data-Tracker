@@ -1448,10 +1448,16 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-26,401909506,true,221,Pittsburgh,Atlantic Coast Conference,71,305,DePaul,Big East Conference,64,221,305,7,135
 2026-11-26,401911523,true,55,Jacksonville State,Conference USA,63,302,UC Davis,Mountain West Conference,68,302,55,5,131
 2026-11-26,401917546,true,2437,Omaha,Summit League,62,279,Pacific,West Coast Conference,71,279,2437,9,133
+2026-11-27,401925703,false,248,Houston,Big 12 Conference,77,2473,Oakland,Horizon League,46,248,2473,31,123
 2026-11-27,401920429,true,2752,Xavier,Big East Conference,71,258,Virginia,Atlantic Coast Conference,83,258,2752,12,154
+2026-11-27,401913531,false,356,Illinois,Big Ten Conference,116,98,Western Kentucky,Conference USA,76,356,98,40,192
 2026-11-27,401921717,true,26,UCLA,Big Ten Conference,75,46,Georgetown,Big East Conference,63,26,46,12,138
+2026-11-27,401921718,true,2608,Saint Mary's,West Coast Conference,73,251,Texas,Southeastern Conference,76,251,2608,3,149
+2026-11-27,401909789,false,2305,Kansas,Big 12 Conference,65,222,Villanova,Big East Conference,50,2305,222,15,115
 2026-11-27,401920533,true,2599,St. John's,Big East Conference,80,66,Iowa State,Big 12 Conference,75,2599,66,5,155
 2026-11-27,401921827,false,238,Vanderbilt,Southeastern Conference,111,2582,Southern,Southwestern Athletic Conference,56,238,2582,55,167
+2026-11-27,401920543,true,333,Alabama,Southeastern Conference,81,2390,Miami,Atlantic Coast Conference,87,2390,333,6,168
+2026-11-27,401911030,false,84,Indiana,Big Ten Conference,93,189,Bowling Green,Mid-American Conference,57,84,189,36,150
 2026-11-27,401929288,true,154,Wake Forest,Atlantic Coast Conference,85,235,Memphis,American Athletic Conference,88,235,154,3,173
 2026-11-27,401920848,true,2335,Liberty,Conference USA,76,2900,St. Thomas,Summit League,67,2335,2900,9,143
 2026-11-27,401924810,true,261,Vermont,America East Conference,57,2771,Merrimack,Metro Conference,75,2771,261,18,132
@@ -1466,4 +1472,29 @@ date,event_id,neutral_site,home_id,home_team,home_conference,home_score,away_id,
 2026-11-27,401920542,true,239,Baylor,Big 12 Conference,69,2628,TCU,Big 12 Conference,88,2628,239,19,157
 2026-11-27,401919021,false,5,UAB,American Athletic Conference,102,2040,Auburn Montgomery Senators,Outside roster,62,5,2040,40,164
 2026-11-27,401902282,false,2086,Butler,Big East Conference,92,91,Bellarmine,Atlantic Sun Conference,56,2086,91,36,148
+2026-11-27,401921417,true,2083,Bucknell,Patriot League,86,2325,La Salle,Atlantic 10 Conference,89,2325,2083,3,175
 2026-11-27,401920774,false,2275,Hofstra,Coastal Athletic Association,49,2142,Colgate,Patriot League,75,2142,2275,26,124
+2026-11-27,401920532,true,2483,Oregon,Big Ten Conference,88,120,Maryland,Big Ten Conference,73,2483,120,15,161
+2026-11-27,401921818,false,142,Missouri,Southeastern Conference,97,2029,Arkansas-Pine Bluff,Southwestern Athletic Conference,61,142,2029,36,158
+2026-11-27,401912213,false,44,American University,Patriot League,64,2515,Radford,Big South Conference,62,44,2515,2,126
+2026-11-27,401911212,false,45,George Washington,Atlantic 10 Conference,91,2378,UMBC,America East Conference,51,45,2378,40,142
+2026-11-27,401929283,true,103,Boston College,Atlantic Coast Conference,59,2132,Cincinnati,Big 12 Conference,70,2132,103,11,129
+2026-11-27,401924845,false,322,Lafayette,Patriot League,82,315,Niagara,Metro Conference,54,322,315,28,136
+2026-11-27,401920810,true,245,Texas A&M,Southeastern Conference,78,269,Marquette,Big East Conference,76,245,269,2,154
+2026-11-27,401920382,false,259,Virginia Tech,Atlantic Coast Conference,70,295,Old Dominion,Sun Belt Conference,61,259,295,9,131
+2026-11-27,401927366,true,68,Boise State,Pac-12 Conference,88,2181,Drake,Missouri Valley Conference,71,68,2181,17,159
+2026-11-27,401920541,true,2306,Kansas State,Big 12 Conference,69,130,Michigan,Big Ten Conference,98,130,2306,29,167
+2026-11-27,401933055,false,2908,South Carolina Upstate,Big South Conference,87,2576,Southern Wesleyan Warriors,Outside roster,78,2908,2576,9,165
+2026-11-27,401921185,false,219,Pennsylvania,Ivy League,61,119,Towson,Coastal Athletic Association,72,119,219,11,133
+2026-11-27,401929284,true,61,Georgia,Southeastern Conference,76,2116,UCF,Big 12 Conference,88,2116,61,12,164
+2026-11-27,401926756,true,2540,UC Santa Barbara,Big West Conference,75,2329,Lehigh,Patriot League,43,2540,2329,32,118
+2026-11-27,401918980,false,151,East Carolina,American Athletic Conference,92,286,North Carolina Wesleyan Battling Bishops,Outside roster,43,151,286,49,135
+2026-11-27,401912711,true,153,North Carolina,Atlantic Coast Conference,59,277,West Virginia,Big 12 Conference,72,277,153,13,131
+2026-11-27,401911380,false,2193,East Tennessee State,Southern Conference,67,2127,Charleston Southern,Big South Conference,76,2127,2193,9,143
+2026-11-27,401929289,true,344,Mississippi State,Southeastern Conference,63,213,Penn State,Big Ten Conference,68,213,344,5,131
+2026-11-27,401929381,false,2031,Little Rock,United Athletic Conference,88,6371,Lane College Dragons,Outside roster,58,2031,6371,30,146
+2026-11-27,401928624,false,198,Oral Roberts,Summit League,72,2623,Missouri State,Conference USA,66,198,2623,6,138
+2026-11-27,401925829,true,249,North Texas,American Athletic Conference,75,2449,North Dakota State,Summit League,73,249,2449,2,148
+2026-11-27,401922264,false,265,Washington State,Pac-12 Conference,69,70,Idaho,Big Sky Conference,61,265,70,8,130
+2026-11-27,401920737,false,77,Northwestern,Big Ten Conference,65,111,Northeastern,Coastal Athletic Association,61,77,111,4,126
+2026-11-27,401911524,true,302,UC Davis,Mountain West Conference,61,279,Pacific,West Coast Conference,78,279,302,17,139
